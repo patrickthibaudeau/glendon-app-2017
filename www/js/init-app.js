@@ -42,7 +42,7 @@ app.initEvents = function() {
     "use strict" ;
     var fName = "app.initEvents():" ;
     app.consoleLog(fName, "entry") ;
-
+    initApp();
     // NOTE: initialize your third-party libraries and event handlers
 
     // initThirdPartyLibraryNumberOne() ;
@@ -66,9 +66,6 @@ app.initEvents = function() {
         evt = "click" ;                                             // let touch become a click event
     else                                                            // else, assume touch events available
         evt = "touchend" ;                                          // not optimum, but works
-
-    el = document.getElementById("id_btnHello") ;
-    el.addEventListener(evt, myEventHandler, false) ;
 
     // NOTE: ...you can put other miscellaneous init stuff in this function...
     // NOTE: ...and add whatever else you want to do now that the app has started...

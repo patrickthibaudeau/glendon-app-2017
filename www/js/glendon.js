@@ -2,7 +2,8 @@
  * Version: 2017051600
  */
 
-$(document).ready(function () {
+$(document).ready(function() {
+
     var online = isOnline();
     $('#lang').val(getLanguage());
     startApp();
@@ -32,13 +33,13 @@ function startApp() {
     route124West();
     route11South();
     route11North();
-    if (pageName == 'subcategories.html') {
+    if (pageName == 'subcategories') {
         subCategories();
     }
-    if (pageName == 'pagelist.html') {
+    if (pageName == 'pagelist') {
         pageList();
     }
-    if (pageName == 'details.html') {
+    if (pageName == 'details') {
         detailsPage();
     }
 //Refresh every 15 seconds
@@ -765,6 +766,6 @@ function getUrlVars() {
 }
 //Return the current page name
 function getPageName() {
-    var name = location.pathname.substring(1);
-    return name.substring(name.indexOf('/') + 1);
+    var name = document.title;
+    return name;
 }

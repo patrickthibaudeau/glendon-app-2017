@@ -51,6 +51,9 @@
     <script src="js/init-app.js"></script>
     <!-- normalizes device and document ready events, see file for details -->
     <script src="xdk/init-dev.js"></script>
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+    </script>
 
     <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
     <!-- Place your remote debugging weinre script URL here, if it does not work above. -->
