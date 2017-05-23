@@ -6,4 +6,5 @@ var en = {
     abbreviatedLang:'FR',
     shuttle:'Shuttle',
     eventTitle:'Events',
+    currentlyOffLine:'Currently offline',
 }

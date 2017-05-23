@@ -6,4 +6,5 @@ var fr = {
     abbreviatedLang: 'EN',
     shuttle: 'Navette',
     eventTitle:'Événements',
+    currentlyOffLine:'Hors ligne',
 }

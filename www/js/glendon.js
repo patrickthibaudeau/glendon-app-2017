@@ -2,9 +2,7 @@
  * Version: 2017051600
  */
 
-$(document).ready(function() {
-
-    var online = isOnline();
+$(document).ready(function () {
     $('#lang').val(getLanguage());
     startApp();
     $('#langue-toggle').click(function () {
@@ -21,43 +19,76 @@ $(document).ready(function() {
         startApp();
     });
 });
+
+function goOffLine() {
+    window.localStorage.setItem('offLine', 1);
+    navPills();
+    getStrings();
+}
+
+function goOnline() {
+    window.localStorage.setItem('offLine', 0);
+    startApp();
+}
+
 function startApp() {
     var pageName = getPageName();
+    var offLine = window.localStorage.getItem('offLine');
     getStrings(); //Provides strings for the app
-    getSite();
-    getCurrentDate();
-    initSlider();
-    getWeather();
-    getAnnouncements();
-    route124East();
-    route124West();
-    route11South();
-    route11North();
-    if (pageName == 'subcategories') {
-        subCategories();
-    }
-    if (pageName == 'pagelist') {
-        pageList();
-    }
-    if (pageName == 'details') {
-        detailsPage();
-    }
-//Refresh every 15 seconds
-    setInterval(function () {
+    if (offLine == 1) {
+        getCurrentDate();
+        initSlider();
+        navPills();
+        if (pageName == 'subcategories') {
+            subCategories();
+        }
+        if (pageName == 'pagelist') {
+            pageList();
+        }
+        if (pageName == 'details') {
+            detailsPage();
+        }
+    } else {
+        getSite();
+        getCurrentDate();
+        initSlider();
+        getWeather();
+        getAnnouncements();
+        navPills();
         route124East();
         route124West();
         route11South();
         route11North();
-        getAnnouncementsRefresh();
-    }, 15000);
-//Refresh weather every 15 minutes
-    setInterval(function () {
-        getWeather();
-    }, 150000);
-//Refresh date every hour
-    setInterval(function () {
-        getCurrentDate();
-    }, 3600000);
+        if (pageName == 'subcategories') {
+            subCategories();
+        }
+        if (pageName == 'pagelist') {
+            pageList();
+        }
+        if (pageName == 'details') {
+            detailsPage();
+        }
+        //Refresh every 15 seconds
+        setInterval(function () {
+            route124East();
+            route124West();
+            route11South();
+            route11North();
+            getAnnouncementsRefresh();
+        }, 10000);
+        //Refresh every 5 seconds
+        setInterval(function () {
+            getAnnouncementsRefresh();
+        }, 5000);
+        //Refresh weather every 15 minutes
+        setInterval(function () {
+            getWeather();
+        }, 150000);
+        //Refresh date every hour
+        setInterval(function () {
+            getCurrentDate();
+        }, 3600000);
+    }
 }
 
 //SLIDER ANIMATION ------------------------------------------
@@ -76,8 +107,12 @@ function initSlider() {
     first_slide.clone().appendTo(ul);
     ul.find("li").each(function (indx) {
         var left_percent = (slide_width_pc * indx) + "%";
-        $(this).css({"left": left_percent});
-        $(this).css({width: (100 / slide_count) + "%"});
+        $(this).css({
+            "left": left_percent
+        });
+        $(this).css({
+            width: (100 / slide_count) + "%"
+        });
     });
     ul.css("margin-left", "-100%");
     // Listen for click of prev button
@@ -90,10 +125,13 @@ function initSlider() {
         console.log("next button clicked");
         slide(slide_index + 1);
     });
+
     function slide(new_slide_index) {
 
         var margin_left_pc = (new_slide_index * (-100) - 100) + "%";
-        ul.animate({"margin-left": margin_left_pc}, 400, function () {
+        ul.animate({
+            "margin-left": margin_left_pc
+        }, 400, function () {
 
             // If new slide is before first slide...
             if (new_slide_index < 0) {
@@ -112,6 +150,25 @@ function initSlider() {
 
 }
 
+//NAV PILLS BLUE---------------------------------------------
+function navPills() {
+    var offLine = window.localStorage.getItem('offLine');
+    var html = '';
+    if (offLine == 0) {
+        html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>';
+        html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
+        html += '<a href="javascript:void(0);" onClick="startApp()"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
+    } else {
+        if (window.localStorage.getItem('lang') == 'fr') {
+            html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Hors ligne</span></a></li>';
+        } else {
+            html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Currently offline</span></a></li>';
+        }
+    }
+
+    $('.blue-title').html(html);
+}
+
 //ONLINE STATUS---------------------------------------------
 function isOnline() {
     if (navigator.onLine) {
@@ -122,11 +179,9 @@ function isOnline() {
 }
 
 //LANGUAGE----------------------------------------------------
-function Language(lang)
-{
+function Language(lang) {
     var __construct = function () {
-        if (eval('typeof ' + lang) == 'undefined')
-        {
+        if (eval('typeof ' + lang) == 'undefined') {
             lang = "en";
         }
         return;
@@ -134,12 +189,10 @@ function Language(lang)
 
     this.getString = function (str, defaultStr) {
         var retStr = eval('eval(lang).' + str);
-        if (typeof retStr != 'undefined')
-        {
+        if (typeof retStr != 'undefined') {
             return retStr;
         } else {
-            if (typeof defaultStr != 'undefined')
-            {
+            if (typeof defaultStr != 'undefined') {
                 return defaultStr;
             } else {
                 return eval('en.' + str);
@@ -167,161 +220,177 @@ function getStrings() {
     $('#myTimeTable').html(l.getString('myTimeTable'));
     $('#abbreviatedLang').html(l.getString('abbreviatedLang'));
     $('#shuttle').html(l.getString('shuttle'));
+    $('#currentlyOffLine').html(l.getString('currentlyOffLine'));
 }
 //TTC ---------------------------------------------
 function route124East() {
-    $.ajax({
-        type: 'GET',
-        url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1220&r=124',
-        crossDomain: true,
-        dataType: 'json',
-        success: function (route) {
-            if ($('#lang').val() == 'en') {
-                $('.route124Title').html(route.predictions.routeTitle);
-                $('#route124East .title').html(route.predictions.direction.title);
-                $('#route124East .stopTitle').html(route.predictions.stopTitle);
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arriving ';
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        $.ajax({
+            type: 'GET',
+            url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1220&r=124',
+            crossDomain: true,
+            dataType: 'json',
+            success: function (route) {
+                if ($('#lang').val() == 'en') {
+                    $('.route124Title').html(route.predictions.routeTitle);
+                    $('#route124East .title').html(route.predictions.direction.title);
+                    $('#route124East .stopTitle').html(route.predictions.stopTitle);
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arriving ';
+                    }
+                } else {
+                    $('.route124Title').html(route.predictions.routeTitle);
+                    $('#route124East .title').html('Est - 124 Sunnybrook vers l\'hôpital de Sunnybrook');
+                    $('#route124East .stopTitle').html('Lawrence ave est à Bayview Ave');
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arrivé ';
+                    }
                 }
-            } else {
-                $('.route124Title').html(route.predictions.routeTitle);
-                $('#route124East .title').html('Est - 124 Sunnybrook vers l\'hôpital de Sunnybrook');
-                $('#route124East .stopTitle').html('Lawrence ave est à Bayview Ave');
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arrivé ';
-                }
+                $('#route124East .minutes0').html(minuteText);
+                $('#route124East .minutes1').html(route.predictions.direction.prediction[1].minutes);
+                $('#route124East .minutes2').html(route.predictions.direction.prediction[2].minutes);
             }
-            $('#route124East .minutes0').html(minuteText);
-            $('#route124East .minutes1').html(route.predictions.direction.prediction[1].minutes);
-            $('#route124East .minutes2').html(route.predictions.direction.prediction[2].minutes);
-        }
-    });
+        });
+    }
 }
 
 function route124West() {
-    $.ajax({
-        url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=124',
-        crossDomain: true,
-        dataType: 'json',
-        success: function (route) {
-            if ($('#lang').val() == 'en') {
-                $('.to').html('To:');
-                $('.stop').html('Stop:');
-                $('.route124Title').html(route.predictions.routeTitle);
-                $('#route124West .title').html(route.predictions.direction.title);
-                $('#route124West .stopTitle').html(route.predictions.stopTitle);
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arriving ';
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        $.ajax({
+            url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=124',
+            crossDomain: true,
+            dataType: 'json',
+            success: function (route) {
+                if ($('#lang').val() == 'en') {
+                    $('.to').html('To:');
+                    $('.stop').html('Stop:');
+                    $('.route124Title').html(route.predictions.routeTitle);
+                    $('#route124West .title').html(route.predictions.direction.title);
+                    $('#route124West .stopTitle').html(route.predictions.stopTitle);
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arriving ';
+                    }
+                } else {
+                    $('.to').html('Vers:');
+                    $('.stop').html('Arrêt:');
+                    $('.route124Title').html(route.predictions.routeTitle);
+                    $('#route124West .title').html('Ouest - 124 Sunnybrook vers la gare de Lawrence');
+                    $('#route124West .stopTitle').html('Bayview ave à Lawrence ave est (Campus Glendon York U)');
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arrivé ';
+                    }
                 }
-            } else {
-                $('.to').html('Vers:');
-                $('.stop').html('Arrêt:');
-                $('.route124Title').html(route.predictions.routeTitle);
-                $('#route124West .title').html('Ouest - 124 Sunnybrook vers la gare de Lawrence');
-                $('#route124West .stopTitle').html('Bayview ave à Lawrence ave est (Campus Glendon York U)');
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arrivé ';
-                }
+                $('#route124West .minutes0').html(minuteText);
+                $('#route124West .minutes1').html(route.predictions.direction.prediction[1].minutes);
+                $('#route124West .minutes2').html(route.predictions.direction.prediction[2].minutes);
             }
-            $('#route124West .minutes0').html(minuteText);
-            $('#route124West .minutes1').html(route.predictions.direction.prediction[1].minutes);
-            $('#route124West .minutes2').html(route.predictions.direction.prediction[2].minutes);
-        }
-    });
+        });
+    }
 }
 
 function route11South() {
-    $.ajax({
-        url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=11330&r=11',
-        crossDomain: true,
-        dataType: 'json',
-        success: function (route) {
-            if ($('#lang').val() == 'en') {
-                $('.route11Title').html(route.predictions.routeTitle);
-                $('#route11South .title').html(route.predictions.direction.title);
-                $('#route11South .stopTitle').html(route.predictions.stopTitle);
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arriving ';
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        $.ajax({
+            url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=11330&r=11',
+            crossDomain: true,
+            dataType: 'json',
+            success: function (route) {
+                if ($('#lang').val() == 'en') {
+                    $('.route11Title').html(route.predictions.routeTitle);
+                    $('#route11South .title').html(route.predictions.direction.title);
+                    $('#route11South .stopTitle').html(route.predictions.stopTitle);
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arriving ';
+                    }
+                } else {
+                    $('.route11Title').html(route.predictions.routeTitle);
+                    $('#route11South .title').html('Sud - 11 Bayview vers Davisville Station via Sunnybrook');
+                    $('#route11South .stopTitle').html('Bayview ave à Lawrence ave est (Campus Glendon York U)');
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arrivé ';
+                    }
                 }
-            } else {
-                $('.route11Title').html(route.predictions.routeTitle);
-                $('#route11South .title').html('Sud - 11 Bayview vers Davisville Station via Sunnybrook');
-                $('#route11South .stopTitle').html('Bayview ave à Lawrence ave est (Campus Glendon York U)');
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arrivé ';
-                }
+                $('#route11South .minutes0').html(minuteText);
+                $('#route11South .minutes1').html(route.predictions.direction.prediction[1].minutes);
+                $('#route11South .minutes2').html(route.predictions.direction.prediction[2].minutes);
             }
-            $('#route11South .minutes0').html(minuteText);
-            $('#route11South .minutes1').html(route.predictions.direction.prediction[1].minutes);
-            $('#route11South .minutes2').html(route.predictions.direction.prediction[2].minutes);
-        }
-    });
+        });
+    }
 }
 
 function route11North() {
-    $.ajax({
-        url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=11',
-        crossDomain: true,
-        dataType: 'json',
-        success: function (route) {
-            if ($('#lang').val() == 'en') {
-                $('.route11Title').html(route.predictions.routeTitle);
-                $('#route11North .title').html(route.predictions.direction.title);
-                $('#route11North .stopTitle').html(route.predictions.stopTitle);
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arriving ';
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        $.ajax({
+            url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=11',
+            crossDomain: true,
+            dataType: 'json',
+            success: function (route) {
+                if ($('#lang').val() == 'en') {
+                    $('.route11Title').html(route.predictions.routeTitle);
+                    $('#route11North .title').html(route.predictions.direction.title);
+                    $('#route11North .stopTitle').html(route.predictions.stopTitle);
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arriving ';
+                    }
+                } else {
+                    $('.route11Title').html(route.predictions.routeTitle);
+                    $('#route11North .title').html('Nord - 11 Bayview vers Steeles via Sunnybrook');
+                    $('#route11North .stopTitle').html('Bayview ave à Lawrence ave est (Campus Glendon York U)');
+                    var minute0 = route.predictions.direction.prediction[0].minutes;
+                    var minuteText = minute0;
+                    if (minute0 == 0) {
+                        minuteText = 'Arriving ';
+                    }
                 }
-            } else {
-                $('.route11Title').html(route.predictions.routeTitle);
-                $('#route11North .title').html('Nord - 11 Bayview vers Steeles via Sunnybrook');
-                $('#route11North .stopTitle').html('Bayview ave à Lawrence ave est (Campus Glendon York U)');
-                var minute0 = route.predictions.direction.prediction[0].minutes;
-                var minuteText = minute0;
-                if (minute0 == 0) {
-                    minuteText = 'Arriving ';
-                }
+                $('#route11North .minutes0').html(minuteText);
+                $('#route11North .minutes1').html(route.predictions.direction.prediction[1].minutes);
+                $('#route11North .minutes2').html(route.predictions.direction.prediction[2].minutes);
             }
-            $('#route11North .minutes0').html(minuteText);
-            $('#route11North .minutes1').html(route.predictions.direction.prediction[1].minutes);
-            $('#route11North .minutes2').html(route.predictions.direction.prediction[2].minutes);
-        }
-    });
+        });
+    }
 }
 
 //WEATHER --------------------------------------------------
 
 function getWeather() {
-    var url =  config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_weather&retrieve=1&moodlewsrestformat=json';
-    $.ajax({
-        url: url,
-        crossDomain: true,
-        dataType: 'json',
-        success: function (weather) {
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_weather&retrieve=1&moodlewsrestformat=json';
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (weather) {
 
-            if ($('#lang').val() == 'en') {
-                $('#temperature').html(weather[0].temperature_en);
-                $('#condition').html(weather[0].condition_en);
-            } else {
-                $('#temperature').html(weather[0].temperature_fr);
-                $('#condition').html(weather[0].condition_fr);
+                if ($('#lang').val() == 'en') {
+                    $('#temperature').html(weather[0].temperature_en);
+                    $('#condition').html(weather[0].condition_en);
+                } else {
+                    $('#temperature').html(weather[0].temperature_fr);
+                    $('#condition').html(weather[0].condition_fr);
+                }
+                $('.meteo-icon').addClass(weather[0].icon);
             }
-            $('.meteo-icon').addClass(weather[0].icon);
-        }
-    });
+        });
+    }
 }
 
 //CURRENT DATE-------------------------------------------------
@@ -380,54 +449,56 @@ function getDateInfo(date) {
 
 //ANNOUNCEMENTS--------------------------------------------
 function getAnnouncements() {
-    
-    var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_announcements&retrieve=1&moodlewsrestformat=json';
-    $.ajax({
-        url: url,
-        crossDomain: true,
-        dataType: 'json',
-        success: function (a) {
-            var now = new Date();
-            var currentDate = now.getYear() + now.getMonth() + now.getDay();
-            if (a.length > 0 && (a[0].liFr != '' || a[0].liEn != '')) {
-                var html = '<div class="announcements">' + "\r";
-                html += '<!--' + currentDate + '-->';
-                html += '   <div class="slider">' + "\r";
-                html += '       <ul>' + "\r";
-                for (i = 0; i < a.length; i++) {
-                    if ($('#lang').val() == 'en') {
-                        html += a[i].liEn;
-                    } else {
-                        html += a[i].liFr;
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_announcements&retrieve=1&moodlewsrestformat=json';
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (a) {
+                var now = new Date();
+                var currentDate = now.getYear() + now.getMonth() + now.getDay();
+                if (a.length > 0 && (a[0].liFr != '' || a[0].liEn != '')) {
+                    var html = '<div class="announcements">' + "\r";
+                    html += '<!--' + currentDate + '-->';
+                    html += '   <div class="slider">' + "\r";
+                    html += '       <ul>' + "\r";
+                    for (i = 0; i < a.length; i++) {
+                        if ($('#lang').val() == 'en') {
+                            html += a[i].liEn;
+                        } else {
+                            html += a[i].liFr;
+                        }
                     }
-                }
 
-                html += '       </ul>' + "\r";
-                html += '       <button class="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>' + "\r";
-                html += '       <button class="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>' + "\r";
-                html += '   </div>' + "\r"; // Slider
-                html += '</div>' + "\r"; // Announcements
-                console.log('I have printing');
-                /**
-                 * Convert html to Base64 and store.
-                 * Verify stored code with new code.
-                 * If not the same refresh annoucments.
-                 * Otherwise, skip 
-                 */
-                var code = b64EncodeUnicode(html);
-                window.localStorage.setItem('announcementCode', code);
-                $('#announcementsContent').html(html);
-                var ulWidth = (a.length * 100);
-                $('.slider ul').css('width', ulWidth + '%');
-                var liWidth = (100 / a.length);
-                $('.slider li').css('width', liWidth + '%');
-                initSlider();
-            } else {
-                console.log('I have no printing');
-                $('.announcements').remove();
+                    html += '       </ul>' + "\r";
+                    html += '       <button class="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>' + "\r";
+                    html += '       <button class="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>' + "\r";
+                    html += '   </div>' + "\r"; // Slider
+                    html += '</div>' + "\r"; // Announcements
+                    console.log('I have printing');
+                    /**
+                     * Convert html to Base64 and store.
+                     * Verify stored code with new code.
+                     * If not the same refresh annoucments.
+                     * Otherwise, skip 
+                     */
+                    var code = b64EncodeUnicode(html);
+                    window.localStorage.setItem('announcementCode', code);
+                    $('#announcementsContent').html(html);
+                    var ulWidth = (a.length * 100);
+                    $('.slider ul').css('width', ulWidth + '%');
+                    var liWidth = (100 / a.length);
+                    $('.slider li').css('width', liWidth + '%');
+                    initSlider();
+                } else {
+                    console.log('I have no printing');
+                    $('.announcements').remove();
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 /**
@@ -437,55 +508,58 @@ function getAnnouncements() {
  * @returns {undefined}
  */
 function getAnnouncementsRefresh() {
-    var url =  config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_announcements&retrieve=1&moodlewsrestformat=json';
-    $.ajax({
-        url: url,
-        crossDomain: true,
-        dataType: 'json',
-        success: function (a) {
-            var now = new Date();
-            var currentDate = now.getYear() + now.getMonth() + now.getDay();
-            if (a.length > 0 && (a[0].liFr != '' || a[0].liEn != '')) {
-                var html = '<div class="announcements">' + "\r";
-                html += '<!--' + currentDate + '-->';
-                html += '   <div class="slider">' + "\r";
-                html += '       <ul>' + "\r";
-                for (i = 0; i < a.length; i++) {
-                    if ($('#lang').val() == 'en') {
-                        html += a[i].liEn;
-                    } else {
-                        html += a[i].liFr;
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_announcements&retrieve=1&moodlewsrestformat=json';
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (a) {
+                var now = new Date();
+                var currentDate = now.getYear() + now.getMonth() + now.getDay();
+                if (a.length > 0 && (a[0].liFr != '' || a[0].liEn != '')) {
+                    var html = '<div class="announcements">' + "\r";
+                    html += '<!--' + currentDate + '-->';
+                    html += '   <div class="slider">' + "\r";
+                    html += '       <ul>' + "\r";
+                    for (i = 0; i < a.length; i++) {
+                        if ($('#lang').val() == 'en') {
+                            html += a[i].liEn;
+                        } else {
+                            html += a[i].liFr;
+                        }
                     }
-                }
 
-                html += '       </ul>' + "\r";
-                html += '       <button class="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>' + "\r";
-                html += '       <button class="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>' + "\r";
-                html += '   </div>' + "\r"; // Slider
-                html += '</div>' + "\r"; // Announcements
+                    html += '       </ul>' + "\r";
+                    html += '       <button class="prev"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>' + "\r";
+                    html += '       <button class="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>' + "\r";
+                    html += '   </div>' + "\r"; // Slider
+                    html += '</div>' + "\r"; // Announcements
 
-                /**
-                 * Convert html to Base64 and store.
-                 * Verify stored code with new code.
-                 * If not the same refresh annoucments.
-                 * Otherwise, skip 
-                 */
-                var code = b64EncodeUnicode(html);
-                if (window.localStorage.getItem('announcementCode') != code) {
-                    window.localStorage.setItem('announcementCode', code);
-                    $('#announcementsContent').html(html);
-                    var ulWidth = (a.length * 100);
-                    $('.slider ul').css('width', ulWidth + '%');
-                    var liWidth = (100 / a.length);
-                    $('.slider li').css('width', liWidth + '%');
-                    initSlider();
+                    /**
+                     * Convert html to Base64 and store.
+                     * Verify stored code with new code.
+                     * If not the same refresh annoucments.
+                     * Otherwise, skip 
+                     */
+                    var code = b64EncodeUnicode(html);
+                    if (window.localStorage.getItem('announcementCode') != code) {
+                        window.localStorage.setItem('announcementCode', code);
+                        $('#announcementsContent').html(html);
+                        var ulWidth = (a.length * 100);
+                        $('.slider ul').css('width', ulWidth + '%');
+                        var liWidth = (100 / a.length);
+                        $('.slider li').css('width', liWidth + '%');
+                        initSlider();
+                    }
+                } else {
+                    console.log('I have no printing');
+                    $('.announcements').remove();
                 }
-            } else {
-                console.log('I have no printing');
-                $('.announcements').remove();
             }
-        }
-    });
+        });
+    }
 }
 
 
@@ -522,14 +596,18 @@ function addToFavorites() {
         var obj = JSON.parse(favorites);
     }
 
-    obj.push({'id': id, 'name': name, 'url': url});
+    obj.push({
+        'id': id,
+        'name': name,
+        'url': url
+    });
     var str = JSON.stringify(obj);
     //Store favorites
     localStorage.setItem('favorites', str);
 }
 
 function deleteFavorite(id) {
-//first get the object from storage
+    //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
     var obj = JSON.parse(favorites);
     delete obj[id];
@@ -541,26 +619,28 @@ function deleteFavorite(id) {
 
 //SITE AND PAGES-------------------------------------------------------
 function getSite() {
-    var url =  config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
-    $.ajax({
-        url: url,
-        crossDomain: true,
-        dataType: 'json',
-        success: function (site) {
-            var siteCode = window.localStorage.getItem('siteCode');
-            if (siteCode == null) {
-                window.localStorage.setItem('siteCode', site[0]['site']);
-            } else {
-                if (siteCode != site[0]['site']) {
+    var offLine = window.localStorage.getItem('offLine');
+    if (offLine == 0) {
+        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (site) {
+                var siteCode = window.localStorage.getItem('siteCode');
+                if (siteCode == null) {
                     window.localStorage.setItem('siteCode', site[0]['site']);
-                    siteCode = site[0]['site'];
+                } else {
+                    if (siteCode != site[0]['site']) {
+                        window.localStorage.setItem('siteCode', site[0]['site']);
+                        siteCode = site[0]['site'];
+                    }
                 }
+                var data = b64DecodeUnicode(siteCode);
+                var json = JSON.parse(data);
             }
-            var data = b64DecodeUnicode(siteCode);
-            var json = JSON.parse(data);
-            console.log(json);
-        }
-    });
+        });
+    }
 }
 
 function subCategories() {
@@ -574,7 +654,6 @@ function subCategories() {
     var json = JSON.parse(data);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
     var html = '<ul>';
-    console.log(sc);
     for (i = 0; i < sc.count; i++) {
         if ($('#lang').val() == 'en') {
             html += '<li class="menu-section">';
@@ -739,18 +818,18 @@ function detailsPage() {
 //Taken from https://developer.mozilla.org/en/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 //This i=function is required to verify if announcments have changed.
 function b64EncodeUnicode(str) {
-// first we use encodeURIComponent to get percent-encoded UTF-8,
-// then we convert the percent encodings into raw bytes which
-// can be fed into btoa.
+    // first we use encodeURIComponent to get percent-encoded UTF-8,
+    // then we convert the percent encodings into raw bytes which
+    // can be fed into btoa.
     return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g,
-            function toSolidBytes(match, p1) {
-                return String.fromCharCode('0x' + p1);
-            }));
+        function toSolidBytes(match, p1) {
+            return String.fromCharCode('0x' + p1);
+        }));
 }
 
 //Taken from https://developer.mozilla.org/en/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 function b64DecodeUnicode(str) {
-// Going backwards: from bytestream, to percent-encoding, to original string.
+    // Going backwards: from bytestream, to percent-encoding, to original string.
     return decodeURIComponent(atob(str).split('').map(function (c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));

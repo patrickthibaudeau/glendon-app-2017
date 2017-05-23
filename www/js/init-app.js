@@ -81,7 +81,8 @@ app.initEvents = function() {
     app.consoleLog(fName, "exit") ;
 } ;
 document.addEventListener("app.Ready", app.initEvents, false) ;
-
+document.addEventListener("offline", goOffLine, false);
+document.addEventListener("online", goOnline, false);
 
 
 // Just a bunch of useful debug console.log() messages.
