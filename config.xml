@@ -31,6 +31,10 @@
 <plugin name="cordova-plugin-splashscreen" spec="3.2.2"/>
 <plugin name="cordova-plugin-network-information" spec="1.2.1"/>
 <plugin name="cordova-plugin-dialogs" spec="1.2.1"/>
+<plugin name="cordova-plugin-calendar" spec="4.5.5">
+<variable name="CALENDAR_USAGE_DESCRIPTION" value=" "/>
+</plugin>
+<plugin name="cordova-plugin-compat" spec="1.0.0"/>
 <plugin name="cordova-plugin-whitelist" spec="1.2.2"/>
 <platform  name="ios">
     <!-- below requires the splash screen plugin -->

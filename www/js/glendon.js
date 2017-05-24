@@ -48,6 +48,9 @@ function startApp() {
         if (pageName == 'details') {
             detailsPage();
         }
+        if (pageName == 'events') {
+            eventsPage();
+        }
     } else {
         getSite();
         getCurrentDate();
@@ -67,6 +70,9 @@ function startApp() {
         }
         if (pageName == 'details') {
             detailsPage();
+        }
+        if (pageName == 'events') {
+            eventsPage();
         }
         //Refresh every 15 seconds
         setInterval(function () {
@@ -728,12 +734,23 @@ function pageList() {
     }
     html += '</ul>';
     $('#pageList').html(html);
+
+    $('.site-wrap').swipe({
+        allowPageScroll: "vertical",
+        //Generic swipe handler for all directions
+        swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+            if (direction == 'right') {
+                window.location = 'subcategories.html?id=' + cId;
+            }
+        }
+    });
     //Update back link
     $('#return-back-link').attr('href', 'subcategories.html?id=' + cId);
 
 }
 
 function detailsPage() {
+    var offline = window.localStorage.getItem('offLine');
     var lang = $('#lang').val();
     var l = new Language(lang);
     var cId = $('#cId').val();
@@ -768,13 +785,17 @@ function detailsPage() {
         $('.location-name').html(details.nameEn);
         $('#eventsTitle').html(l.getString('eventTitle'));
         $('#description').html(details.descriptionEn);
-        $('#location-image').attr('src', details.imageEn);
+        if (offline == 0) {
+            $('#location-image').attr('src', details.imageEn);
+        } else {
+            $('#location-image').attr('src', 'img/transparent.png');
+        }
         $('#location-email').html(details.email);
         for (e = 0; e < events['count']; e++) {
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             event += '    <li class="location-event-listing">';
-            event += '    <a href="event_bar.html"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
             event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
             event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
             event += '    </li>';
@@ -784,13 +805,17 @@ function detailsPage() {
         $('.location-name').html(details.name);
         $('#eventsTitle').html(l.getString('eventTitle'));
         $('#description').html(details.descriptionFr);
-        $('#location-image').attr('src', details.imageFr);
+        if (offline == 0) {
+            $('#location-image').attr('src', details.imageFr);
+        } else {
+            $('#location-image').attr('src', 'img/transparent.png');
+        }
         $('#location-email').html(details.email);
         for (e = 0; e < events['count']; e++) {
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             event += '    <li class="location-event-listing">';
-            event += '    <a href="event_bar.html"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
             event += '    <span>' + events[e].nameFr + '</span><br/>Où: ' + events[e].locationFr + '<br/>';
             event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
             event += '    </li>';
@@ -811,9 +836,137 @@ function detailsPage() {
     }
     var favorites = 'data-cId="' + cId + '" data-scId="' + scId + '" data-listId="' + listId + '" data-pId="' + pId + '"';
     $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>')
+        //Swipe action
+    $('.site-wrap').swipe({
+        allowPageScroll: "vertical",
+        //Generic swipe handler for all directions
+        swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+            if (direction == 'right') {
+                window.location = 'pagelist.html?cid=' + cId + '&scid=' + scId;
+            }
+
+        }
+    });
     $('#return-back-link').attr('href', 'pagelist.html?cid=' + cId + '&scid=' + scId);
 }
 
+function eventsPage() {
+    var lang = getLanguage();
+    var l = new Language(lang);
+    var cId = $('#cId').val();
+    var scId = $('#scId').val();
+    var listId = $('#listId').val();
+    var pId = $('#pId').val();
+    var eId = $('#eId').val();
+    if (cId == '') {
+        cId = getUrlVars()["cid"];
+        $('#cId').val(cId);
+    }
+    if (scId == '') {
+        scId = getUrlVars()["scid"];
+        $('#scId').val(scId);
+    }
+    if (listId == '') {
+        listId = getUrlVars()["listid"];
+        $('#listId').val(listId);
+    }
+    if (pId == '') {
+        pId = getUrlVars()["pid"];
+        $('#pId').val(pId);
+    }
+    if (eId == '') {
+        eId = getUrlVars()["eid"];
+        $('#eId').val(eId);
+    }
+    var siteCode = localStorage.getItem('siteCode');
+    var data = b64DecodeUnicode(siteCode);
+    var json = JSON.parse(data);
+    var details = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'][eId];
+    var event = '';
+    console.log(details);
+    var eventDate = getDateInfo(details.startTimeEn);
+    if (lang == 'en') {
+        $('#where').html(l.getString('where'));
+        $('#when').html(l.getString('when'));
+        $('#description').html(l.getString('description'));
+        $('#eventTitle').html(details.nameEn);
+        $('.event-description').html(details.descriptionEn);
+        //        $('#location-image').attr('src', 'appimg/' + details.imageEn);
+        $('#location-email').html(details.email);
+        $('.event-date-time').html(eventDate.currentDateEn + ' | @ ' + eventDate.timeEn);
+        //Add to calendar
+        $('.add-to-calendar').click(function () {
+            var startDate = new Date(details.startDateTime); // beware: month 0 = january, 11 = december 
+            var endDate = new Date(details.endDateTime);
+            var title = details.nameEn;
+            var eventLocation = details.locationEn;
+            var notes = details.descriptionEn;
+            var success = function (message) {
+                alert("Success: " + JSON.stringify(message));
+            };
+            var error = function (message) {
+                alert("Error: " + message);
+            };
+            window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
+        });
+
+
+    } else {
+        $('#where').html(l.getString('where'));
+        $('#when').html(l.getString('when'));
+        $('#description').html(l.getString('description'));
+        $('#eventTitle').html(details.nameFr);
+        $('.event-description').html(details.descriptionFr);
+        //        $('#location-image').attr('src', 'appimg/' + details.imageEn);
+        $('#location-email').html(details.email);
+        $('.event-date-time').html(eventDate.currentDateFr + ' | @ ' + eventDate.timeFr);
+        //Add to calendar
+        $('.add-to-calendar').click(function () {
+            var startTime = details.startDateTime;
+            var startDate = new Date(details.startDateTime); // beware: month 0 = january, 11 = december 
+            var endDate = new Date(details.endDateTime);
+            var title = details.nameFr;
+            var eventLocation = details.locationFr;
+            var notes = details.descriptionFr;
+            var success = function (message) {
+                alert("Success: " + JSON.stringify(message));
+            };
+            var error = function (message) {
+                alert("Error: " + message);
+            };
+            window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
+        });
+
+    }
+
+    $('#eventsList').html(event);
+
+
+    if (details.instagram != '') {
+        $('#instagram').html('<a href="' + details.instagram + '"><i class="fa fa-instagram  contact-info-icon" aria-hidden="true"></i></a>')
+    }
+    if (details.facebook != '') {
+        $('#facebook').html('<a href="' + details.facebook + '"><i class="fa fa-facebook-square  contact-info-icon" aria-hidden="true"></i></a>')
+    }
+    if (details.twitter != '') {
+        $('#twitter').html('<a href="' + details.twitter + '"><i class="fa fa-twitter-square  contact-info-icon" aria-hidden="true"></i></a>')
+    }
+    //Swipe action
+    $('.site-wrap').swipe({
+        allowPageScroll: "vertical",
+        //Generic swipe handler for all directions
+        swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+            if (direction == 'right') {
+                window.location = 'details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId;
+            }
+
+
+        }
+    });
+    var favorites = 'data-cId="' + cId + '" data-scId="' + scId + '" data-listId="' + listId + '" data-pId="' + pId + '"';
+    $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>')
+    $('#return-back-link').attr('href', 'details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
+}
 //OTHER----------------------------------------------------------------
 //Taken from https://developer.mozilla.org/en/docs/Web/API/WindowBase64/Base64_encoding_and_decoding
 //This i=function is required to verify if announcments have changed.

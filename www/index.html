@@ -3,6 +3,7 @@
 <!--
   * Please see the included README.md file for license terms and conditions.
   -->
+
 <head>
     <title>Blank Cordova Mobile App Template</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
@@ -14,23 +15,43 @@
     <style>
         /* following two viewport lines are equivalent to meta viewport statement above, and is needed for Windows */
         /* see http://www.quirksmode.org/blog/archives/2014/05/html5_dev_conf.html and http://dev.w3.org/csswg/css-device-adapt/ */
-        @-ms-viewport { width: 100vw ; min-zoom: 100% ; zoom: 100% ; }          @viewport { width: 100vw ; min-zoom: 100% zoom: 100% ; }
-        @-ms-viewport { user-zoom: fixed ; min-zoom: 100% ; }                   @viewport { user-zoom: fixed ; min-zoom: 100% ; }
+        
+        @-ms-viewport {
+            width: 100vw;
+            min-zoom: 100%;
+            zoom: 100%;
+        }
+        
+        @viewport {
+            width: 100vw;
+            min-zoom: 100% zoom: 100%;
+        }
+        
+        @-ms-viewport {
+            user-zoom: fixed;
+            min-zoom: 100%;
+        }
+        
+        @viewport {
+            user-zoom: fixed;
+            min-zoom: 100%;
+        }
         /*@-ms-viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }   @viewport { user-zoom: zoom ; min-zoom: 100% ; max-zoom: 200% ; }*/
     </style>
 
     <!--Styles-->
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet"> 
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <!--Javascripts-->
-        <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/config.js"></script>
-        <script src="js/lang.fr.js"></script>
-        <script src="js/lang.en.js"></script>
-        <script src="js/glendon.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--Javascripts-->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/lang.fr.js"></script>
+    <script src="js/lang.en.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/glendon.js"></script>
 
     <link rel="stylesheet" href="css/app.css">
 </head>
@@ -58,155 +79,174 @@
     <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
     <!-- Place your remote debugging weinre script URL here, if it does not work above. -->
     <input type="hidden" id="lang" value="fr">
-        <div class="menu-wrapping">            
-            <ul class="navigation">
-                <li class="nav-item"><a href="#"><span id="home"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="about"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="contact"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="myTimeTable"></span></a></li>
+    <div class="menu-wrapping">
+        <ul class="navigation">
+            <li class="nav-item"><a href="#"><span id="home"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="about"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="contact"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="myTimeTable"></span></a></li>
+        </ul>
+    </div>
+
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger"></label>
+
+    <div class="site-wrap">
+        <div class="logo-banner">
+            <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
+            <img src="img/Glendon_College_logo.png" id="logo-glendon" />
+        </div>
+        <nav class='main-menu'>
+            <ul>
+                <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                <li><a href="listingspage.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
+                <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
             </ul>
+        </nav>
+
+        <div class="info-banner">
+            <div class="daily-date">
+                <h1><span id="dayName"></span></h1><span id="currentDate"></span>
+            </div>
+            <div class="meteo">
+                <h1><span id="temperature"></span><i class="wi meteo-icon" aria-hidden="true"></i></h1>
+                <span id="condition"></span>
+            </div>
         </div>
 
-        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
-        <label for="nav-trigger"></label>
+        <div id="announcementsContent"></div>
 
-        <div class="site-wrap">
-            <div class="logo-banner">
-                <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
-                <img src="img/Glendon_College_logo.png" id="logo-glendon" />
-            </div>
-            <nav class='main-menu'>
-                <ul>
-                    <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-                    <li><a href="listingspage.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
-                    <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
-                    <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
-                    <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
-                </ul>
-            </nav>
+        <ul class="nav nav-pills blue-title">
+            <li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>
+            <li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>
+            <a href="javascript:void(0);" onClick="startApp()"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
+        </ul>
 
-            <div class="info-banner">
-                <div class="daily-date">
-                    <h1><span id="dayName"></span></h1><span id="currentDate"></span>
+        <div class="tab-content">
+            <div id="shuttleTab" class="tab-pane fade in active">
+                <div class="shuttle-schedule">
+                    <h1 class="direction-title">Glendon > Keele</h1>
+                    <ul class='to-keele'>
+                        <li>
+                            <div id="bus-time">
+                                2 h 20 min
+                                <br/><span>7:00 am</span>
+                            </div>
+                            <div id="direction">
+                                <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
+                                <span id="destination-indicator">Glendon York Hall<br/>toward Keele Vari Hall</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="bus-time">
+                                2 h 20 min
+                                <br/><span>7:00 am</span>
+                            </div>
+                            <div id="direction">
+                                <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
+                                <span id="destination-indicator">Glendon York Hall<br/>toward Keele Vari Hall</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="bus-time">
+                                2 h 20 min
+                                <br/><span>7:00 am</span>
+                            </div>
+                            <div id="direction">
+                                <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
+                                <span id="destination-indicator">Glendon York Hall<br/>toward Keele Vari Hall</span>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <h1 class="direction-title">Keele > Glendon</h1>
+                    <ul class='to-glendon'>
+                        <li>
+                            <div id="bus-time">
+                                2 h 20 min
+                                <br/><span>7:00 am</span>
+                            </div>
+                            <div id="direction">
+                                <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
+                                <span id="destination-indicator">Keele Vari Hall toward<br/>Glendon York Hall</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="bus-time">
+                                2 h 20 min
+                                <br/><span>7:00 am</span>
+                            </div>
+                            <div id="direction">
+                                <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
+                                <span id="destination-indicator">Keele Vari Hall toward<br/>Glendon York Hall</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="bus-time">
+                                2 h 20 min
+                                <br/><span>7:00 am</span>
+                            </div>
+                            <div id="direction">
+                                <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
+                                <span id="destination-indicator">Keele Vari Hall toward<br/>Glendon York Hall</span>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="meteo">
-                    <h1><span id="temperature"></span><i class="wi meteo-icon" aria-hidden="true"></i></h1>
-                    <span id="condition"></span>
-                </div>   
             </div>
+            <!--ShuttleTab-->
 
-            <div id="announcementsContent"></div>
-
-            <ul class="nav nav-pills blue-title">
-                <li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>
-                <li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>
-                <a href="javascript:void(0);" onClick="startApp()"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
-            </ul>
-
-            <div class="tab-content">
-                <div id="shuttleTab" class="tab-pane fade in active">
-                    <div class="shuttle-schedule">
-                        <h1 class="direction-title">Glendon > Keele</h1>
-                        <ul class='to-keele'>
-                            <li>
-                                <div id="bus-time">
-                                    2 h 20 min<br/><span>7:00 am</span>
-                                </div>
-                                <div id="direction">
-                                    <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
-                                    <span id="destination-indicator">Glendon York Hall<br/>toward Keele Vari Hall</span>  
-                                </div>
-                            </li>
-                            <li>
-                                <div id="bus-time">
-                                    2 h 20 min<br/><span>7:00 am</span>
-                                </div>
-                                <div id="direction">
-                                    <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
-                                    <span id="destination-indicator">Glendon York Hall<br/>toward Keele Vari Hall</span>  
-                                </div>
-                            </li><li>
-                                <div id="bus-time">
-                                    2 h 20 min<br/><span>7:00 am</span>
-                                </div>
-                                <div id="direction">
-                                    <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
-                                    <span id="destination-indicator">Glendon York Hall<br/>toward Keele Vari Hall</span>  
-                                </div>
-                            </li>
-                        </ul>
-
-                        <h1 class="direction-title">Keele > Glendon</h1>
-                        <ul class='to-glendon'>
-                            <li>
-                                <div id="bus-time">
-                                    2 h 20 min<br/><span>7:00 am</span>
-                                </div>
-                                <div id="direction">
-                                    <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
-                                    <span id="destination-indicator">Keele Vari Hall toward<br/>Glendon York Hall</span>  
-                                </div>
-                            </li>
-                            <li>
-                                <div id="bus-time">
-                                    2 h 20 min<br/><span>7:00 am</span>
-                                </div>
-                                <div id="direction">
-                                    <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
-                                    <span id="destination-indicator">Keele Vari Hall toward<br/>Glendon York Hall</span>  
-                                </div>
-                            </li>
-                            <li>
-                                <div id="bus-time">
-                                    2 h 20 min<br/><span>7:00 am</span>
-                                </div>
-                                <div id="direction">
-                                    <i class="fa fa-calendar-plus-o shuttle-calendar" aria-hidden="true"></i>
-                                    <span id="destination-indicator">Keele Vari Hall toward<br/>Glendon York Hall</span>  
-                                </div>
-                            </li>
-                        </ul>
+            <div id="ttcTab" class="tab-pane fade">
+                <div class="route">
+                    <div class="routeHeader">
+                        <span class="route124Title direction-title"></span>
                     </div>
-                </div><!--ShuttleTab-->
-
-                <div id="ttcTab" class="tab-pane fade">
-                    <div  class="route">
-                        <div class="routeHeader">
-                            <span class="route124Title direction-title"></span>
+                    <div class="routeContent">
+                        <div id="route124West" class="routeOne">
+                            <span class="route-subtitle to">To:</span><span class="title"></span>
+                            <br>
+                            <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span>
+                            <br>
+                            <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
                         </div>
-                        <div class="routeContent">
-                            <div id="route124West" class="routeOne">
-                                <span class="route-subtitle to">To:</span><span class="title"></span><br>
-                                <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span><br>
-                                <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
-                            </div>
-                            <div id="route124East" class="routeTwo">
-                                <span class="route-subtitle to">To:</span><span class="title"></span><br>
-                                <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span><br>
-                                <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
-                            </div>
+                        <div id="route124East" class="routeTwo">
+                            <span class="route-subtitle to">To:</span><span class="title"></span>
+                            <br>
+                            <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span>
+                            <br>
+                            <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
                         </div>
                     </div>
-                    <div  class="route">
-                        <div class="routeHeader">
-                            <span class="route11Title direction-title"></span>
+                </div>
+                <div class="route">
+                    <div class="routeHeader">
+                        <span class="route11Title direction-title"></span>
+                    </div>
+                    <div class="routeContent">
+                        <div id="route11North" class="routeOne">
+                            <span class="route-subtitle to">To:</span><span class="title"></span>
+                            <br>
+                            <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span>
+                            <br>
+                            <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
                         </div>
-                        <div class="routeContent">
-                            <div id="route11North" class="routeOne">
-                                <span class="route-subtitle to">To:</span><span class="title"></span><br>
-                                <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span><br>
-                                <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
-                            </div>
-                            <div id="route11South" class="routeTwo">
-                                <span class="route-subtitle to">To:</span><span class="title"></span><br>
-                                <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span><br>
-                                <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
-                            </div>
+                        <div id="route11South" class="routeTwo">
+                            <span class="route-subtitle to">To:</span><span class="title"></span>
+                            <br>
+                            <span class="route-subtitle stop">Stop:</span><span class="stopTitle"></span>
+                            <br>
+                            <span id="next-ttc-time"><span class="minutes0"></span> & <span class="minutes1"></span> minutes</span>
                         </div>
                     </div>
-                </div><!--TTC Tab-->
-            </div><!--Tab content-->
-        </div><!--Site wrap-->
+                </div>
+            </div>
+            <!--TTC Tab-->
+        </div>
+        <!--Tab content-->
+    </div>
+    <!--Site wrap-->
 </body>
 
 <!--

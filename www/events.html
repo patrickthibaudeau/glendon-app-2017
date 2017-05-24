@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+
+<head>
+    <title>events</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Glendon YorkU">
+    <meta name="description" content="Student Application">
+    <!--Styles-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/atc-base.css">
+    <link rel="stylesheet" href="css/atc-style-blue.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--Javascripts-->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/lang.fr.js"></script>
+    <script src="js/lang.en.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <!--<script src="js/jquery.addtocal.js"></script>-->
+    <script src="js/glendon.js"></script>
+</head>
+
+<body>
+    <input type="hidden" id="lang" value="fr">
+    <div class="menu-wrapping">
+        <ul class="navigation">
+            <li class="nav-item"><a href="#"><span id="home"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="about"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="contact"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="myTimeTable"></span></a></li>
+        </ul>
+    </div>
+
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger"></label>
+
+    <div class="site-wrap">
+        <div class="logo-banner">
+            <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
+            <img src="img/Glendon_College_logo.png" id="logo-glendon" />
+        </div>
+        <nav class='main-menu'>
+            <ul>
+                <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                <li><a href="listingspage.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
+                <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
+            </ul>
+        </nav>
+        <input type="hidden" id="cId" value="">
+        <input type="hidden" id="scId" value="">
+        <input type="hidden" id="listId" value="">
+        <input type="hidden" id="pId" value="">
+        <input type="hidden" id="eId" value="">
+        <div class="sub-menu-listing">
+            <a id="return-back-link" href="#"> </a>
+            <!-- <p id="go-back-text">BACK</p> -->
+            <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>
+
+            <h1 class="event-title"><span id="eventTitle"></span></h1>
+            <h1 class="event-info-title"><span id="where"></span></h1>
+
+            <div class="location-description">
+                <i class="fa fa-heart location-heart" aria-hidden="true"></i>
+                <p class="location-text"> <img src="" alt="logo" id="location-image" />
+                    <span class="location-name"></span>
+                    <br/>
+                    <br/>
+                    <span id="locataionAddress"></span>
+                    <br/>
+                    <br/>
+                </p>
+            </div>
+            <div class="location-contact-info">
+                <a href="" id="location-email"></a>
+                <!--<a href=""><i class="fa fa-twitter-square  contact-info-icon" aria-hidden="true"><span> |</span></i></a>
+                    <a href=""><i class="fa fa-instagram  contact-info-icon" aria-hidden="true"></i></a>
+                    <a href=""><i class="fa fa-facebook-square contact-info-icon" aria-hidden="true"></i></a>-->
+            </div>
+            <h1 class="event-info-title"><span id="when"></span></h1>
+            <h1 class="event-date-time"></h1>
+            <h1 class="event-info-title"><span id="description"></span></h1>
+            <p class="event-description"></p>
+            <div class="add-to-calendar-wrap">
+                <a href="" class="add-to-calendar"><i class="fa fa-calendar-plus-o event-calendar-icon" aria-hidden="true"></i><i class="fa fa-angle-right add-to-calendar-arrow" aria-hidden="true"></i></a>
+            </div>
+
+        </div>
+    </div>
+    </div>
+    <!--Site wrap-->
+</body>
+
+</html>
