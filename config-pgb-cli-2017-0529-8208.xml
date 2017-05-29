@@ -73,14 +73,6 @@
 <preference name="Fullscreen" value="false"/>
 <preference name="Orientation" value="portrait"/>
 </platform>
-<splash platform="android" src="package-assets/screen/android/LDPI 320 - 426.png" density="ldpi" width="320" height="426" orientation="portrait"/>
-<splash platform="android" src="package-assets/screen/android/MDPI 320 - 470.png" density="mdpi" width="320" height="470" orientation="portrait"/>
-<splash platform="android" src="package-assets/screen/android/HDPI 480 - 640.png" density="hdpi" width="480" height="640" orientation="portrait"/>
-<splash platform="android" src="package-assets/screen/android/XHDPI 720 - 960.png" density="xhdpi" width="720" height="960" orientation="portrait"/>
-<icon platform="android" src="package-assets/icon/android/icon-36-ldpi.png" density="ldpi" width="36" height="36"/>
-<icon platform="android" src="package-assets/icon/android/icon-48-mdpi.png" density="mdpi" width="48" height="48"/>
-<icon platform="android" src="package-assets/icon/android/icon-72-hdpi.png" density="hdpi" width="72" height="72"/>
-<icon platform="android" src="package-assets/icon/android/icon-96-xhdpi.png" density="xhdpi" width="96" height="96"/>
 <config-file platform="android" parent="/manifest/application" mode="merge"> 
     <activity android:launchMode="singleTop" />
 </config-file>

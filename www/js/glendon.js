@@ -31,7 +31,7 @@ function goOnline() {
     startApp(0);
 }
 
-function startApp(ignoreVersion) {
+function startApp(ignore) {
     var pageName = getPageName();
     var offLine = window.localStorage.getItem('offLine');
     getStrings(); //Provides strings for the app
@@ -51,7 +51,7 @@ function startApp(ignoreVersion) {
             eventsPage();
         }
     } else {
-        getSite(ignoreVersion);
+        getSite(ignore);
         if (pageName == 'GlendonApp') {
             getCurrentDate();
             initSlider();
@@ -165,7 +165,7 @@ function navPills() {
     if (offLine == 0) {
         html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
-        html += '<a href="javascript:void(0);" onClick="startApp()"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
+        html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
     } else {
         if (window.localStorage.getItem('lang') == 'fr') {
             html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Hors ligne</span></a></li>';
@@ -485,7 +485,6 @@ function getAnnouncements() {
                     html += '       <button class="next"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>' + "\r";
                     html += '   </div>' + "\r"; // Slider
                     html += '</div>' + "\r"; // Announcements
-                    console.log('I have printing');
                     /**
                      * Convert html to Base64 and store.
                      * Verify stored code with new code.
@@ -502,7 +501,6 @@ function getAnnouncements() {
                     initSlider();
                 } else {
                     console.log('I have no printing');
-                    $('.announcements').remove();
                 }
             }
         });
@@ -633,15 +631,12 @@ function getSite(ignoreVersion) {
     var now = new Date();
     var version = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
     var siteVersion = window.localStorage.getItem('siteVersion');
-    if (siteVersion == null || siteVersion != version) {
-        //Store the site version
-        siteVersion = window.localStorage.setItem('siteVersion', version);
-        siteVersion = version;
-    }
+
     //Only update if online
     if (offLine == 0) {
         //Only update if version is ignored OR on a new day
-        if (ignoreVersion == 1 || siteVersion != version) {
+        if (ignoreVersion == 1 || siteVersion == null || siteVersion != version) {
+            console.log('I am getting a new versioin');
             var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
             $.ajax({
                 url: url,
@@ -659,6 +654,8 @@ function getSite(ignoreVersion) {
                     }
                     var data = b64DecodeUnicode(siteCode);
                     var json = JSON.parse(data);
+                    siteVersion = window.localStorage.setItem('siteVersion', version);
+                    siteVersion = version;
                 }
             });
         }
