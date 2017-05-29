@@ -4,7 +4,7 @@
 
 $(document).ready(function () {
     $('#lang').val(getLanguage());
-    startApp();
+    startApp(0);
     $('#langue-toggle').click(function () {
         var lang = $('#lang').val();
         if (lang == 'fr') {
@@ -16,7 +16,7 @@ $(document).ready(function () {
             //Update local storage variable
             window.localStorage.setItem('lang', 'fr');
         }
-        startApp();
+        startApp(0);
     });
 });
 
@@ -28,16 +28,15 @@ function goOffLine() {
 
 function goOnline() {
     window.localStorage.setItem('offLine', 0);
-    startApp();
+    startApp(0);
 }
 
-function startApp() {
+function startApp(ignoreVersion) {
     var pageName = getPageName();
     var offLine = window.localStorage.getItem('offLine');
     getStrings(); //Provides strings for the app
     if (offLine == 1) {
         getCurrentDate();
-        initSlider();
         navPills();
         if (pageName == 'subcategories') {
             subCategories();
@@ -52,16 +51,38 @@ function startApp() {
             eventsPage();
         }
     } else {
-        getSite();
-        getCurrentDate();
-        initSlider();
-        getWeather();
-        getAnnouncements();
-        navPills();
-        route124East();
-        route124West();
-        route11South();
-        route11North();
+        getSite(ignoreVersion);
+        if (pageName == 'GlendonApp') {
+            getCurrentDate();
+            initSlider();
+            getWeather();
+            getAnnouncements();
+            navPills();
+            route124East();
+            route124West();
+            route11South();
+            route11North();
+            //Refresh every 10 seconds
+            setInterval(function () {
+                route124East();
+                route124West();
+                route11South();
+                route11North();
+                getAnnouncementsRefresh();
+            }, 10000);
+            //Refresh every 5 seconds
+            setInterval(function () {
+                getAnnouncementsRefresh();
+            }, 5000);
+            //Refresh weather every hour
+            setInterval(function () {
+                getWeather();
+            }, 3600000);
+            //Refresh date every hour
+            setInterval(function () {
+                getCurrentDate();
+            }, 3600000);
+        }
         if (pageName == 'subcategories') {
             subCategories();
         }
@@ -74,26 +95,7 @@ function startApp() {
         if (pageName == 'events') {
             eventsPage();
         }
-        //Refresh every 15 seconds
-        setInterval(function () {
-            route124East();
-            route124West();
-            route11South();
-            route11North();
-            getAnnouncementsRefresh();
-        }, 10000);
-        //Refresh every 5 seconds
-        setInterval(function () {
-            getAnnouncementsRefresh();
-        }, 5000);
-        //Refresh weather every 15 minutes
-        setInterval(function () {
-            getWeather();
-        }, 150000);
-        //Refresh date every hour
-        setInterval(function () {
-            getCurrentDate();
-        }, 3600000);
+
     }
 }
 
@@ -624,28 +626,42 @@ function deleteFavorite(id) {
 }
 
 //SITE AND PAGES-------------------------------------------------------
-function getSite() {
+function getSite(ignoreVersion) {
     var offLine = window.localStorage.getItem('offLine');
+    //Create site version. This will prevent the site from being pulled constantly reducing data transfers.
+    //The site data will only be updated once per day unless ignoreVersion is set
+    var now = new Date();
+    var version = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
+    var siteVersion = window.localStorage.getItem('siteVersion');
+    if (siteVersion == null || siteVersion != version) {
+        //Store the site version
+        siteVersion = window.localStorage.setItem('siteVersion', version);
+        siteVersion = version;
+    }
+    //Only update if online
     if (offLine == 0) {
-        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
-        $.ajax({
-            url: url,
-            crossDomain: true,
-            dataType: 'json',
-            success: function (site) {
-                var siteCode = window.localStorage.getItem('siteCode');
-                if (siteCode == null) {
-                    window.localStorage.setItem('siteCode', site[0]['site']);
-                } else {
-                    if (siteCode != site[0]['site']) {
+        //Only update if version is ignored OR on a new day
+        if (ignoreVersion == 1 || siteVersion != version) {
+            var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
+            $.ajax({
+                url: url,
+                crossDomain: true,
+                dataType: 'json',
+                success: function (site) {
+                    var siteCode = window.localStorage.getItem('siteCode');
+                    if (siteCode == null) {
                         window.localStorage.setItem('siteCode', site[0]['site']);
-                        siteCode = site[0]['site'];
+                    } else {
+                        if (siteCode != site[0]['site']) {
+                            window.localStorage.setItem('siteCode', site[0]['site']);
+                            siteCode = site[0]['site'];
+                        }
                     }
+                    var data = b64DecodeUnicode(siteCode);
+                    var json = JSON.parse(data);
                 }
-                var data = b64DecodeUnicode(siteCode);
-                var json = JSON.parse(data);
-            }
-        });
+            });
+        }
     }
 }
 
@@ -907,7 +923,7 @@ function eventsPage() {
             var error = function (message) {
                 alert("Error: " + message);
             };
-            window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
+            window.plugins.calendar.createEvent(title, eventLocation, notes, startDate, endDate, success, error);
         });
 
 
@@ -934,7 +950,7 @@ function eventsPage() {
             var error = function (message) {
                 alert("Error: " + message);
             };
-            window.plugins.calendar.createEvent(title,eventLocation,notes,startDate,endDate,success,error);
+            window.plugins.calendar.createEvent(title, eventLocation, notes, startDate, endDate, success, error);
         });
 
     }
