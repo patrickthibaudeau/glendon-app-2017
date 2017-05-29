@@ -896,7 +896,7 @@ function eventsPage() {
     var json = JSON.parse(data);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'][eId];
     var event = '';
-    console.log(details);
+ 
     var eventDate = getDateInfo(details.startTimeEn);
     if (lang == 'en') {
         $('#where').html(l.getString('where'));
@@ -920,10 +920,9 @@ function eventsPage() {
             var error = function (message) {
                 alert("Error: " + message);
             };
+            console.log(startDate);
             window.plugins.calendar.createEvent(title, eventLocation, notes, startDate, endDate, success, error);
         });
-
-
     } else {
         $('#where').html(l.getString('where'));
         $('#when').html(l.getString('when'));
@@ -947,6 +946,7 @@ function eventsPage() {
             var error = function (message) {
                 alert("Error: " + message);
             };
+            console.log(startDate);
             window.plugins.calendar.createEvent(title, eventLocation, notes, startDate, endDate, success, error);
         });
 
