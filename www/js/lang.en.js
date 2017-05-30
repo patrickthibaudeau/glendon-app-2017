@@ -8,4 +8,5 @@ var en = {
     eventTitle:'Events',
     currentlyOffLine:'Currently offline',
     towards:'towards',
+    myFavorites: 'My favorites',
 }

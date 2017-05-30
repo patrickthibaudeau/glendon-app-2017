@@ -50,6 +50,9 @@ function startApp(ignore) {
         if (pageName == 'events') {
             eventsPage();
         }
+        if (pageName == 'favorites') {
+            getMyFavorites();
+        }
     } else {
         getSite(ignore);
         if (pageName == 'GlendonApp') {
@@ -98,7 +101,9 @@ function startApp(ignore) {
         if (pageName == 'events') {
             eventsPage();
         }
-
+        if (pageName == 'favorites') {
+            getMyFavorites();
+        }
     }
 }
 
@@ -397,7 +402,11 @@ function getGlendonShuttle() {
                         if (shuttle[i].remaininghour != "") {
                             var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
                         } else {
-                            var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            if (shuttle[i].remainingminutes != 0) {
+                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            } else {
+                                var timeRemaining = 'Leaving';
+                            }
                         }
                         html += '<li>';
                         html += '	<div id="bus-time">';
@@ -408,7 +417,7 @@ function getGlendonShuttle() {
                         html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
                         html += '	</div>';
                         html += '</li>';
-                        
+
                         if (i === 3) {
                             break;
                         }
@@ -419,7 +428,11 @@ function getGlendonShuttle() {
                         if (shuttle[i].remaininghour != "") {
                             var timeRemaining = shuttle[i].remaininghour + ' h ' + shuttle[i].remainingminutes + ' min';
                         } else {
-                            var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            if (shuttle[i].remainingminutes != 0) {
+                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            } else {
+                                var timeRemaining = 'Départ';
+                            }
                         }
                         html += '<li>';
                         html += '	<div id="bus-time">';
@@ -430,7 +443,7 @@ function getGlendonShuttle() {
                         html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
                         html += '	</div>';
                         html += '</li>';
-                        
+
                         if (i === 3) {
                             break;
                         }
@@ -461,7 +474,11 @@ function getKeeleShuttle() {
                         if (shuttle[i].remaininghour != "") {
                             var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
                         } else {
-                            var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            if (shuttle[i].remainingminutes != 0) {
+                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            } else {
+                                var timeRemaining = 'Leaving';
+                            }
                         }
                         html += '<li>';
                         html += '	<div id="bus-time">';
@@ -472,7 +489,7 @@ function getKeeleShuttle() {
                         html += '		<span id="destination-indicator">Keele Vari Hall<br/>' + l.getString('towards') + ' Glendon York Hall</span>';
                         html += '	</div>';
                         html += '</li>';
-                        
+
                         if (i === 3) {
                             break;
                         }
@@ -483,7 +500,11 @@ function getKeeleShuttle() {
                         if (shuttle[i].remaininghour != "") {
                             var timeRemaining = shuttle[i].remaininghour + ' h ' + shuttle[i].remainingminutes + ' min';
                         } else {
-                            var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            if (shuttle[i].remainingminutes != 0) {
+                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                            } else {
+                                var timeRemaining = 'Départ';
+                            }
                         }
                         html += '<li>';
                         html += '	<div id="bus-time">';
@@ -494,7 +515,7 @@ function getKeeleShuttle() {
                         html += '		<span id="destination-indicator">Keele Vari Hall<br/>' + l.getString('towards') + ' Glendon York Halll</span>';
                         html += '	</div>';
                         html += '</li>';
-                        
+
                         if (i === 3) {
                             break;
                         }
@@ -702,20 +723,36 @@ function getAnnouncementsRefresh() {
 //FAVORITES-----------------------------------------------
 
 function getMyFavorites() {
+
+    var lang = getLanguage();
+    var l = new Language(lang);
     var storage = window.localStorage.getItem('favorites');
-    var favorites = JSON.parse(storage);
-    console.log(favorites);
-    var html = '<ul>';
-    for (i = 0; i < favorites.length; i++) {
-        html += '<li class="menu-section">';
-        html += '<i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
-        html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i].id + ')" aria-hidden="true"></i>';
-        html += '<a href="' + favorites[i].url + '">' + favorites[i].name + '</a>';
-        html += '</li>';
+    if (storage != "") {
+        var favorites = JSON.parse(storage);
+        //    var favorites = JSON.parse(storage);
+        console.log(favorites);
+        var html = '<ul>';
+        if (favorites != null) {
+
+            for (i = 0; i < favorites.length; i++) {
+                if (i > 0) {
+                    html += '<li class="menu-section">';
+                    html += '<i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
+                    html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
+                    html += '<a href="' + favorites[i].url + '">' + favorites[i].name + '</a>';
+                    html += '</li>';
+                }
+            }
+        }
+        html += '</ul>';
+        $('#favorites').html(html);
     }
-    html += '</ul>';
-    $('#favorites').html(html);
-    console.log(obj);
+    if (lang == 'en') {
+        $('#myFavorites').html(l.getString('myFavorites'));
+    } else {
+        $('#myFavorites').html(l.getString('myFavorites'));
+    }
+
 }
 
 function addToFavorites() {
@@ -724,29 +761,37 @@ function addToFavorites() {
     var url = $('#addToFavorites').data('url');
     //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
-    console.log(favorites);
-    if (favorites == null) {
-        obj = ['favorites'];
-    } else {
+
+    console.log(id + ' name: ' + name + ' url: ' + url);
+    console.log('favorites: ' + favorites);
+    if (favorites != "") {
         var obj = JSON.parse(favorites);
+    } else {
+        obj = ['favorites'];
     }
 
+    console.log(obj);
     obj.push({
-        'id': id,
-        'name': name,
-        'url': url
+        id: id,
+        name: name,
+        url: url
     });
+
+
     var str = JSON.stringify(obj);
-    //Store favorites
-    localStorage.setItem('favorites', str);
+    console.log
+        //Store favorites
+    window.localStorage.setItem('favorites', str);
 }
 
 function deleteFavorite(id) {
     //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
     var obj = JSON.parse(favorites);
-    delete obj[id];
-    var str = JSON.stringify(obj);
+    items = $.grep(obj, function (obj) {
+        return obj.id !== id;
+    });
+    var str = JSON.stringify(items);
     //Store favorites
     localStorage.setItem('favorites', str);
     return getMyFavorites();
@@ -943,6 +988,8 @@ function detailsPage() {
             event += '    </li>';
         }
         event += '</ul>';
+        var favorites = 'data-url="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '" data-name="' + details.nameFr + '" data-id="' + pId + '"';
+        $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>');
     } else {
         $('.location-name').html(details.name);
         $('#eventsTitle').html(l.getString('eventTitle'));
@@ -963,6 +1010,8 @@ function detailsPage() {
             event += '    </li>';
         }
         event += '</ul>';
+        var favorites = 'data-url="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '" data-name="' + details.nameFr + '" data-id="' + pId + '"';
+        $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>');
     }
 
     $('#eventsList').html(event);
@@ -976,9 +1025,8 @@ function detailsPage() {
     if (details.twitter != '') {
         $('#twitter').html('<a href="' + details.twitter + '"><i class="fa fa-twitter-square  contact-info-icon" aria-hidden="true"></i></a>')
     }
-    var favorites = 'data-cId="' + cId + '" data-scId="' + scId + '" data-listId="' + listId + '" data-pId="' + pId + '"';
-    $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>')
-        //Swipe action
+
+    //Swipe action
     $('.site-wrap').swipe({
         allowPageScroll: "vertical",
         //Generic swipe handler for all directions

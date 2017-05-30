@@ -8,4 +8,5 @@ var fr = {
     eventTitle:'Événements',
     currentlyOffLine:'Hors ligne',
     towards: 'vers',
+    myFavorites: 'Mes favoris',
 }
