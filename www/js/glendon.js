@@ -62,14 +62,17 @@ function startApp(ignore) {
             route124West();
             route11South();
             route11North();
-            //Refresh every 10 seconds
+            getGlendonShuttle();
+            getKeeleShuttle();
+            //Refresh every minute
             setInterval(function () {
                 route124East();
                 route124West();
                 route11South();
                 route11North();
-                getAnnouncementsRefresh();
-            }, 10000);
+                getGlendonShuttle();
+                getKeeleShuttle();
+            }, 60000);
             //Refresh every 5 seconds
             setInterval(function () {
                 getAnnouncementsRefresh();
@@ -371,6 +374,125 @@ function route11North() {
                 $('#route11North .minutes0').html(minuteText);
                 $('#route11North .minutes1').html(route.predictions.direction.prediction[1].minutes);
                 $('#route11North .minutes2').html(route.predictions.direction.prediction[2].minutes);
+            }
+        });
+    }
+}
+//GLENDON SHUTTLE SERVICE-----------------------------------
+function getGlendonShuttle() {
+    var offLine = window.localStorage.getItem('offLine');
+    var lang = getLanguage();
+    var l = new Language(lang);
+    if (offLine == 0) { 
+        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_shuttle&campus=glendon&moodlewsrestformat=json';
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (shuttle) {
+                console.log(shuttle);
+                if ($('#lang').val() == 'en') {
+                    if (shuttle[0].remaininghour != "") {
+                        $('#glRemaining1').html(shuttle[0].remaininghour + ':' + shuttle[0].remainingminutes + ' min');
+                    } else {
+                        $('#glRemaining1').html(shuttle[0].remainingminutes + ' min');
+                    }
+                    if (shuttle[1].remaininghour != "") {
+                        $('#glRemaining2').html(shuttle[1].remaininghour + ':' + shuttle[1].remainingminutes + ' min');
+                    } else {
+                        $('#glRemaining2').html(shuttle[1].remainingminutes + ' min');
+                    }
+                    if (shuttle[2].remaininghour != "") {
+                        $('#glRemaining3').html(shuttle[2].remaininghour + ':' + shuttle[2].remainingminutes + ' min');
+                    } else {
+                        $('#glRemaining3').html(shuttle[2].remainingminutes + ' min');
+                    }
+                    $('#glTime1').html(shuttle[0].departurehour + ':' + shuttle[0].departureminute);
+                    $('#glTime2').html(shuttle[1].departurehour + ':' + shuttle[1].departureminute);
+                    $('#glTime3').html(shuttle[2].departurehour + ':' + shuttle[2].departureminute);
+                    $('.towards').html(l.getString('towards'));
+                } else {
+                    if (shuttle[0].remaininghour != "") {
+                        $('#glRemaining1').html(shuttle[0].remaininghour + ' h ' + shuttle[0].remainingminutes + ' min');
+                    } else {
+                        $('#glRemaining1').html(shuttle[0].remainingminutes + ' min');
+                    }
+                    if (shuttle[1].remaininghour != "") {
+                        $('#glRemaining2').html(shuttle[1].remaininghour + ' h ' + shuttle[1].remainingminutes + ' min');
+                    } else {
+                        $('#glRemaining2').html(shuttle[1].remainingminutes + ' min');
+                    }
+                    if (shuttle[2].remaininghour != "") {
+                        $('#glRemaining3').html(shuttle[2].remaininghour + ' h ' + shuttle[2].remainingminutes + ' min');
+                    } else {
+                        $('#glRemaining3').html(shuttle[2].remainingminutes + ' min');
+                    }
+                    $('#glTime1').html(shuttle[0].departurehour + ' h ' + shuttle[0].departureminute);
+                    $('#glTime2').html(shuttle[1].departurehour + ' h ' + shuttle[1].departureminute);
+                    $('#glTime3').html(shuttle[2].departurehour + ' h ' + shuttle[2].departureminute);
+                    $('.towards').html(l.getString('towards'));
+                }
+                $('.meteo-icon').addClass(weather[0].icon);
+            }
+        });
+    }
+}
+
+//KEELE SHUTTLE SERVICE-----------------------------------
+function getKeeleShuttle() {
+    var offLine = window.localStorage.getItem('offLine');
+    var lang = getLanguage();
+    var l = new Language(lang);
+    if (offLine == 0) { 
+        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_shuttle&campus=keele&moodlewsrestformat=json';
+        $.ajax({
+            url: url,
+            crossDomain: true,
+            dataType: 'json',
+            success: function (shuttle) {
+                console.log(shuttle);
+                if ($('#lang').val() == 'en') {
+                    if (shuttle[0].remaininghour != "") {
+                        $('#klRemaining1').html(shuttle[0].remaininghour + ':' + shuttle[0].remainingminutes + ' min');
+                    } else {
+                        $('#klRemaining1').html(shuttle[0].remainingminutes + ' min');
+                    }
+                    if (shuttle[1].remaininghour != "") {
+                        $('#klRemaining2').html(shuttle[1].remaininghour + ':' + shuttle[1].remainingminutes + ' min');
+                    } else {
+                        $('#klRemaining2').html(shuttle[1].remainingminutes + ' min');
+                    }
+                    if (shuttle[2].remaininghour != "") {
+                        $('#klRemaining3').html(shuttle[2].remaininghour + ':' + shuttle[2].remainingminutes + ' min');
+                    } else {
+                        $('#klRemaining3').html(shuttle[2].remainingminutes + ' min');
+                    }
+                    $('#klTime1').html(shuttle[0].departurehour + ':' + shuttle[0].departureminute);
+                    $('#klTime2').html(shuttle[1].departurehour + ':' + shuttle[1].departureminute);
+                    $('#klTime3').html(shuttle[2].departurehour + ':' + shuttle[2].departureminute);
+                    $('.towards').html(l.getString('towards'));
+                } else {
+                    if (shuttle[0].remaininghour != "") {
+                        $('#klRemaining1').html(shuttle[0].remaininghour + ' h ' + shuttle[0].remainingminutes + ' min');
+                    } else {
+                        $('#klRemaining1').html(shuttle[0].remainingminutes + ' min');
+                    }
+                    if (shuttle[1].remaininghour != "") {
+                        $('#klRemaining2').html(shuttle[1].remaininghour + ' h ' + shuttle[1].remainingminutes + ' min');
+                    } else {
+                        $('#klRemaining2').html(shuttle[1].remainingminutes + ' min');
+                    }
+                    if (shuttle[2].remaininghour != "") {
+                        $('#klRemaining3').html(shuttle[2].remaininghour + ' h ' + shuttle[2].remainingminutes + ' min');
+                    } else {
+                        $('#klRemaining3').html(shuttle[2].remainingminutes + ' min');
+                    }
+                    $('#klTime1').html(shuttle[0].departurehour + ' h ' + shuttle[0].departureminute);
+                    $('#klTime2').html(shuttle[1].departurehour + ' h ' + shuttle[1].departureminute);
+                    $('#klTime3').html(shuttle[2].departurehour + ' h ' + shuttle[2].departureminute);
+                    $('.towards').html(l.getString('towards'));
+                }
+                $('.meteo-icon').addClass(weather[0].icon);
             }
         });
     }
@@ -896,7 +1018,7 @@ function eventsPage() {
     var json = JSON.parse(data);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'][eId];
     var event = '';
- 
+
     var eventDate = getDateInfo(details.startTimeEn);
     if (lang == 'en') {
         $('#where').html(l.getString('where'));

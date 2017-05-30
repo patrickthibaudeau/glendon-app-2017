@@ -7,4 +7,5 @@ var fr = {
     shuttle: 'Navette',
     eventTitle:'Événements',
     currentlyOffLine:'Hors ligne',
+    towards: 'vers',
 }

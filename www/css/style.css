@@ -541,7 +541,8 @@ body {
     line-height: 110%;
 }
 
-#bus-time span {
+
+.bus-time-span {
     font-size: 22px;
     font-weight: 300;
 }

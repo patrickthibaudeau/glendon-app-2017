@@ -7,4 +7,5 @@ var en = {
     shuttle:'Shuttle',
     eventTitle:'Events',
     currentlyOffLine:'Currently offline',
+    towards:'towards',
 }
