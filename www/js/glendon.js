@@ -723,15 +723,12 @@ function getAnnouncementsRefresh() {
 //FAVORITES-----------------------------------------------
 
 function getMyFavorites() {
+//       window.localStorage.removeItem('favorites');
     var lang = getLanguage();
     var l = new Language(lang);
     var storage = window.localStorage.getItem('favorites');
-    console.log('storage: ' + storage);
     if ((storage !== "") && (storage !== null)) {
-        console.log(storage);
         var favorites = JSON.parse(storage);
-        //    var favorites = JSON.parse(storage);
-        console.log(favorites);
         var html = '<ul>';
         if (favorites != null) {
             for (i = 0; i < favorites.length; i++) {
@@ -756,30 +753,27 @@ function getMyFavorites() {
 function addToFavorites() {
     var lang = getLanguage();
     var l = new Language(lang);
-    var id = $('#addToFavorites').data('id');
-    var name = $('#addToFavorites').data('name');
-    var url = $('#addToFavorites').data('url');
+    var id = $('#id').val();
+    var name = $('#name').val();
+    var url = $('#url').val();
     //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
 
-    console.log(id + ' name: ' + name + ' url: ' + url);
-    console.log('favorites: ' + favorites);
     if ((favorites == "") || (favorites == null)) {
         obj = [{
-            'id': id,
+            'id': parseInt(id),
             'name': name,
             'url': url
         }];
     } else {
         var obj = JSON.parse(favorites);
         obj.push({
-            id: id,
+            id: parseInt(id),
             name: name,
             url: url
         });
     }
     var str = JSON.stringify(obj);
-    console.log
         //Store favorites
     window.localStorage.setItem('favorites', str);
 
@@ -808,12 +802,14 @@ function deleteFavorite(id) {
     //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
     var obj = JSON.parse(favorites);
+    var i = 0;
+    
     items = $.grep(obj, function (obj) {
-        return obj.id !== id;
+            return obj.id !== id;
     });
-    var str = JSON.stringify(items);
-    //Store favorites
-    localStorage.setItem('favorites', str);
+        var str = JSON.stringify(items);
+    //    //Store favorites
+        localStorage.setItem('favorites', str);
     return getMyFavorites();
 }
 
@@ -987,7 +983,9 @@ function detailsPage() {
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
     var event = '<ul>';
     console.log(events);
-
+    //Add favorites data info
+    $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
+    $('#id').val(pId);
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
         $('#eventsTitle').html(l.getString('eventTitle'));
@@ -1008,8 +1006,7 @@ function detailsPage() {
             event += '    </li>';
         }
         event += '</ul>';
-        var favorites = 'data-url="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '" data-name="' + details.nameFr + '" data-id="' + pId + '"';
-        $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>');
+        $('#name').val(details.nameEn);
     } else {
         $('.location-name').html(details.name);
         $('#eventsTitle').html(l.getString('eventTitle'));
@@ -1030,8 +1027,8 @@ function detailsPage() {
             event += '    </li>';
         }
         event += '</ul>';
-        var favorites = 'data-url="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '" data-name="' + details.nameFr + '" data-id="' + pId + '"';
-        $('#favorites').html('<a href="#" id="addToFavorites" onClick="addToFavorites()" ' + favorites + '><i class="fa fa-heart contact-info-icon" aria-hidden="true"></i></a>');
+        $('#name').val(details.nameFr);
+
     }
 
     $('#eventsList').html(event);
