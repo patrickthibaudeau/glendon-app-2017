@@ -723,25 +723,23 @@ function getAnnouncementsRefresh() {
 //FAVORITES-----------------------------------------------
 
 function getMyFavorites() {
-
     var lang = getLanguage();
     var l = new Language(lang);
     var storage = window.localStorage.getItem('favorites');
-    if (storage != "") {
+    console.log('storage: ' + storage);
+    if ((storage !== "") && (storage !== null)) {
+        console.log(storage);
         var favorites = JSON.parse(storage);
         //    var favorites = JSON.parse(storage);
         console.log(favorites);
         var html = '<ul>';
         if (favorites != null) {
-
             for (i = 0; i < favorites.length; i++) {
-                if (i > 0) {
-                    html += '<li class="menu-section">';
-                    html += '<i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
-                    html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
-                    html += '<a href="' + favorites[i].url + '">' + favorites[i].name + '</a>';
-                    html += '</li>';
-                }
+                html += '<li class="menu-section">';
+                html += '<i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
+                html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
+                html += '<a href="' + favorites[i].url + '">' + favorites[i].name + '</a>';
+                html += '</li>';
             }
         }
         html += '</ul>';
@@ -756,6 +754,8 @@ function getMyFavorites() {
 }
 
 function addToFavorites() {
+    var lang = getLanguage();
+    var l = new Language(lang);
     var id = $('#addToFavorites').data('id');
     var name = $('#addToFavorites').data('name');
     var url = $('#addToFavorites').data('url');
@@ -764,24 +764,44 @@ function addToFavorites() {
 
     console.log(id + ' name: ' + name + ' url: ' + url);
     console.log('favorites: ' + favorites);
-    if (favorites != "") {
-        var obj = JSON.parse(favorites);
+    if ((favorites == "") || (favorites == null)) {
+        obj = [{
+            'id': id,
+            'name': name,
+            'url': url
+        }];
     } else {
-        obj = ['favorites'];
+        var obj = JSON.parse(favorites);
+        obj.push({
+            id: id,
+            name: name,
+            url: url
+        });
     }
-
-    console.log(obj);
-    obj.push({
-        id: id,
-        name: name,
-        url: url
-    });
-
-
     var str = JSON.stringify(obj);
     console.log
         //Store favorites
     window.localStorage.setItem('favorites', str);
+
+    if (lang == 'en') {
+        $.notify({
+            message: "Favorite added"
+        }, {
+            element: 'body',
+            position: null,
+            type: 'success',
+            delay: 1000,
+        });
+    } else {
+        $.notify({
+            message: "Favoris ajouté"
+        }, {
+            element: 'body',
+            position: null,
+            type: 'success',
+            delay: 1000,
+        });
+    }
 }
 
 function deleteFavorite(id) {
