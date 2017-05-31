@@ -170,7 +170,7 @@ function initSlider() {
 function navPills() {
     var offLine = window.localStorage.getItem('offLine');
     var html = '';
-    if (offLine == 0) {
+    if (offLine === 0) {
         html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
         html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
@@ -194,54 +194,11 @@ function isOnline() {
     }
 }
 
-//LANGUAGE----------------------------------------------------
-function Language(lang) {
-    var __construct = function () {
-        if (eval('typeof ' + lang) == 'undefined') {
-            lang = "en";
-        }
-        return;
-    }()
 
-    this.getString = function (str, defaultStr) {
-        var retStr = eval('eval(lang).' + str);
-        if (typeof retStr != 'undefined') {
-            return retStr;
-        } else {
-            if (typeof defaultStr != 'undefined') {
-                return defaultStr;
-            } else {
-                return eval('en.' + str);
-            }
-        }
-    }
-}
-
-function getLanguage() {
-    var lang = window.localStorage.getItem('lang');
-    if (lang == null) {
-        window.localStorage.setItem('lang', 'fr');
-        lang = 'fr';
-    }
-
-    return lang;
-}
-
-function getStrings() {
-    var lang = $('#lang').val();
-    var l = new Language(lang);
-    $('#home').html(l.getString('home'));
-    $('#about').html(l.getString('about'));
-    $('#contact').html(l.getString('contact'));
-    $('#myTimeTable').html(l.getString('myTimeTable'));
-    $('#abbreviatedLang').html(l.getString('abbreviatedLang'));
-    $('#shuttle').html(l.getString('shuttle'));
-    $('#currentlyOffLine').html(l.getString('currentlyOffLine'));
-}
 //TTC ---------------------------------------------
 function route124East() {
     var offLine = window.localStorage.getItem('offLine');
-    if (offLine == 0) {
+    if (offLine === 0) {
         $.ajax({
             type: 'GET',
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1220&r=124',
@@ -254,7 +211,7 @@ function route124East() {
                     $('#route124East .stopTitle').html(route.predictions.stopTitle);
                     var minute0 = route.predictions.direction.prediction[0].minutes;
                     var minuteText = minute0;
-                    if (minute0 == 0) {
+                    if (minute0 === 0) {
                         minuteText = 'Arriving ';
                     }
                 } else {
@@ -263,7 +220,7 @@ function route124East() {
                     $('#route124East .stopTitle').html('Lawrence ave est à Bayview Ave');
                     var minute0 = route.predictions.direction.prediction[0].minutes;
                     var minuteText = minute0;
-                    if (minute0 == 0) {
+                    if (minute0 === 0) {
                         minuteText = 'Arrivé ';
                     }
                 }
@@ -277,7 +234,7 @@ function route124East() {
 
 function route124West() {
     var offLine = window.localStorage.getItem('offLine');
-    if (offLine == 0) {
+    if (offLine === 0) {
         $.ajax({
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=124',
             crossDomain: true,
@@ -291,7 +248,7 @@ function route124West() {
                     $('#route124West .stopTitle').html(route.predictions.stopTitle);
                     var minute0 = route.predictions.direction.prediction[0].minutes;
                     var minuteText = minute0;
-                    if (minute0 == 0) {
+                    if (minute0 === 0) {
                         minuteText = 'Arriving ';
                     }
                 } else {
@@ -1203,6 +1160,7 @@ function getUrlVars() {
     });
     return vars;
 }
+
 //Return the current page name
 function getPageName() {
     var name = document.title;
