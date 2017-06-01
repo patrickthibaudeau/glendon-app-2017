@@ -8,5 +8,12 @@ var en = {
     eventTitle:'Events',
     currentlyOffLine:'Currently offline',
     towards:'towards',
-    myFavorites: 'My favorites',
+    mon: 'MON',
+    tue: 'TUE',
+    wed: 'WED',
+    thu: 'THU',
+    fri: 'FRI',
+    fall: 'Fall',
+    winter: 'Winter',
+    summer: 'Summer',
 }

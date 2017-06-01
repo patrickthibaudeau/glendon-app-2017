@@ -9,4 +9,12 @@ var fr = {
     currentlyOffLine:'Hors ligne',
     towards: 'vers',
     myFavorites: 'Mes favoris',
+    mon: 'LUN',
+    tue: 'MAR',
+    wed: 'MER',
+    thu: 'JEU',
+    fri: 'VEN',
+    fall: 'Automn',
+    winter: 'Hiver',
+    summer: 'Été',
 }

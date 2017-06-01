@@ -239,6 +239,14 @@ function getStrings() {
     $('#abbreviatedLang').html(l.getString('abbreviatedLang'));
     $('#shuttle').html(l.getString('shuttle'));
     $('#currentlyOffLine').html(l.getString('currentlyOffLine'));
+    $('#mon').html(l.getString('mon'));
+    $('#tue').html(l.getString('tue'));
+    $('#wed').html(l.getString('wed'));
+    $('#thu').html(l.getString('thu'));
+    $('#fri').html(l.getString('fri'));
+    $('#fall').html(l.getString('fall'));
+    $('#winter').html(l.getString('winter'));
+    $('#summer').html(l.getString('summer'));
 }
 
 //TIMETABLE LINKS----------------------------------
@@ -824,6 +832,8 @@ function addToFavorites() {
     var str = JSON.stringify(obj);
     //Store favorites
     window.localStorage.setItem('favorites', str);
+    
+    $('#favoriteIcon').attr('style', "color:#E31836");
 
     if (lang == 'en') {
         $.notify({
@@ -949,7 +959,7 @@ function pageList() {
     var html = '<ul>';
     console.log(list);
     var favorites = JSON.parse(window.localStorage.getItem('favorites'));
-    console.log(favorites);
+
     for (i = 0; i < list.count; i++) {
         //Get external urls;
         if (list[i].externalUrlEn != '' || list[i].externalUrlFr != '') {
@@ -967,11 +977,16 @@ function pageList() {
         }
         //This is to change the color of the heart for favorites
         var style = '';
-        var result = $.grep(favorites, function(e){ return e.id == list[i].id; });
-        if (result.length == 1) {
-            style = 'style="color:red"';
-        } else {
-            style = '';
+        if (favorites !== null) {
+            var result = $.grep(favorites, function (e) {
+                return e.id == list[i].id;
+            });
+
+            if (result.length == 1) {
+                style = 'style="color:#E31836"';
+            } else {
+                style = '';
+            }
         }
         if ($('#lang').val() == 'en') {
             html += '<li class="menu-section-listing">';
@@ -1034,17 +1049,21 @@ function detailsPage() {
         pId = getUrlVars()["pid"];
         $('#pId').val(pId);
     }
-    
+
     //This is to change the color of the heart for favorites
     var favorites = JSON.parse(window.localStorage.getItem('favorites'));
-        var style = '';
-        var result = $.grep(favorites, function(e){ return e.id == pId; });
+    var style = '';
+    if (favorites !== null) {
+        var result = $.grep(favorites, function (e) {
+            return e.id == pId;
+        });
         if (result.length == 1) {
-            $('#favoriteIcon').attr('style',"color:red");
+            $('#favoriteIcon').attr('style', "color:#E31836");
         } else {
             style = '';
         }
-    
+    }
+
     var siteCode = window.localStorage.getItem('siteCode');
     var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(data);

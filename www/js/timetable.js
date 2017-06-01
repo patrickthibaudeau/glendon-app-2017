@@ -13,8 +13,8 @@ function getTimeTable() {
             crossDomain: true,
             dataType: 'json',
             success: function (timeTable) {
-                console.log(timeTable); 
-                
+                console.log(timeTable);
+
                 window.localStorage.setItem('fall', timeTable[0].fall);
                 window.localStorage.setItem('winter', timeTable[0].winter);
                 window.localStorage.setItem('summer', timeTable[0].summer);
@@ -24,67 +24,112 @@ function getTimeTable() {
     }
 }
 
-function refreshFallCalendar(defaultDate) {
+function refreshFallCalendar(defaultDate, day) {
     term = JSON.parse(b64DecodeUnicode(window.localStorage.getItem('fall')));
     console.log(term);
+    addActive(day);
+    $('#' + day).addClass('active');
     $('#calendar').fullCalendar('destroy');
     $('#calendar').fullCalendar({
-                    defaultDate: defaultDate,
-                    editable: false,
-                    defaultView: 'basicDay',
-                    weekends: false,
-                    slotDuration: '00:30:00',
-                    contentHeight: 'auto',
-                    minTime: '08:00:00',
-                    maxTime: '22:00:00',
-                    header: {
-                        left: '',
-                        center: '',
-                        right: '',
-                    },
-                    events: term
-                });
+        defaultDate: defaultDate,
+        editable: false,
+        defaultView: 'basicDay',
+        weekends: false,
+        slotDuration: '00:30:00',
+        contentHeight: 'auto',
+        minTime: '08:00:00',
+        maxTime: '22:00:00',
+        header: {
+            left: '',
+            center: '',
+            right: '',
+        },
+        events: term
+    });
 }
 
-function refreshWinterCalendar(defaultDate) {
+function refreshWinterCalendar(defaultDate, day) {
     term = JSON.parse(b64DecodeUnicode(window.localStorage.getItem('winter')));
+    addActive(day);
     console.log(term);
     $('#calendar').fullCalendar('destroy');
     $('#calendar').fullCalendar({
-                    defaultDate: defaultDate,
-                    editable: false,
-                    defaultView: 'basicDay',
-                    weekends: false,
-                    slotDuration: '00:30:00',
-                    contentHeight: 'auto',
-                    minTime: '08:00:00',
-                    maxTime: '22:00:00',
-                    header: {
-                        left: '',
-                        center: '',
-                        right: '',
-                    },
-                    events: term
-                });
+        defaultDate: defaultDate,
+        editable: false,
+        defaultView: 'basicDay',
+        weekends: false,
+        slotDuration: '00:30:00',
+        contentHeight: 'auto',
+        minTime: '08:00:00',
+        maxTime: '22:00:00',
+        header: {
+            left: '',
+            center: '',
+            right: '',
+        },
+        events: term
+    });
 }
-function refreshSummerCalendar(defaultDate) {
+
+function refreshSummerCalendar(defaultDate, day) {
     term = JSON.parse(b64DecodeUnicode(window.localStorage.getItem('summer')));
+    addActive(day);
     console.log(term);
     $('#calendar').fullCalendar('destroy');
     $('#calendar').fullCalendar({
-                    defaultDate: defaultDate,
-                    editable: false,
-                    defaultView: 'basicDay',
-                    weekends: false,
-                    slotDuration: '00:30:00',
-                    contentHeight: 'auto',
-                    minTime: '08:00:00',
-                    maxTime: '22:00:00',
-                    header: {
-                        left: '',
-                        center: '',
-                        right: '',
-                    },
-                    events: term
-                });
+        defaultDate: defaultDate,
+        editable: false,
+        defaultView: 'basicDay',
+        weekends: false,
+        slotDuration: '00:30:00',
+        contentHeight: 'auto',
+        minTime: '08:00:00',
+        maxTime: '22:00:00',
+        header: {
+            left: '',
+            center: '',
+            right: '',
+        },
+        events: term
+    });
+}
+
+function addActive(day) {
+    switch (day) {
+    case 'm':
+        $('#m').addClass('active');
+        $('#t').removeClass('active');
+        $('#w').removeClass('active');
+        $('#r').removeClass('active');
+        $('#f').removeClass('active');
+        break
+    case 't':
+        $('#m').removeClass('active');
+        $('#t').addClass('active');
+        $('#w').removeClass('active');
+        $('#r').removeClass('active');
+        $('#f').removeClass('active');
+        break;
+    case 'w':
+        $('#m').removeClass('active');
+        $('#t').removeClass('active');
+        $('#w').addClass('active');
+        $('#r').removeClass('active');
+        $('#f').removeClass('active');
+        break;
+    case 'r':
+        $('#m').removeClass('active');
+        $('#t').removeClass('active');
+        $('#w').removeClass('active');
+        $('#r').addClass('active');
+        $('#f').removeClass('active');
+        break;
+    case 'f':
+        $('#m').removeClass('active');
+        $('#t').removeClass('active');
+        $('#w').removeClass('active');
+        $('#r').removeClass('active');
+        $('#f').addClass('active');
+        break;
+    }
 }

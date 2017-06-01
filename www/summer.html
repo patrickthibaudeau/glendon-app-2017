@@ -69,19 +69,19 @@ and open the template in the editor.
         <div class="sub-menu">
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation"><a href="timetable.html" aria-controls="fall" role="tab" ><span id="fall">Fall</span></a></li>
-                <li role="presentation"><a href="winter.html" aria-controls="winter" role="tab" ><span id="winter">Winter</span></a></li>
-                <li role="presentation" class="active"><a href="summer.html" aria-controls="summer" role="tab" ><span id="summer">Summer</span></a></li>
+                <li role="presentation" class="term"><a href="fall.html" aria-controls="fall" role="tab" ><span id="fall">Fall</span></a></li>
+                <li role="presentation" class="term"><a href="winter.html" aria-controls="winter" role="tab" ><span id="winter">Winter</span></a></li>
+                <li role="presentation" class="term active"><a href="summer.html" aria-controls="summer" role="tab" ><span id="summer">Summer</span></a></li>
             </ul>
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" class="active"><a href="#" onclick="refreshSummerCalendar('2017-05-01')" aria-controls="m" role="tab" ><span id="monday">MON</span></a></li>
-                <li role="presentation"><a href="#" aria-controls="t" onclick="refreshSummerCalendar('2017-05-02')" role="tab" ><span id="tuesday">TUE</span></a></li>
-                <li role="presentation"><a href="#" aria-controls="w" onclick="refreshSummerCalendar('2017-05-03')" role="tab" ><span id="wednesday">WED</span></a></li>
-                <li role="presentation"><a href="#" aria-controls="r" onclick="refreshSummerCalendar('2017-05-04')" role="tab" ><span id="thursday">THU</span></a></li>
-                <li role="presentation"><a href="#" aria-controls="f" onclick="refreshSummerCalendar('2017-05-05')" role="tab" ><span id="friday">FRI</span></a></li>
+                <li role="presentation" id="m" class="active"><a href="#" onclick="refreshSummerCalendar('2017-05-01','m')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
+                <li role="presentation" id="t"><a href="#" aria-controls="t" onclick="refreshSummerCalendar('2017-05-02','t')" role="tab"><span id="tue">TUE</span></a></li>
+                <li role="presentation" id="w"><a href="#" aria-controls="w" onclick="refreshSummerCalendar('2017-05-03','w')" role="tab"><span id="wed">WED</span></a></li>
+                <li role="presentation" id="r"><a href="#" aria-controls="r" onclick="refreshSummerCalendar('2017-05-04','r')" role="tab"><span id="thu">THU</span></a></li>
+                <li role="presentation" id="f"><a href="#" aria-controls="f" onclick="refreshSummerCalendar('2017-05-05','f')" role="tab"><span id="fri">FRI</span></a></li>
             </ul>
                 <div role="tabpanel" class="tab-pane active" id="fall">
                     <div id="calendar"></div>
