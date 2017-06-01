@@ -18,7 +18,7 @@ function getTimeTable(ignore) {
     }
     if (ignore == 1) {
         if (offLine == 0) {
-            var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_timetable&uid=gallantg&moodlewsrestformat=json';
+            var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_timetable&uid=' + uid + '&moodlewsrestformat=json';
             $.ajax({
                 url: url,
                 crossDomain: true,
