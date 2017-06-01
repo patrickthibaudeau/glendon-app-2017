@@ -55,6 +55,7 @@ function startApp(ignore) {
             getMyFavorites();
         }
     } else {
+        $('#spinner').addClass('fa-spin');
         getSite(ignore);
         getTimeTableLink();
         if (pageName == 'GlendonApp') {
@@ -106,6 +107,7 @@ function startApp(ignore) {
         if (pageName == 'favorites') {
             getMyFavorites();
         }
+        $('#spinner').removeClass('fa-spin');
     }
 }
 

@@ -18,6 +18,7 @@ function getTimeTable(ignore) {
     }
     if (ignore == 1) {
         if (offLine == 0) {
+            $('#spinner').addClass('fa-spin');
             var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_timetable&uid=' + uid + '&moodlewsrestformat=json';
             $.ajax({
                 url: url,
@@ -29,7 +30,7 @@ function getTimeTable(ignore) {
                     window.localStorage.setItem('fall', timeTable[0].fall);
                     window.localStorage.setItem('winter', timeTable[0].winter);
                     window.localStorage.setItem('summer', timeTable[0].summer);
-
+                   $('#spinner').removeClass('fa-spin'); 
                 }
             });
         }
