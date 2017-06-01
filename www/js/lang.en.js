@@ -16,4 +16,9 @@ var en = {
     fall: 'Fall',
     winter: 'Winter',
     summer: 'Summer',
+    userName: 'User name',
+    password: 'Password',
+    login: 'Sign in',
+    loginInstructions: 'Please note that only YorkU students can login to get their time table. YorkU Faculty and staff will not be able to login.',
+    noCredentials: 'You have entered the wrong credentials. Please try again.',
 }

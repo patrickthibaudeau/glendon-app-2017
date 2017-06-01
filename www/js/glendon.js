@@ -247,6 +247,12 @@ function getStrings() {
     $('#fall').html(l.getString('fall'));
     $('#winter').html(l.getString('winter'));
     $('#summer').html(l.getString('summer'));
+    $('#userName').html(l.getString('userName'));
+    $('#password').html(l.getString('password'));
+    $('#login').html(l.getString('login'));
+    $('#uid').attr('placeholder', l.getString('userName'));
+    $('#pwd').attr('placeholder', l.getString('password'));
+    $('#loginInstructions').html(l.getString('loginInstructions'));
 }
 
 //TIMETABLE LINKS----------------------------------

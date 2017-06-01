@@ -16,5 +16,10 @@ var fr = {
     fri: 'VEN',
     fall: 'Automn',
     winter: 'Hiver',
-    summer: 'Été',
+    summer: 'Été', 
+    userName: 'Nom utilisateur',
+    password: 'Mot de passe',
+    login: 'Me connecter',
+    loginInstructions: 'Veuillez noter que seuls les étudiants de YorkU peuvent se connecter pour obtenir leur calendrier. Le membres de faculté et le personnel de YorkU ne pourront pas se connecter.',
+    noCredentials: 'Vous avez entré les fausses informations d\'identification. Veuillez réessayer.',
 }

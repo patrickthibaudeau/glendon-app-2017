@@ -2,25 +2,37 @@ $(document).ready(function () {
     getTimeTable();
 });
 
-function getTimeTable() {
+function getTimeTable(ignore) {
     var offLine = window.localStorage.getItem('offLine');
     var lang = getLanguage();
     var l = new Language(lang);
-    if (offLine == 0) {
-        var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_timetable&uid=gallantg&moodlewsrestformat=json';
-        $.ajax({
-            url: url,
-            crossDomain: true,
-            dataType: 'json',
-            success: function (timeTable) {
-                console.log(timeTable);
+    var uid = window.localStorage.getItem('uid');
+//    User must login in order to get credentials
+    if (uid === null) {
+        window.location = 'login.html';
+    }
+    var fall = window.localStorage.getItem('fall');
+//    perform webservice call only if needed.
+    if (fall === null) {
+        ignore = 1;
+    }
+    if (ignore == 1) {
+        if (offLine == 0) {
+            var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_timetable&uid=gallantg&moodlewsrestformat=json';
+            $.ajax({
+                url: url,
+                crossDomain: true,
+                dataType: 'json',
+                success: function (timeTable) {
+                    console.log(timeTable);
 
-                window.localStorage.setItem('fall', timeTable[0].fall);
-                window.localStorage.setItem('winter', timeTable[0].winter);
-                window.localStorage.setItem('summer', timeTable[0].summer);
+                    window.localStorage.setItem('fall', timeTable[0].fall);
+                    window.localStorage.setItem('winter', timeTable[0].winter);
+                    window.localStorage.setItem('summer', timeTable[0].summer);
 
-            }
-        });
+                }
+            });
+        }
     }
 }
 
