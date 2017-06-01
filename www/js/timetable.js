@@ -30,9 +30,10 @@ function getTimeTable(ignore) {
                     window.localStorage.setItem('fall', timeTable[0].fall);
                     window.localStorage.setItem('winter', timeTable[0].winter);
                     window.localStorage.setItem('summer', timeTable[0].summer);
-                   $('#spinner').removeClass('fa-spin'); 
+                   
                 }
             });
+            $('#spinner').removeClass('fa-spin'); 
         }
     }
 }
