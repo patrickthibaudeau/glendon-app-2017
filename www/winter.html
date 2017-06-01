@@ -64,26 +64,27 @@ and open the template in the editor.
                 <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
             </ul>
         </nav>
+        <ul class="nav nav-pills blue-title">
+            <li><a href="fall.html"><i class="fa fa-leaf" aria-hidden="true"></i><span id="fall">Fall</span></a></li>
+            <li class="active"><a href="winter.html"><i class="fa fa-snowflake-o" aria-hidden="true"></i><span id="winter">Winter</span></a></li>
+            <li><a data-toggle="tab" href="summer.html"><i class="fa fa-sun-o" aria-hidden="true"></i><span id="summer">Summer</span></a></li>
+            <a href="#" onClick="getTimeTable('1')"><i id="spinner" class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
+        </ul>
         <input type="hidden" id="cId" value="">
         <input type="hidden" id="scId" value="">
         <div class="sub-menu">
             <!-- Nav tabs -->
-            <ul class="nav nav-pills blue-title">
-                <li><a data-toggle="tab" href="fall.html"><i class="fa fa-leaf" aria-hidden="true"></i><span id="fall">Fall</span></a></li>
-                <li><a data-toggle="tab" href="winter.html"><i class="fa fa-snowflake-o" aria-hidden="true"></i><span id="winter">Winter</span></a></li>
-                <li class="active"><a data-toggle="tab" href="summer.html"><i class="fa fa-sun-o" aria-hidden="true"></i><span id="summer">Summer</span></a></li>
-                <a href="#" onClick="getTimeTable('1')"><i id="spinner" class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
-            </ul>
+
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Nav tabs -->
-            <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" id="m" class="active"><a href="#" onclick="refreshWinterCalendar('2017-05-01','m')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
-                <li role="presentation" id="t"><a href="#" aria-controls="t" onclick="refreshWinterCalendar('2017-05-02','t')" role="tab"><span id="tue">TUE</span></a></li>
-                <li role="presentation" id="w"><a href="#" aria-controls="w" onclick="refreshWinterCalendar('2017-05-03','w')" role="tab"><span id="wed">WED</span></a></li>
-                <li role="presentation" id="r"><a href="#" aria-controls="r" onclick="refreshWinterCalendar('2017-05-04','r')" role="tab"><span id="thu">THU</span></a></li>
-                <li role="presentation" id="f"><a href="#" aria-controls="f" onclick="refreshWinterCalendar('2017-05-05','f')" role="tab"><span id="fri">FRI</span></a></li>
-            </ul>
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" id="m" class="active"><a href="#" onclick="refreshWinterCalendar('2017-05-01','m')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
+                    <li role="presentation" id="t"><a href="#" aria-controls="t" onclick="refreshWinterCalendar('2017-05-02','t')" role="tab"><span id="tue">TUE</span></a></li>
+                    <li role="presentation" id="w"><a href="#" aria-controls="w" onclick="refreshWinterCalendar('2017-05-03','w')" role="tab"><span id="wed">WED</span></a></li>
+                    <li role="presentation" id="r"><a href="#" aria-controls="r" onclick="refreshWinterCalendar('2017-05-04','r')" role="tab"><span id="thu">THU</span></a></li>
+                    <li role="presentation" id="f"><a href="#" aria-controls="f" onclick="refreshWinterCalendar('2017-05-05','f')" role="tab"><span id="fri">FRI</span></a></li>
+                </ul>
                 <div role="tabpanel" class="tab-pane active" id="fall">
                     <div id="calendar"></div>
                 </div>

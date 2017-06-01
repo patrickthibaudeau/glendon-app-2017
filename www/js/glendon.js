@@ -32,6 +32,7 @@ function goOnline() {
 }
 
 function startApp(ignore) {
+    $('#spinner').addClass('fa-spin');
     var pageName = getPageName();
     var offLine = window.localStorage.getItem('offLine');
     getStrings(); //Provides strings for the app
@@ -55,10 +56,11 @@ function startApp(ignore) {
             getMyFavorites();
         }
     } else {
-        $('#spinner').addClass('fa-spin');
+        
         getSite(ignore);
         getTimeTableLink();
         if (pageName == 'GlendonApp') {
+            
             getCurrentDate();
             initSlider();
             getWeather();
@@ -91,6 +93,7 @@ function startApp(ignore) {
             setInterval(function () {
                 getCurrentDate();
             }, 3600000);
+             $('#spinner').removeClass('fa-spin');
         }
         if (pageName == 'subcategories') {
             subCategories();
@@ -107,7 +110,7 @@ function startApp(ignore) {
         if (pageName == 'favorites') {
             getMyFavorites();
         }
-        $('#spinner').removeClass('fa-spin');
+       
     }
 }
 

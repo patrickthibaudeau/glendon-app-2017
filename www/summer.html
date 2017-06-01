@@ -64,16 +64,17 @@ and open the template in the editor.
                 <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
             </ul>
         </nav>
+        <ul class="nav nav-pills blue-title">
+            <li><a href="fall.html"><i class="fa fa-leaf" aria-hidden="true"></i><span id="fall">Fall</span></a></li>
+            <li><a  href="winter.html"><i class="fa fa-snowflake-o" aria-hidden="true"></i><span id="winter">Winter</span></a></li>
+            <li class="active"><a  href="summer.html"><i class="fa fa-sun-o" aria-hidden="true"></i><span id="summer">Summer</span></a></li>
+            <a href="#" onClick="getTimeTable('1')"><i id="spinner" class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
+        </ul>
         <input type="hidden" id="cId" value="">
         <input type="hidden" id="scId" value="">
         <div class="sub-menu">
             <!-- Nav tabs -->
-            <ul class="nav nav-pills blue-title">
-                <li><a data-toggle="tab" href="fall.html"><i class="fa fa-leaf" aria-hidden="true"></i><span id="fall">Fall</span></a></li>
-                <li class="active"><a data-toggle="tab" href="winter.html"><i class="fa fa-snowflake-o" aria-hidden="true"></i><span id="winter">Winter</span></a></li>
-                <li><a data-toggle="tab" href="summer.html"><i class="fa fa-sun-o" aria-hidden="true"></i><span id="summer">Summer</span></a></li>
-                <a href="#" onClick="getTimeTable('1')"><i id="spinner" class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
-            </ul>
+
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Nav tabs -->
