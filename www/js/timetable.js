@@ -53,6 +53,7 @@ function refreshFallCalendar(defaultDate, day) {
         contentHeight: 'auto',
         minTime: '08:00:00',
         maxTime: '22:00:00',
+        textColor: '#ffffff',
         header: {
             left: '',
             center: '',
@@ -76,6 +77,7 @@ function refreshWinterCalendar(defaultDate, day) {
         contentHeight: 'auto',
         minTime: '08:00:00',
         maxTime: '22:00:00',
+        textColor: '#ffffff',
         header: {
             left: '',
             center: '',
@@ -99,6 +101,7 @@ function refreshSummerCalendar(defaultDate, day) {
         contentHeight: 'auto',
         minTime: '08:00:00',
         maxTime: '22:00:00',
+        textColor: '#ffffff',
         header: {
             left: '',
             center: '',
