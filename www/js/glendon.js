@@ -38,6 +38,7 @@ function startApp(ignore) {
     if (offLine == 1) {
         getCurrentDate();
         navPills();
+        getTimeTableLink();
         if (pageName == 'subcategories') {
             subCategories();
         }
@@ -55,6 +56,7 @@ function startApp(ignore) {
         }
     } else {
         getSite(ignore);
+        getTimeTableLink();
         if (pageName == 'GlendonApp') {
             getCurrentDate();
             initSlider();
@@ -170,7 +172,7 @@ function initSlider() {
 function navPills() {
     var offLine = window.localStorage.getItem('offLine');
     var html = '';
-    if (offLine === 0) {
+    if (offLine == 0) {
         html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
         html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
@@ -194,11 +196,84 @@ function isOnline() {
     }
 }
 
+//LANGUAGE----------------------------------------------------
+function Language(lang) {
+    var __construct = function () {
+        if (eval('typeof ' + lang) == 'undefined') {
+            lang = "en";
+        }
+        return;
+    }()
+
+    this.getString = function (str, defaultStr) {
+        var retStr = eval('eval(lang).' + str);
+        if (typeof retStr != 'undefined') {
+            return retStr;
+        } else {
+            if (typeof defaultStr != 'undefined') {
+                return defaultStr;
+            } else {
+                return eval('en.' + str);
+            }
+        }
+    }
+}
+
+function getLanguage() {
+    var lang = window.localStorage.getItem('lang');
+    if (lang == null) {
+        window.localStorage.setItem('lang', 'fr');
+        lang = 'fr';
+    }
+
+    return lang;
+}
+
+function getStrings() {
+    var lang = $('#lang').val();
+    var l = new Language(lang);
+    $('#home').html(l.getString('home'));
+    $('#about').html(l.getString('about'));
+    $('#contact').html(l.getString('contact'));
+    $('#myTimeTable').html(l.getString('myTimeTable'));
+    $('#abbreviatedLang').html(l.getString('abbreviatedLang'));
+    $('#shuttle').html(l.getString('shuttle'));
+    $('#currentlyOffLine').html(l.getString('currentlyOffLine'));
+}
+
+//TIMETABLE LINKS----------------------------------
+//This function is used to determine which page will
+//be loaded according to the month
+function getTimeTableLink() {
+    var now = new Date();
+
+    switch (now.getMonth()) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+        $("#timeTable").attr('href', 'winter.html');
+        break;
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+        $("#timeTable").attr('href', 'summer.html');
+        break;
+    case 9:
+    case 10:
+    case 11:
+        $("#timeTable").attr('href', 'fall.html');
+        break;
+    }
+
+}
 
 //TTC ---------------------------------------------
 function route124East() {
     var offLine = window.localStorage.getItem('offLine');
-    if (offLine === 0) {
+    if (offLine == 0) {
         $.ajax({
             type: 'GET',
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1220&r=124',
@@ -234,7 +309,7 @@ function route124East() {
 
 function route124West() {
     var offLine = window.localStorage.getItem('offLine');
-    if (offLine === 0) {
+    if (offLine == 0) {
         $.ajax({
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=124',
             crossDomain: true,
@@ -355,54 +430,62 @@ function getGlendonShuttle() {
                 console.log(shuttle);
                 var html = '';
                 if ($('#lang').val() == 'en') {
-                    for (i = 0; i < shuttle.length; i++) {
-                        if (shuttle[i].remaininghour != "") {
-                            var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
-                        } else {
-                            if (shuttle[i].remainingminutes != 0) {
-                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                    if (shuttle.length == 1 && shuttle[0]['campus'] == 0) {
+                        html = '<div class="alert alert-warning" >No shuttle available at this time.</div>';
+                    } else {
+                        for (i = 0; i < shuttle.length; i++) {
+                            if (shuttle[i].remaininghour != "") {
+                                var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
                             } else {
-                                var timeRemaining = 'Leaving';
+                                if (shuttle[i].remainingminutes != 0) {
+                                    var timeRemaining = shuttle[i].remainingminutes + ' min';
+                                } else {
+                                    var timeRemaining = 'Leaving';
+                                }
                             }
-                        }
-                        html += '<li>';
-                        html += '	<div id="bus-time">';
-                        html += timeRemaining;
-                        html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + shuttle[i].departureminute + '</span>';
-                        html += '	</div>';
-                        html += '	<div id="direction">';
-                        html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
-                        html += '	</div>';
-                        html += '</li>';
+                            html += '<li>';
+                            html += '	<div id="bus-time">';
+                            html += timeRemaining;
+                            html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + shuttle[i].departureminute + '</span>';
+                            html += '	</div>';
+                            html += '	<div id="direction">';
+                            html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
+                            html += '	</div>';
+                            html += '</li>';
 
-                        if (i === 3) {
-                            break;
+                            if (i == 3) {
+                                break;
+                            }
                         }
                     }
 
                 } else {
-                    for (i = 0; i < shuttle.length; i++) {
-                        if (shuttle[i].remaininghour != "") {
-                            var timeRemaining = shuttle[i].remaininghour + ' h ' + shuttle[i].remainingminutes + ' min';
-                        } else {
-                            if (shuttle[i].remainingminutes != 0) {
-                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                    if (shuttle.length == 1 && shuttle[0]['campus'] == 0) {
+                        html = '<div class="alert alert-warning">Pas de navette disponible pour le moment.</div>';
+                    } else {
+                        for (i = 0; i < shuttle.length; i++) {
+                            if (shuttle[i].remaininghour != "") {
+                                var timeRemaining = shuttle[i].remaininghour + ' h ' + shuttle[i].remainingminutes + ' min';
                             } else {
-                                var timeRemaining = 'Départ';
+                                if (shuttle[i].remainingminutes != 0) {
+                                    var timeRemaining = shuttle[i].remainingminutes + ' min';
+                                } else {
+                                    var timeRemaining = 'Départ';
+                                }
                             }
-                        }
-                        html += '<li>';
-                        html += '	<div id="bus-time">';
-                        html += timeRemaining;
-                        html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ' h ' + shuttle[i].departureminute + '</span>';
-                        html += '	</div>';
-                        html += '	<div id="direction">';
-                        html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
-                        html += '	</div>';
-                        html += '</li>';
+                            html += '<li>';
+                            html += '	<div id="bus-time">';
+                            html += timeRemaining;
+                            html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ' h ' + shuttle[i].departureminute + '</span>';
+                            html += '	</div>';
+                            html += '	<div id="direction">';
+                            html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
+                            html += '	</div>';
+                            html += '</li>';
 
-                        if (i === 3) {
-                            break;
+                            if (i == 3) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -427,54 +510,62 @@ function getKeeleShuttle() {
                 console.log(shuttle);
                 var html = '';
                 if ($('#lang').val() == 'en') {
-                    for (i = 0; i < shuttle.length; i++) {
-                        if (shuttle[i].remaininghour != "") {
-                            var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
-                        } else {
-                            if (shuttle[i].remainingminutes != 0) {
-                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                    if (shuttle.length == 1 && shuttle[0]['campus'] == 0) {
+                        html = '<div class="alert alert-warning" >No shuttle available at this time.</div>';
+                    } else {
+                        for (i = 0; i < shuttle.length; i++) {
+                            if (shuttle[i].remaininghour != "") {
+                                var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
                             } else {
-                                var timeRemaining = 'Leaving';
+                                if (shuttle[i].remainingminutes != 0) {
+                                    var timeRemaining = shuttle[i].remainingminutes + ' min';
+                                } else {
+                                    var timeRemaining = 'Leaving';
+                                }
                             }
-                        }
-                        html += '<li>';
-                        html += '	<div id="bus-time">';
-                        html += timeRemaining;
-                        html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + shuttle[i].departureminute + '</span>';
-                        html += '	</div>';
-                        html += '	<div id="direction">';
-                        html += '		<span id="destination-indicator">Keele Vari Hall<br/>' + l.getString('towards') + ' Glendon York Hall</span>';
-                        html += '	</div>';
-                        html += '</li>';
+                            html += '<li>';
+                            html += '	<div id="bus-time">';
+                            html += timeRemaining;
+                            html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + shuttle[i].departureminute + '</span>';
+                            html += '	</div>';
+                            html += '	<div id="direction">';
+                            html += '		<span id="destination-indicator">Keele Vari Hall<br/>' + l.getString('towards') + ' Glendon York Hall</span>';
+                            html += '	</div>';
+                            html += '</li>';
 
-                        if (i === 3) {
-                            break;
+                            if (i == 3) {
+                                break;
+                            }
                         }
                     }
 
                 } else {
-                    for (i = 0; i < shuttle.length; i++) {
-                        if (shuttle[i].remaininghour != "") {
-                            var timeRemaining = shuttle[i].remaininghour + ' h ' + shuttle[i].remainingminutes + ' min';
-                        } else {
-                            if (shuttle[i].remainingminutes != 0) {
-                                var timeRemaining = shuttle[i].remainingminutes + ' min';
+                    if (shuttle.length == 1 && shuttle[0]['campus'] == 0) {
+                        html = '<div class="alert alert-warning">Pas de navette disponible pour le moment.</div>';
+                    } else {
+                        for (i = 0; i < shuttle.length; i++) {
+                            if (shuttle[i].remaininghour != "") {
+                                var timeRemaining = shuttle[i].remaininghour + ' h ' + shuttle[i].remainingminutes + ' min';
                             } else {
-                                var timeRemaining = 'Départ';
+                                if (shuttle[i].remainingminutes != 0) {
+                                    var timeRemaining = shuttle[i].remainingminutes + ' min';
+                                } else {
+                                    var timeRemaining = 'Départ';
+                                }
                             }
-                        }
-                        html += '<li>';
-                        html += '	<div id="bus-time">';
-                        html += timeRemaining;
-                        html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ' h ' + shuttle[i].departureminute + '</span>';
-                        html += '	</div>';
-                        html += '	<div id="direction">';
-                        html += '		<span id="destination-indicator">Keele Vari Hall<br/>' + l.getString('towards') + ' Glendon York Halll</span>';
-                        html += '	</div>';
-                        html += '</li>';
+                            html += '<li>';
+                            html += '	<div id="bus-time">';
+                            html += timeRemaining;
+                            html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ' h ' + shuttle[i].departureminute + '</span>';
+                            html += '	</div>';
+                            html += '	<div id="direction">';
+                            html += '		<span id="destination-indicator">Keele Vari Hall<br/>' + l.getString('towards') + ' Glendon York Halll</span>';
+                            html += '	</div>';
+                            html += '</li>';
 
-                        if (i === 3) {
-                            break;
+                            if (i == 3) {
+                                break;
+                            }
                         }
                     }
                 }
@@ -680,7 +771,7 @@ function getAnnouncementsRefresh() {
 //FAVORITES-----------------------------------------------
 
 function getMyFavorites() {
-//       window.localStorage.removeItem('favorites');
+    //       window.localStorage.removeItem('favorites');
     var lang = getLanguage();
     var l = new Language(lang);
     var storage = window.localStorage.getItem('favorites');
@@ -731,7 +822,7 @@ function addToFavorites() {
         });
     }
     var str = JSON.stringify(obj);
-        //Store favorites
+    //Store favorites
     window.localStorage.setItem('favorites', str);
 
     if (lang == 'en') {
@@ -760,13 +851,13 @@ function deleteFavorite(id) {
     var favorites = window.localStorage.getItem('favorites');
     var obj = JSON.parse(favorites);
     var i = 0;
-    
+
     items = $.grep(obj, function (obj) {
-            return obj.id !== id;
+        return obj.id !== id;
     });
-        var str = JSON.stringify(items);
+    var str = JSON.stringify(items);
     //    //Store favorites
-        localStorage.setItem('favorites', str);
+    localStorage.setItem('favorites', str);
     return getMyFavorites();
 }
 
@@ -857,6 +948,8 @@ function pageList() {
     var redirect = false;
     var html = '<ul>';
     console.log(list);
+    var favorites = JSON.parse(window.localStorage.getItem('favorites'));
+    console.log(favorites);
     for (i = 0; i < list.count; i++) {
         //Get external urls;
         if (list[i].externalUrlEn != '' || list[i].externalUrlFr != '') {
@@ -872,9 +965,17 @@ function pageList() {
             }
             redirect = true;
         }
+        //This is to change the color of the heart for favorites
+        var style = '';
+        var result = $.grep(favorites, function(e){ return e.id == list[i].id; });
+        if (result.length == 1) {
+            style = 'style="color:red"';
+        } else {
+            style = '';
+        }
         if ($('#lang').val() == 'en') {
             html += '<li class="menu-section-listing">';
-            html += '    <i class="fa fa-heart sub-menu-heart" aria-hidden="true"></i>';
+            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true"></i>';
             if (redirect == true) {
                 html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
             } else {
@@ -883,7 +984,7 @@ function pageList() {
             html += '</li>';
         } else {
             html += '<li class="menu-section-listing">';
-            html += '    <i class="fa fa-heart sub-menu-heart" aria-hidden="true"></i>';
+            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true"></i>';
             if (redirect == true) {
                 html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
             } else {
@@ -933,6 +1034,17 @@ function detailsPage() {
         pId = getUrlVars()["pid"];
         $('#pId').val(pId);
     }
+    
+    //This is to change the color of the heart for favorites
+    var favorites = JSON.parse(window.localStorage.getItem('favorites'));
+        var style = '';
+        var result = $.grep(favorites, function(e){ return e.id == pId; });
+        if (result.length == 1) {
+            $('#favoriteIcon').attr('style',"color:red");
+        } else {
+            style = '';
+        }
+    
     var siteCode = window.localStorage.getItem('siteCode');
     var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(data);

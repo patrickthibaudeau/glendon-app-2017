@@ -303,7 +303,7 @@ body {
     margin: 0;
     font-weight: 900;
     color: rgba(15, 44, 91, 0.3);
-    font-size: 20px !important;
+    font-size: 18px !important;
     float: left;
     clear: right;
     display: inline-block;
@@ -321,6 +321,7 @@ body {
     color: rgb(15, 44, 91);
     vertical-align: bottom;
     line-height: 100%;
+    font-size: 22px;
 }
 
 .meteo span {
