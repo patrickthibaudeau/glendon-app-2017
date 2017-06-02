@@ -25,8 +25,8 @@ and open the template in the editor.
         <script src="js/notify.js"></script> 
         <script src="js/libs/rfc3339date.js"></script>
         <script src="js/jquery.touchSwipe.min.js"></script>
-        <script src="js/atlas.js"></script>
         <script src="js/glendon.js"></script>
+        <script src="js/atlas.js"></script>
     </head>
     <body>
         <input type="hidden" id="lang" value="fr">
@@ -56,10 +56,10 @@ and open the template in the editor.
                     <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
                 </ul>
             </nav>
-            <div class="sub-menu">
 
-                <div class="col-md-12">
-                    <h3>Directory</h3>
+                <div id="atlasContent" class="col-md-12">
+                    <h3><span id="directoryHeader"></span></h3>
+                    <div id="atlasOffline"></div>
                     <form id="atlasForm">
                         <div class="form-group">
 <!--                            <div class="form-label" id="lastName">Last name</div>-->
@@ -91,10 +91,9 @@ and open the template in the editor.
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <div id="atlasTable"></div>
+                        <div id="atlasData"></div>
                     </div> 
                 </div>
-            </div>
         </div><!--Site wrap-->
     </body>
 </html>

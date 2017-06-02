@@ -24,15 +24,17 @@ function goOffLine() {
     window.localStorage.setItem('offLine', 1);
     navPills();
     getStrings();
+    atlasCheckOnlineStatus();
 }
 
 function goOnline() {
     window.localStorage.setItem('offLine', 0);
     startApp(0);
+    atlasCheckOnlineStatus();
 }
 
 function startApp(ignore) {
-    $('#spinner').addClass('fa-spin');
+    $('#spinnerHome').addClass('fa-spin');
     var pageName = getPageName();
     var offLine = window.localStorage.getItem('offLine');
     getStrings(); //Provides strings for the app
@@ -93,7 +95,7 @@ function startApp(ignore) {
             setInterval(function () {
                 getCurrentDate();
             }, 3600000);
-             $('#spinner').removeClass('fa-spin');
+             $('#spinnerHome').removeClass('fa-spin');
         }
         if (pageName == 'subcategories') {
             subCategories();
@@ -268,6 +270,7 @@ function getStrings() {
     $('#fn').attr('placeholder', l.getString('firstName'));
     $('#email').attr('placeholder', l.getString('email'));
     $('#dep').attr('placeholder', l.getString('department'));
+    $('#directoryHeader').html(l.getString('directory'));
 }
 
 //TIMETABLE LINKS----------------------------------
