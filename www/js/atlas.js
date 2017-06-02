@@ -145,9 +145,9 @@ function getPerson(seqPersonId) {
                     }
                 }
                 if (typeof items[i].preferredemailaddress !== 'undefined') {
-                    var email = '<a href="mail:' + items[i].preferredemailaddress + '">' + items[i].preferredemailaddress + '</a>';
+                    var email = '<a href="mailto:' + items[i].preferredemailaddress + '">' + items[i].preferredemailaddress + '</a>';
                 } else {
-                    var email = '<a href="mail:' + items[i].mail + '">' + items[i].mail + '</a>';
+                    var email = '<a href="mailto:' + items[i].mail + '">' + items[i].mail + '</a>';
                 }
                 html += '   <tr>';
                 html += '       <td>';
