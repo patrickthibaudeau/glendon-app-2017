@@ -21,4 +21,11 @@ var en = {
     login: 'Sign in',
     loginInstructions: 'Please note that only YorkU students can login to get their time table. YorkU Faculty and staff will not be able to login.',
     noCredentials: 'You have entered the wrong credentials. Please try again.',
+    directory: 'Directory',
+    lastName: 'Last Name',
+    firstName: 'First Name',
+    email: 'Email',
+    extension: 'Phone extension',
+    title: 'Title',
+    department: 'Department',
 }

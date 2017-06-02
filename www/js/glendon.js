@@ -258,6 +258,16 @@ function getStrings() {
     $('#uid').attr('placeholder', l.getString('userName'));
     $('#pwd').attr('placeholder', l.getString('password'));
     $('#loginInstructions').html(l.getString('loginInstructions'));
+    $('#directory').html(l.getString('directory'));
+    $('#lastName').html(l.getString('lastName'));
+    $('#firstName').html(l.getString('firstName'));
+    $('#emailText').html(l.getString('email'));
+    $('#serviceprovided').html(l.getString('title'));
+    $('#extension').html(l.getString('extension'));
+    $('#ln').attr('placeholder', l.getString('lastName'));
+    $('#fn').attr('placeholder', l.getString('firstName'));
+    $('#email').attr('placeholder', l.getString('email'));
+    $('#dep').attr('placeholder', l.getString('department'));
 }
 
 //TIMETABLE LINKS----------------------------------

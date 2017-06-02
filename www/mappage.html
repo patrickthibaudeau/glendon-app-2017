@@ -5,64 +5,68 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>Glendon App</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="Glendon YorkU">
-        <meta name="description" content="Student Application">
-        <!--Styles-->
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet"> 
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <!--Javascripts-->
-        <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/config.js"></script>
-        <script src="js/lang.fr.js"></script>
-        <script src="js/lang.en.js"></script>
-        <script src="js/glendon.js"></script>
-    </head>
-    <body>
-        <input type="hidden" id="lang" value="fr">
-        <div class="menu-wrapping">            
-            <ul class="navigation">
-                <li class="nav-item"><a href="#"><span id="home"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="about"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="contact"></span></a></li>
-                <li class="nav-item"><a id="timeTable" href="#"><span id="myTimeTable"></span></a></li>
-            </ul>
+
+<head>
+    <title>Glendon App</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Glendon YorkU">
+    <meta name="description" content="Student Application">
+    <!--Styles-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--Javascripts-->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/lang.fr.js"></script>
+    <script src="js/lang.en.js"></script>
+    <script src="js/glendon.js"></script>
+</head>
+
+<body>
+    <input type="hidden" id="lang" value="fr">
+    <div class="menu-wrapping">
+        <ul class="navigation">
+            <li class="nav-item"><a href="index.html"><span id="home"></span></a></li>
+            <li class="nav-item"><a href="atlas.html"><span id="directory"></span></a></li>
+            <li class="nav-item"><a href="contact.html"><span id="contact"></span></a></li>
+            <li class="nav-item"><a id="timeTable" href="#"><span id="myTimeTable"></span></a></li>
+        </ul>
+    </div>
+
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger"></label>
+
+    <div class="site-wrap">
+        <div class="logo-banner">
+            <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
+            <img src="img/Glendon_College_logo.png" id="logo-glendon" />
         </div>
+        <nav class='main-menu'>
+            <ul>
+                <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                <li><a href="favorites.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
+                <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
+            </ul>
+        </nav>
 
-        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
-        <label for="nav-trigger"></label>
-
-        <div class="site-wrap">
-            <div class="logo-banner">
-                <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
-                <img src="img/Glendon_College_logo.png" id="logo-glendon" />
+        <div class="info-banner">
+            <div class="daily-date">
+                <h1><span id="dayName"></span></h1><span id="currentDate"></span>
             </div>
-            <nav class='main-menu'>
-                <ul>
-                    <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-                    <li><a href="favorites.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
-                    <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
-                    <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
-                    <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
-                </ul>
-            </nav>
-
-            <div class="info-banner">
-                <div class="daily-date">
-                    <h1><span id="dayName"></span></h1><span id="currentDate"></span>
-                </div>
-                <div class="meteo">
-                    <h1><span id="temperature"></span><i class="wi meteo-icon" aria-hidden="true"></i></h1>
-                    <span id="condition"></span>
-                </div>   
+            <div class="meteo">
+                <h1><span id="temperature"></span><i class="wi meteo-icon" aria-hidden="true"></i></h1>
+                <span id="condition"></span>
             </div>
-            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1441.596285519811!2d-79.37834273530535!3d43.72732627150089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf81ed94e67c07620!2sGlendon+Theatre+-+Th%C3%A9%C3%A2tre+Glendon!5e0!3m2!1sen!2sca!4v1494951867693" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
-        </div><!--Site wrap-->
-    </body>
+        </div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1441.596285519811!2d-79.37834273530535!3d43.72732627150089!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf81ed94e67c07620!2sGlendon+Theatre+-+Th%C3%A9%C3%A2tre+Glendon!5e0!3m2!1sen!2sca!4v1494951867693" width="600" height="450" frameborder="0" style="border:0" allowfullscreen></iframe>
+    </div>
+    <!--Site wrap-->
+</body>
+
 </html>

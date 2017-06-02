@@ -5,87 +5,94 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <html>
-    <head>
-        <title>details</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="Glendon YorkU">
-        <meta name="description" content="Student Application">
-        <!--Styles-->
-        <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet"> 
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-        <link rel="stylesheet" href="css/bootstrap.min.css">
-        <link rel="stylesheet" href="css/style.css">
-        <!--Javascripts-->
-        <script src="js/jquery-3.2.1.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/config.js"></script>
-        <script src="js/lang.fr.js"></script>
-        <script src="js/lang.en.js"></script>
-        <script src="js/notify.js"></script> 
-        <script src="js/libs/rfc3339date.js"></script>
-        <script src="js/jquery.touchSwipe.min.js"></script>
-        <script src="js/glendon.js"></script>
-    </head>
-    <body>
-        <input type="hidden" id="lang" value="fr">
-        <div class="menu-wrapping">            
-            <ul class="navigation">
-                <li class="nav-item"><a href="#"><span id="home"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="about"></span></a></li>
-                <li class="nav-item"><a href="#"><span id="contact"></span></a></li>
-                <li class="nav-item"><a id="timeTable" href="#"><span id="myTimeTable"></span></a></li>
-            </ul>
+
+<head>
+    <title>details</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Glendon YorkU">
+    <meta name="description" content="Student Application">
+    <!--Styles-->
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900|Oswald:300,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--Javascripts-->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/lang.fr.js"></script>
+    <script src="js/lang.en.js"></script>
+    <script src="js/notify.js"></script>
+    <script src="js/libs/rfc3339date.js"></script>
+    <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/glendon.js"></script>
+</head>
+
+<body>
+    <input type="hidden" id="lang" value="fr">
+    <div class="menu-wrapping">
+        <ul class="navigation">
+            <li class="nav-item"><a href="index.html"><span id="home"></span></a></li>
+            <li class="nav-item"><a href="atlas.html"><span id="directory"></span></a></li>
+            <li class="nav-item"><a href="contact.html"><span id="contact"></span></a></li>
+            <li class="nav-item"><a id="timeTable" href="#"><span id="myTimeTable"></span></a></li>
+        </ul>
+    </div>
+
+    <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+    <label for="nav-trigger"></label>
+
+    <div class="site-wrap">
+        <div class="logo-banner">
+            <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
+            <img src="img/Glendon_College_logo.png" id="logo-glendon" />
         </div>
-
-        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
-        <label for="nav-trigger"></label>
-
-        <div class="site-wrap">
-            <div class="logo-banner">
-                <a href="#" id="langue-toggle"><span id="abbreviatedLang"></span></a>
-                <img src="img/Glendon_College_logo.png" id="logo-glendon" />
-            </div>
-            <nav class='main-menu'>
-                <ul>
-                    <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-                    <li><a href="favorites.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
-                    <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
-                    <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
-                    <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
-                </ul>
-            </nav>
-            <input type="hidden" id="cId" value="">
-            <input type="hidden" id="scId" value="">
-            <input type="hidden" id="listId" value="">
-            <input type="hidden" id="pId" value="">
-            <div class="sub-menu-listing">
-                <a id="return-back-link" href="#"> </a>
-                <!-- <p id="go-back-text">BACK</p> -->
-                <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>
+        <nav class='main-menu'>
+            <ul>
+                <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
+                <li><a href="favorites.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
+                <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
+                <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
+            </ul>
+        </nav>
+        <input type="hidden" id="cId" value="">
+        <input type="hidden" id="scId" value="">
+        <input type="hidden" id="listId" value="">
+        <input type="hidden" id="pId" value="">
+        <div class="sub-menu-listing">
+            <a id="return-back-link" href="#"> </a>
+            <!-- <p id="go-back-text">BACK</p> -->
+            <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>
 
 
-                <div class="location-description">
-                    <input type="hidden" id="name" value="">
-                    <input type="hidden" id="url" value="">
-                    <input type="hidden" id="id" value="">
-                    <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
-                    <p class="location-text">  <div class="location-img-div"><img src="" alt="logo" id="location-image" class="img-responsive pull-left" /></div>
-                    <span class="location-name"></span><br/><br/>
+            <div class="location-description">
+                <input type="hidden" id="name" value="">
+                <input type="hidden" id="url" value="">
+                <input type="hidden" id="id" value="">
+                <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
+                <p class="location-text">
+                    <div class="location-img-div"><img src="" alt="logo" id="location-image" class="img-responsive pull-left" /></div>
+                    <span class="location-name"></span>
+                    <br/>
+                    <br/>
                     <span id="description"></span>
-                    </p>
-                </div>
-                <div class="location-contact-info">
-                    <a href="" id="location-email"></a>
-                    <span id="twitter"></span>
-                    <span id="instagram"></span>
-                    <span id="facebook"></span>
-                </div>
-
-                <h1 class="location-event-title"><span id="eventsTitle"></span></h1>
-                <div id="eventsList"></div> 
-
+                </p>
             </div>
-        </div><!--Site wrap-->
-    </body>
+            <div class="location-contact-info">
+                <a href="" id="location-email"></a>
+                <span id="twitter"></span>
+                <span id="instagram"></span>
+                <span id="facebook"></span>
+            </div>
+
+            <h1 class="location-event-title"><span id="eventsTitle"></span></h1>
+            <div id="eventsList"></div>
+
+        </div>
+    </div>
+    <!--Site wrap-->
+</body>
+
 </html>

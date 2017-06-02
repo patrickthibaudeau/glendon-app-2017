@@ -542,7 +542,6 @@ body {
     line-height: 110%;
 }
 
-
 .bus-time-span {
     font-size: 22px;
     font-weight: 300;
@@ -1183,6 +1182,18 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
 }
 
 
+/*Because label is being used in the styles, it conflicts with Bootstrap label.
+* So this class reproduces the Bootstrap label
+*/
+
+.form-label {
+    display: inline-block;
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+
 /*WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 SMALL DESIGN
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
@@ -1236,17 +1247,23 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
     }
 }
 
+
 /*WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW
 TIME TABLE
 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
+
 .term {
     height: 35px;
 }
-.nav>li>a:focus, .nav>li>a:hover {
+
+.nav>li>a:focus,
+.nav>li>a:hover {
     color: #000;
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+.nav-tabs>li.active>a,
+.nav-tabs>li.active>a:focus,
+.nav-tabs>li.active>a:hover {
     background-color: #286090;
     color: #FFF;
 }
