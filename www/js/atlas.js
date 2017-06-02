@@ -131,6 +131,8 @@ function getPerson(seqPersonId) {
             html += '   <tbody>';
             for (i = 0; i < items.length; i++) {
                 var title = '';
+                var address = '';
+                var campusAddress = '';
                 //Sometimes serviceprovided is not available
                 if (typeof items[i].serviceprovided !== 'undefined') {
                     if (typeof items[i].serviceprovided.department !== 'undefined') {
@@ -142,6 +144,20 @@ function getPerson(seqPersonId) {
                         if (typeof items[i].serviceprovided.service.description !== 'undefined') {
                             title = items[i].serviceprovided.service.description + '<br>';
                         }
+                        if (typeof items[i].serviceprovided.service.buildingaddress !== 'undefined') {
+                            address = items[i].serviceprovided.service.buildingaddress + '<br>';
+                        } else {
+                            if (typeof items[i].serviceprovided[0] !== 'undefined') {
+                                if (typeof items[i].serviceprovided[0].service.buildingaddress !== 'undefined') {
+                                    address = items[i].serviceprovided[0].service.buildingaddress + '<br>';
+                                }
+                            }
+                        }
+                        if (typeof items[i].serviceprovided.service.campusmailingaddress !== 'undefined') {
+                            campusAddress = items[i].serviceprovided.service.campusmailingaddress + '<br>';
+                        } else {
+                            campusAddress = items[i].serviceprovided[0].service.campusmailingaddress + '<br>';
+                        }
                     }
                 }
                 if (typeof items[i].preferredemailaddress !== 'undefined') {
@@ -152,6 +168,7 @@ function getPerson(seqPersonId) {
                 html += '   <tr>';
                 html += '       <td>';
                 html += '           <h4>' + items[i].givenName + ' ' + items[i].sn + '</h4>' + title + department + '<br>' + email + '<br>' + items[i].telephoneNumber;
+                html += '           <br>' + address + campusAddress;
                 html += '       </td>';
                 html += '   </tr>';
             }
