@@ -1227,7 +1227,7 @@ function eventsPage() {
                 alert("Error: " + message);
             };
             console.log(startDate);
-            window.plugins.calendar.createEvent(title, eventLocation, notes, startDate, endDate, success, error);
+            window.plugins.calendar.createEventInteractively(title, eventLocation, notes, startDate, endDate, success, error);
         });
     } else {
         $('#where').html(l.getString('where'));
@@ -1239,13 +1239,12 @@ function eventsPage() {
         $('#location-email').html(details.email);
         $('.event-date-time').html(eventDate.currentDateFr + ' | @ ' + eventDate.timeFr);
         //Add to calendar
-        $('.add-to-calendar').click(function () {
-            var startTime = details.startDateTime;
+         $('.add-to-calendar').click(function () {
             var startDate = new Date(details.startDateTime); // beware: month 0 = january, 11 = december 
             var endDate = new Date(details.endDateTime);
-            var title = details.nameFr;
-            var eventLocation = details.locationFr;
-            var notes = details.descriptionFr;
+            var title = details.nameEn;
+            var eventLocation = details.locationEn;
+            var notes = details.descriptionEn;
             var success = function (message) {
                 alert("Success: " + JSON.stringify(message));
             };
@@ -1253,7 +1252,7 @@ function eventsPage() {
                 alert("Error: " + message);
             };
             console.log(startDate);
-            window.plugins.calendar.createEvent(title, eventLocation, notes, startDate, endDate, success, error);
+            window.plugins.calendar.createEventInteractively(title, eventLocation, notes, startDate, endDate, success, error);
         });
 
     }
