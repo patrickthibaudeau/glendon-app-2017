@@ -80,6 +80,7 @@ app.initEvents = function() {
 
     app.consoleLog(fName, "exit") ;
 } ;
+
 document.addEventListener("app.Ready", app.initEvents, false) ;
 document.addEventListener("offline", goOffLine, false);
 document.addEventListener("online", goOnline, false);

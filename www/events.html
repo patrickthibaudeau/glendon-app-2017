@@ -27,11 +27,23 @@ and open the template in the editor.
     <script src="js/lang.en.js"></script>
     <script src="js/notify.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
-    <script type="text/javascript" src="js/Calendar.js"></script>
+    
     <script src="js/glendon.js"></script>
 </head>
 
 <body>
+    <!-- IMPORTANT: Do not include a weinre script tag as part of your release builds! -->
+    <!-- Place your remote debugging weinre script URL here, if it does not work below. -->
+
+    <!-- See <head> section above for additional JS libraries loaded as part of this application. -->
+
+    <!-- "Phantom" cordova.js required for projects that use Cordova plugins. -->
+    <script src="cordova.js"></script>
+    <script type="text/javascript" src="js/Calendar.js"></script>
+
+    <script>
+        document.addEventListener("deviceready", onDeviceReady, false);
+    </script>
     <input type="hidden" id="lang" value="fr">
     <div class="menu-wrapping">
         <ul class="navigation">

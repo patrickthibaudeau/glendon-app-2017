@@ -274,5 +274,5 @@ Calendar.install = function () {
   window.plugins.calendar = new Calendar();
   return window.plugins.calendar;
 };
-
+ 
 cordova.addConstructor(Calendar.install);
