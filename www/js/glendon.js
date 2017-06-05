@@ -271,6 +271,7 @@ function getStrings() {
     $('#email').attr('placeholder', l.getString('email'));
     $('#dep').attr('placeholder', l.getString('department'));
     $('#directoryHeader').html(l.getString('directory'));
+    $('#addToCalendar').html(l.getString('addToCalendar'));
 }
 
 //TIMETABLE LINKS----------------------------------
