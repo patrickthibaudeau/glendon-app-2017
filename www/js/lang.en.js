@@ -6,6 +6,7 @@ var en = {
     contact: 'Contact',
     currentlyOffLine:'Currently offline',
     department: 'Department',
+    description: 'Description',
     directory: 'Directory',
     email: 'Email',
     eventTitle:'Events',
@@ -31,5 +32,7 @@ var en = {
     tue: 'TUE',
     userName: 'User name',
     wed: 'WED',
-    winter: 'Winter',   
+    when: 'When',
+    where: 'Where',
+    winter: 'Winter', 
 }

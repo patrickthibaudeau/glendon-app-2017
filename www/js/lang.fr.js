@@ -6,6 +6,7 @@ var fr = {
     contact: 'Contact',
     currentlyOffLine:'Hors ligne',
     department: 'Departement',
+    description: 'Description',
     directory: 'Répertoire',
     email: 'Courriel',
     eventTitle:'Événements',
@@ -31,5 +32,7 @@ var fr = {
     tue: 'MAR',
     userName: 'Nom utilisateur',
     wed: 'MER',
+    when: 'Quand',
+    where: 'Ou',
     winter: 'Hiver',
 }

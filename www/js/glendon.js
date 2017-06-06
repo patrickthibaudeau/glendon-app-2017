@@ -1092,7 +1092,7 @@ function detailsPage() {
             style = '';
         }
     }
-    
+
     var siteCode = window.localStorage.getItem('siteCode');
     var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(data);
@@ -1102,9 +1102,9 @@ function detailsPage() {
     //Add favorites data info
     $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
     $('#id').val(pId);
-    
+
     $('#search').attr('placeholder', l.getString('refineList'));
-    
+
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
         if (events.type == 2) {
@@ -1171,7 +1171,7 @@ function detailsPage() {
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
 
             var eventDate = getDateInfo(events[e].startTimeEn);
-            
+
             if (events.type == 2) {
                 if (thisEvent == today) {
                     event += '    <li class="location-event-listing">';
@@ -1223,6 +1223,7 @@ function detailsPage() {
 }
 
 function eventsPage() {
+    var offline = window.localStorage.getItem('offLine');
     var lang = getLanguage();
     var l = new Language(lang);
     var cId = $('#cId').val();
@@ -1256,14 +1257,23 @@ function eventsPage() {
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'][eId];
     var event = '';
 
+    $('#where').html(l.getString('where'));
+    $('#when').html(l.getString('when'));
+    $('#description').html(l.getString('description'));
+    console.log(details);
     var eventDate = getDateInfo(details.startTimeEn);
     if (lang == 'en') {
-        $('#where').html(l.getString('where'));
-        $('#when').html(l.getString('when'));
-        $('#description').html(l.getString('description'));
         $('#eventTitle').html(details.nameEn);
         $('.event-description').html(details.descriptionEn);
-        //        $('#location-image').attr('src', 'appimg/' + details.imageEn);
+        if (offline == 1 || details.imageEn == "") {
+            $('#location-image').attr('src', 'img/transparent.png');
+            $('#location-image').attr('style', 'width: 0px; height:0px;');
+
+        } else {
+            $('#location-image').attr('src', details.imageEn);
+        }
+        
+        $('.location-name').html(details.locationEn);
         $('#location-email').html(details.email);
         $('.event-date-time').html(eventDate.currentDateEn + ' | @ ' + eventDate.timeEn);
         //Add to calendar
@@ -1279,16 +1289,19 @@ function eventsPage() {
             var error = function (message) {
                 alert("Error: " + message);
             };
-            console.log(startDate);
             window.plugins.calendar.createEventInteractively(title, eventLocation, notes, startDate, endDate, success, error);
         });
     } else {
-        $('#where').html(l.getString('where'));
-        $('#when').html(l.getString('when'));
-        $('#description').html(l.getString('description'));
         $('#eventTitle').html(details.nameFr);
         $('.event-description').html(details.descriptionFr);
-        //        $('#location-image').attr('src', 'appimg/' + details.imageEn);
+        if (offline == 1 || details.imageFr == "") {
+            $('#location-image').attr('src', 'img/transparent.png');
+            $('#location-image').attr('style', 'width: 0px; height:0px;');
+
+        } else {
+            $('#location-image').attr('src', details.imageFr);
+        }
+        $('.location-name').html(details.locationFr);
         $('#location-email').html(details.email);
         $('.event-date-time').html(eventDate.currentDateFr + ' | @ ' + eventDate.timeFr);
         //Add to calendar
@@ -1304,7 +1317,6 @@ function eventsPage() {
             var error = function (message) {
                 alert("Error: " + message);
             };
-            console.log(startDate);
             window.plugins.calendar.createEventInteractively(title, eventLocation, notes, startDate, endDate, success, error);
         });
 
