@@ -177,10 +177,12 @@ function initSlider() {
 
 //NAV PILLS BLUE---------------------------------------------
 function navPills() {
+    var lang = window.localStorage.getItem('lang');
+    var l = new Language(lang);
     var offLine = window.localStorage.getItem('offLine');
     var html = '';
     if (offLine == 0) {
-        html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>Shuttle</a></li>';
+        html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle')  + '</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
         html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
     } else {
@@ -244,7 +246,7 @@ function getStrings() {
     $('#contact').html(l.getString('contact'));
     $('#myTimeTable').html(l.getString('myTimeTable'));
     $('#abbreviatedLang').html(l.getString('abbreviatedLang'));
-    $('#shuttle').html(l.getString('shuttle'));
+    $('#shuttle').html(l.getString('shuttle')); 
     $('#currentlyOffLine').html(l.getString('currentlyOffLine'));
     $('#mon').html(l.getString('mon'));
     $('#tue').html(l.getString('tue'));
