@@ -26,7 +26,13 @@ and open the template in the editor.
     <script src="js/notify.js"></script>
     <script src="js/libs/rfc3339date.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
+    <script src="js/jquery.hideseek.min.js"></script>
     <script src="js/glendon.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#search').hideseek();
+        });
+    </script>
 </head>
 
 <body>
@@ -88,6 +94,12 @@ and open the template in the editor.
             </div>
 
             <h1 class="location-event-title"><span id="eventsTitle"></span></h1>
+            <div class="schedule-selector">
+                <div class="schedule-slider">
+                    <input id="search" name="search" placeholder="" type="text" data-list=".default_list" autocomplete="off">
+                </div>
+            </div>
+
             <div id="eventsList"></div>
 
         </div>

@@ -165,9 +165,25 @@ function getPerson(seqPersonId) {
                 } else {
                     var email = '<a href="mailto:' + items[i].mail + '">' + items[i].mail + '</a>';
                 }
+                var phone = items[i].telephoneNumber;
+                var telephone = '';
+                if (typeof phone === 'string') {
+                    telephone = phone;
+                } else {
+                    telephone = phone[0];
+                }
+//                telephone = replaceAll(telephone, 'Voicemail', '');
+                telephone = telephone.replace(/["'(Voicemail)]/g,"");
+                
+                telephoneUrl = telephone.replace(/["'x]/g,";ext=");
+                telephoneUrl = telephoneUrl.replace(/["'-]/g,"");
+                telephoneUrl = telephoneUrl.replace(/["' ]/g,"");
+                console.log(telephoneUrl);
+                telephone = '(' + telephone.substr(0,3) + ') ' + telephone.substr(3,25);
+
                 html += '   <tr>';
                 html += '       <td>';
-                html += '           <h4>' + items[i].givenName + ' ' + items[i].sn + '</h4>' + title + department + '<br>' + email + '<br>' + items[i].telephoneNumber;
+                html += '           <h4>' + items[i].givenName + ' ' + items[i].sn + '</h4>' + title + department + '<br>' + email + '<br><a href="tel:' + telephoneUrl + '">' + telephone + '</a>';
                 html += '           <br>' + address + campusAddress;
                 html += '       </td>';
                 html += '   </tr>';
@@ -179,4 +195,8 @@ function getPerson(seqPersonId) {
             $('#searchSpinner').remove();
         }
     });
+}
+
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
 }

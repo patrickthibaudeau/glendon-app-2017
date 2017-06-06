@@ -58,11 +58,11 @@ function startApp(ignore) {
             getMyFavorites();
         }
     } else {
-        
+
         getSite(ignore);
         getTimeTableLink();
         if (pageName == 'GlendonApp') {
-            
+
             getCurrentDate();
             initSlider();
             getWeather();
@@ -95,7 +95,7 @@ function startApp(ignore) {
             setInterval(function () {
                 getCurrentDate();
             }, 3600000);
-             $('#spinnerHome').removeClass('fa-spin');
+            $('#spinnerHome').removeClass('fa-spin');
         }
         if (pageName == 'subcategories') {
             subCategories();
@@ -112,7 +112,7 @@ function startApp(ignore) {
         if (pageName == 'favorites') {
             getMyFavorites();
         }
-       
+
     }
 }
 
@@ -857,7 +857,7 @@ function addToFavorites() {
     var str = JSON.stringify(obj);
     //Store favorites
     window.localStorage.setItem('favorites', str);
-    
+
     $('#favoriteIcon').attr('style', "color:#E31836");
 
     if (lang == 'en') {
@@ -1075,6 +1075,10 @@ function detailsPage() {
         $('#pId').val(pId);
     }
 
+    //Use todays date to view events
+    var now = new Date();
+    var today = now.getFullYear() + '' + now.getMonth() + '' + now.getDate();
+
     //This is to change the color of the heart for favorites
     var favorites = JSON.parse(window.localStorage.getItem('favorites'));
     var style = '';
@@ -1088,56 +1092,104 @@ function detailsPage() {
             style = '';
         }
     }
-
+    
     var siteCode = window.localStorage.getItem('siteCode');
     var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(data);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
-    var event = '<ul>';
-    console.log(events);
+    var event = '<ul class="default_list">';
     //Add favorites data info
     $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
     $('#id').val(pId);
+    
+    $('#search').attr('placeholder', l.getString('refineList'));
+    
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
-        $('#eventsTitle').html(l.getString('eventTitle'));
-        $('#description').html(details.descriptionEn);
-        if (offline == 0) {
-            $('#location-image').attr('src', details.imageEn);
+        if (events.type == 2) {
+            $('#eventsTitle').html(l.getString('classes'));
         } else {
+            $('#eventsTitle').html(l.getString('eventTitle'));
+        }
+        $('#description').html(details.descriptionEn);
+        if (offline == 1 || details.imageEn == "") {
             $('#location-image').attr('src', 'img/transparent.png');
+            $('#location-image').attr('style', 'width: 0px; height:0px;');
+
+        } else {
+            $('#location-image').attr('src', details.imageEn);
         }
         $('#location-email').html(details.email);
-        for (e = 0; e < events['count']; e++) {
-            var eventDate = getDateInfo(events[e].startTimeEn);
 
-            event += '    <li class="location-event-listing">';
-            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-            event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
-            event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
-            event += '    </li>';
+        console.log(today);
+        for (e = 0; e < events['count']; e++) {
+            //Get event date for comparison
+            var eventDate = new Date(events[e].startDateTime);
+            var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
+
+            var eventDate = getDateInfo(events[e].startTimeEn);
+            if (events.type == 2) {
+                if (thisEvent == today) {
+                    event += '    <li class="location-event-listing">';
+                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                    event += '    </li>';
+                }
+
+            } else {
+                if (thisEvent >= today) {
+                    event += '    <li class="location-event-listing">';
+                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                    event += '    </li>';
+                }
+            }
         }
         event += '</ul>';
         $('#name').val(details.nameEn);
     } else {
-        $('.location-name').html(details.name);
-        $('#eventsTitle').html(l.getString('eventTitle'));
-        $('#description').html(details.descriptionFr);
-        if (offline == 0) {
-            $('#location-image').attr('src', details.imageFr);
+        $('.location-name').html(details.nameFr);
+        if (events.type == 2) {
+            $('#eventsTitle').html(l.getString('classes'));
         } else {
+            $('#eventsTitle').html(l.getString('eventTitle'));
+        }
+        $('#description').html(details.descriptionFr);
+        if (offline == 1 || details.imageFr == "") {
             $('#location-image').attr('src', 'img/transparent.png');
+            $('#location-image').attr('style', 'width: 0px; height:0px;');
+        } else {
+            $('#location-image').attr('src', details.imageFr);
         }
         $('#location-email').html(details.email);
         for (e = 0; e < events['count']; e++) {
-            var eventDate = getDateInfo(events[e].startTimeEn);
+            //Get event date for comparison
+            var eventDate = new Date(events[e].startDateTime);
+            var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
 
-            event += '    <li class="location-event-listing">';
-            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-            event += '    <span>' + events[e].nameFr + '</span><br/>Où: ' + events[e].locationFr + '<br/>';
-            event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
-            event += '    </li>';
+            var eventDate = getDateInfo(events[e].startTimeEn);
+            
+            if (events.type == 2) {
+                if (thisEvent == today) {
+                    event += '    <li class="location-event-listing">';
+                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
+                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                    event += '    </li>';
+                }
+
+            } else {
+                if (thisEvent >= today) {
+                    event += '    <li class="location-event-listing">';
+                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
+                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                    event += '    </li>';
+                }
+            }
         }
         event += '</ul>';
         $('#name').val(details.nameFr);
@@ -1240,7 +1292,7 @@ function eventsPage() {
         $('#location-email').html(details.email);
         $('.event-date-time').html(eventDate.currentDateFr + ' | @ ' + eventDate.timeFr);
         //Add to calendar
-         $('.add-to-calendar').click(function () {
+        $('.add-to-calendar').click(function () {
             var startDate = new Date(details.startDateTime); // beware: month 0 = january, 11 = december 
             var endDate = new Date(details.endDateTime);
             var title = details.nameEn;
