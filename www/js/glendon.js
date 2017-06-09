@@ -286,6 +286,7 @@ function getStrings() {
     $('#goSAFE').html(l.getString('goSAFE'));
     $('#good2Talk').html(l.getString('good2Talk'));
     $('#lostFound').html(l.getString('lostFound'));
+    $('#SASSL').html(l.getString('SASSL'));
 }
 
 //TIMETABLE LINKS----------------------------------
