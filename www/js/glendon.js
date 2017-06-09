@@ -1123,7 +1123,7 @@ function detailsPage() {
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
         $('#description').html(details.descriptionEn);
-        if (offline == 1 || details.imageEn != "") {
+        if (offline == 1 || details.imageEn == "") {
             $('#location-image').attr('src', 'img/transparent.png');
             $('#location-image').attr('style', 'width: 0px; height:0px;');
 
@@ -1194,18 +1194,15 @@ function detailsPage() {
                     event += '    </li>';
 
                 }
-
                 break;
-
             }
-
         }
         event += '</ul>';
         $('#name').val(details.nameEn);
     } else {
         $('.location-name').html(details.nameFr);
         $('#description').html(details.descriptionFr);
-        if (offline == 1 || details.imageFr != "") {
+        if (offline == 1 || details.imageFr == "") {
             $('#location-image').attr('src', 'img/transparent.png');
             $('#location-image').attr('style', 'width: 0px; height:0px;');
         } else {
