@@ -175,7 +175,7 @@ function getPerson(seqPersonId) {
 //                telephone = replaceAll(telephone, 'Voicemail', '');
                 telephone = telephone.replace(/["'(Voicemail)]/g,"");
                 
-                telephoneUrl = telephone.replace(/["'x]/g,";ext=");
+                telephoneUrl = telephone.replace(/["'x]/g,",");
                 telephoneUrl = telephoneUrl.replace(/["'-]/g,"");
                 telephoneUrl = telephoneUrl.replace(/["' ]/g,"");
                 console.log(telephoneUrl);
