@@ -112,6 +112,10 @@ function startApp(ignore) {
         if (pageName == 'favorites') {
             getMyFavorites();
         }
+        if (pageName == 'Contact') {
+            getCurrentDate();
+            getWeather();
+        }
 
     }
 }
@@ -182,7 +186,7 @@ function navPills() {
     var offLine = window.localStorage.getItem('offLine');
     var html = '';
     if (offLine == 0) {
-        html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle')  + '</a></li>';
+        html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle') + '</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
         html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
     } else {
@@ -246,7 +250,7 @@ function getStrings() {
     $('#contact').html(l.getString('contact'));
     $('#myTimeTable').html(l.getString('myTimeTable'));
     $('#abbreviatedLang').html(l.getString('abbreviatedLang'));
-    $('#shuttle').html(l.getString('shuttle')); 
+    $('#shuttle').html(l.getString('shuttle'));
     $('#currentlyOffLine').html(l.getString('currentlyOffLine'));
     $('#mon').html(l.getString('mon'));
     $('#tue').html(l.getString('tue'));
@@ -274,6 +278,14 @@ function getStrings() {
     $('#dep').attr('placeholder', l.getString('department'));
     $('#directoryHeader').html(l.getString('directory'));
     $('#addToCalendar').html(l.getString('addToCalendar'));
+    $('#lifeThreatening').html(l.getString('lifeThreatening'));
+    $('#urgentCampusMatters').html(l.getString('urgentCampusMatters'));
+    $('#ysGeneral').html(l.getString('ysGeneral'));
+    $('#ysTTY').html(l.getString('ysTTY'));
+    $('#ysUrgent').html(l.getString('ysUrgent'));
+    $('#goSAFE').html(l.getString('goSAFE'));
+    $('#good2Talk').html(l.getString('good2Talk'));
+    $('#lostFound').html(l.getString('lostFound'));
 }
 
 //TIMETABLE LINKS----------------------------------
@@ -1107,15 +1119,11 @@ function detailsPage() {
 
     $('#search').attr('placeholder', l.getString('refineList'));
 
+
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
-        if (events.type == 2) {
-            $('#eventsTitle').html(l.getString('classes'));
-        } else {
-            $('#eventsTitle').html(l.getString('eventTitle'));
-        }
         $('#description').html(details.descriptionEn);
-        if (offline == 1 || details.imageEn == "") {
+        if (offline == 1 || details.imageEn != "") {
             $('#location-image').attr('src', 'img/transparent.png');
             $('#location-image').attr('style', 'width: 0px; height:0px;');
 
@@ -1131,16 +1139,10 @@ function detailsPage() {
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
 
             var eventDate = getDateInfo(events[e].startTimeEn);
-            if (events.type == 2) {
-                if (thisEvent == today) {
-                    event += '    <li class="location-event-listing">';
-                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
-                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
-                    event += '    </li>';
-                }
 
-            } else {
+            switch (events.type) {
+            case 1:
+                $('#eventsTitle').html(l.getString('classes'));
                 if (thisEvent >= today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
@@ -1148,19 +1150,62 @@ function detailsPage() {
                     event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
                     event += '    </li>';
                 }
+                break;
+            case 2:
+                $('#eventsTitle').html(l.getString('eventTitle'));
+                if (thisEvent == today) {
+                    event += '    <li class="location-event-listing">';
+                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                    event += '    </li>';
+                }
+                break;
+            case 3:
+                $('#eventsTitle').html(l.getString('dailySpecials'));
+                console.log(events[e]);
+                var operationHours = JSON.parse(events[e].operationHours);
+                var openingHour = '';
+                var closingHour = '';
+                console.log(operationHours);
+
+                var days = JSON.parse(events[e].days);
+                var day = now.getDay();
+                //get operation hours for today
+                for (i = 0; i < operationHours.length; i++) {
+                    if (operationHours[i].day == day) {
+                        openingHour = operationHours[i].openingHour;
+                        closingHour = operationHours[i].closingHour;
+                    }
+                }
+                var hour = now.getHours();
+                var minutes = now.getMinutes();
+                //Check if store is open
+                var storeHours = '<h1 class="hours-operation-title">Store hours</h1>';
+                //                storeHours += '<h1 class="operation-schedule">' + openHour + ' à ' + closingHour + '<span class="open-icon">OPEN</span></h1>'
+                storeHours += '<h1 class="operation-schedule">' + openingHour + ' to ' + closingHour + '</h1>';
+                $('#storeHours').html(storeHours);
+                if ($.inArray(day, days)) {
+                    event += '    <li class = "food-menu-item"> ';
+                    if (offline == 1 || events[e].imageEn != "") {
+                        event += '    <img style="float: left; margin: 0px 15px 15px 0px;" src="' + events[e].imageEn + '" class="img-responsive" height="42" width="42">';
+                    }
+                    event += '    <span>$' + events[e].price + ' // ' + events[e].nameEn + '</span><br style="clear:both" />' + events[e].descriptionEn;
+                    event += '    </li>';
+
+                }
+
+                break;
+
             }
+
         }
         event += '</ul>';
         $('#name').val(details.nameEn);
     } else {
         $('.location-name').html(details.nameFr);
-        if (events.type == 2) {
-            $('#eventsTitle').html(l.getString('classes'));
-        } else {
-            $('#eventsTitle').html(l.getString('eventTitle'));
-        }
         $('#description').html(details.descriptionFr);
-        if (offline == 1 || details.imageFr == "") {
+        if (offline == 1 || details.imageFr != "") {
             $('#location-image').attr('src', 'img/transparent.png');
             $('#location-image').attr('style', 'width: 0px; height:0px;');
         } else {
@@ -1174,23 +1219,60 @@ function detailsPage() {
 
             var eventDate = getDateInfo(events[e].startTimeEn);
 
-            if (events.type == 2) {
-                if (thisEvent == today) {
-                    event += '    <li class="location-event-listing">';
-                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
-                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
-                    event += '    </li>';
-                }
-
-            } else {
+            switch (events.type) {
+            case 1:
+                $('#eventsTitle').html(l.getString('classes'));
                 if (thisEvent >= today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
-                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
                     event += '    </li>';
                 }
+                break;
+            case 2:
+                $('#eventsTitle').html(l.getString('eventTitle'));
+                if (thisEvent == today) {
+                    event += '    <li class="location-event-listing">';
+                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                    event += '    </li>';
+                }
+                break;
+            case 3:
+                $('#eventsTitle').html(l.getString('dailySpecials'));
+                console.log(events[e]);
+                var operationHours = JSON.parse(events[e].operationHours);
+                var openingHour = '';
+                var closingHour = '';
+
+                var days = JSON.parse(events[e].days);
+                var day = now.getDay();
+                //get operation hours for today
+                for (i = 0; i < operationHours.length; i++) {
+                    if (operationHours[i].day == day) {
+                        openingHour = operationHours[i].openingHour;
+                        closingHour = operationHours[i].closingHour;
+                    }
+                }
+                var hour = now.getHours();
+                var minutes = now.getMinutes();
+                //Check if store is open
+                var storeHours = '<h1 class="hours-operation-title">Heures d\'ouvertures</h1>';
+                //                storeHours += '<h1 class="operation-schedule">' + openHour + ' à ' + closingHour + '<span class="open-icon">OPEN</span></h1>'
+                storeHours += '<h1 class="operation-schedule">' + openingHour + ' à ' + closingHour + '</h1>';
+                $('#storeHours').html(storeHours);
+                if ($.inArray(day, days)) {
+                    event += '    <li class = "food-menu-item"> ';
+                    if (offline == 1 || events[e].imageFr != "") {
+                        event += '    <img style="float: left; margin: 0px 15px 15px 0px;" src="' + events[e].imageFr + '" class="img-responsive" height="42" width="42">';
+                    }
+                    event += '    <span>' + events[e].price + '$ // ' + events[e].nameFr + '</span><br style="clear:both" />' + events[e].descriptionFr;
+                    event += '    </li>';
+
+                }
+                break;
             }
         }
         event += '</ul>';
@@ -1274,7 +1356,7 @@ function eventsPage() {
         } else {
             $('#location-image').attr('src', details.imageEn);
         }
-        
+
         $('.location-name').html(details.locationEn);
         $('#location-email').html(details.email);
         $('.event-date-time').html(eventDate.currentDateEn + ' | @ ' + eventDate.timeEn);

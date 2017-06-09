@@ -7,7 +7,7 @@ and open the template in the editor.
 <html>
 
 <head>
-    <title>details</title>
+    <title>Contact</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Glendon YorkU">
@@ -23,16 +23,7 @@ and open the template in the editor.
     <script src="js/config.js"></script>
     <script src="js/lang.fr.js"></script>
     <script src="js/lang.en.js"></script>
-    <script src="js/notify.js"></script>
-    <script src="js/libs/rfc3339date.js"></script>
-    <script src="js/jquery.touchSwipe.min.js"></script>
-    <script src="js/jquery.hideseek.min.js"></script>
     <script src="js/glendon.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('#search').hideseek();
-        });
-    </script>
 </head>
 
 <body>
@@ -63,45 +54,52 @@ and open the template in the editor.
                 <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
             </ul>
         </nav>
-        <input type="hidden" id="cId" value="">
-        <input type="hidden" id="scId" value="">
-        <input type="hidden" id="listId" value="">
-        <input type="hidden" id="pId" value="">
+
+        <div class="info-banner">
+            <div class="daily-date">
+                <h1><span id="dayName"></span></h1><span id="currentDate"></span>
+            </div>
+            <div class="meteo">
+                <h1><span id="temperature"></span><i class="wi meteo-icon" aria-hidden="true"></i></h1>
+                <span id="condition"></span>
+            </div>
+        </div>
+        <ul class="nav nav-pills blue-title">
+
+            <li class="active"><a data-toggle="tab" href="#"><i class="fa fa-phone" aria-hidden="true"></i><span id="contacts">Contacts</span></a></li>
+
+
+        </ul>
         <div class="sub-menu-listing">
-            <a id="return-back-link" href="#"> </a>
+            <a id="return-back-link" href="index.html"> </a>
             <!-- <p id="go-back-text">BACK</p> -->
             <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>
-
-
-            <div class="location-description">
-                <input type="hidden" id="name" value="">
-                <input type="hidden" id="url" value="">
-                <input type="hidden" id="id" value="">
-                <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
-                <p class="location-text">
-                    <div class="location-img-div"><img src="" alt="logo" id="location-image" class="img-responsive pull-left" /></div>
-                    <span class="location-name"></span>
-                    <br/>
-                    <br/>
-                    <span id="description"></span>
-                </p>
-            </div>
-            <div class="location-contact-info">
-                <a href="" id="location-email"></a>
-                <span id="twitter"></span>
-                <span id="instagram"></span>
-                <span id="facebook"></span>
-            </div>
-        <div id="storeHours"></div>
-            <h1 class="location-event-title"><span id="eventsTitle"></span></h1>
-            <div class="schedule-selector">
-                <div class="schedule-slider">
-                    <input id="search" name="search" placeholder="" type="text" data-list=".default_list" autocomplete="off">
-                </div>
-            </div>
-
-            <div id="eventsList"></div>
-
+            <ul>
+                <li class="menu-section-listing">
+                    <a href="tel:911"><span id="lifeThreatening"></span> (911)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:416-736-5333p33333"><span id="ysUrgent"></span><br>(416-736-5333 x33333)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:416-650-8000p58000"><span id="ysGeneral"></span><br>(416-650-8000 x58000)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:416-736-5470p55470"><span id="ysTTY"></span><br>(416-736-5470 x55470)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:416-736-5454p55454"><span id="goSAFE"></span><br>(416-736-5454 x55454)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:416-650-8056"><span id="SASSL"></span><br>(416-650-8056)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:416-736-2100p33369"><span id="lostFound"></span><br>(416-736-2100 x33369)</a>
+                </li>
+                <li class="menu-section-listing">
+                    <a href="tel:1-866-925-5454"><span id="good2Talk"></span><br>(1-866-925-5454)</a>
+                </li>
+            </ul>
         </div>
     </div>
     <!--Site wrap-->
