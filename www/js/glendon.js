@@ -830,7 +830,7 @@ function getMyFavorites() {
             for (i = 0; i < favorites.length; i++) {
                 html += '<li class="menu-section">';
                 html += '<i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
-                html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
+//                html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
                 html += '<a href="' + favorites[i].url + '">' + favorites[i].name + '</a>';
                 html += '</li>';
             }
@@ -908,7 +908,9 @@ function deleteFavorite(id) {
     var str = JSON.stringify(items);
     //    //Store favorites
     localStorage.setItem('favorites', str);
+    $('#favoriteIcon').attr('style', "color:rgba(15, 44, 91, 0.3)");
     return getMyFavorites();
+    
 }
 
 //SITE AND PAGES-------------------------------------------------------
@@ -1013,7 +1015,7 @@ function pageList() {
             if (redirectEn == '') {
                 redirectEn = redirectFr;
             }
-            redirect = true;
+            redirect = false;
         }
         //This is to change the color of the heart for favorites
         var style = '';
@@ -1030,7 +1032,7 @@ function pageList() {
         }
         if ($('#lang').val() == 'en') {
             html += '<li class="menu-section-listing">';
-            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true"></i>';
+//            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
             if (redirect == true) {
                 html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
             } else {
@@ -1039,7 +1041,7 @@ function pageList() {
             html += '</li>';
         } else {
             html += '<li class="menu-section-listing">';
-            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true"></i>';
+//            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
             if (redirect == true) {
                 html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
             } else {
@@ -1103,8 +1105,10 @@ function detailsPage() {
         });
         if (result.length == 1) {
             $('#favoriteIcon').attr('style', "color:#E31836");
+            $('#favoriteIcon').attr('onclick', "deleteFavorite(" + pId + ")");
         } else {
             style = '';
+            $('#favoriteIcon').attr('onclick', "addToFavorites(" + pId + ")");
         }
     }
 
@@ -1114,13 +1118,13 @@ function detailsPage() {
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
     var event = '<ul class="default_list">';
+
     //Add favorites data info
     $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
     $('#id').val(pId);
 
     $('#search').attr('placeholder', l.getString('refineList'));
-
-
+    
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
         $('#description').html(details.descriptionEn);
@@ -1132,13 +1136,16 @@ function detailsPage() {
             $('#location-image').attr('src', details.imageEn);
         }
         $('#location-email').html(details.email);
+        
+        if (details.externalUrlEn != '')  {
+            $('#externalUrl').html('<a href="' + details.externalUrlEn + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
+        }
 
-        console.log(today);
         for (e = 0; e < events['count']; e++) {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-
+            
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             switch (events.type) {
@@ -1214,7 +1221,7 @@ function detailsPage() {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-
+            
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             switch (events.type) {

@@ -64,9 +64,6 @@
 <preference name="Orientation" value="portrait"/>
 <preference name="android-signed" value="true"/>
 <preference name="AndroidLaunchMode" value="singleTop"/>
-<feature name="Calendar">
-    <param name="android-package" value="nl.xservices.plugins.Calendar" />
-</feature>
 </platform>
 <platform name="ios" >
 <preference name="exit-on-suspend" value="false"/>
@@ -74,9 +71,6 @@
 <preference name="ios-configuration" value="adhoc"/>
 <preference name="Fullscreen" value="false"/>
 <preference name="Orientation" value="portrait"/>
-<feature name="Calendar">
-    <param name="ios-package" value="Calendar" />
-</feature>
 </platform>
 <splash platform="android" src="package-assets/screen/android/LDPI 320 - 426.png" density="ldpi" width="320" height="426" orientation="portrait"/>
 <splash platform="android" src="package-assets/screen/android/MDPI 320 - 470.png" density="mdpi" width="320" height="470" orientation="portrait"/>
