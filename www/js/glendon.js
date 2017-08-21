@@ -95,7 +95,11 @@ function startApp(ignore) {
             setInterval(function () {
                 getCurrentDate();
             }, 3600000);
-            $('#spinnerHome').removeClass('fa-spin');
+            
+            setInterval(function() {
+                $('#spinnerHome').removeClass('fa-spin');
+            }, 1500);
+            
         }
         if (pageName == 'subcategories') {
             subCategories();
@@ -186,9 +190,9 @@ function navPills() {
     var offLine = window.localStorage.getItem('offLine');
     var html = '';
     if (offLine == 0) {
-        html = '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle') + '</a></li>';
+        html += '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle') + '</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
-        html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>';
+        html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i id="spinnerHome" class="fa fa-refresh fa-spin refresh-icon" aria-hidden="true"></i></a>';
     } else {
         if (window.localStorage.getItem('lang') == 'fr') {
             html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Hors ligne</span></a></li>';
@@ -494,7 +498,12 @@ function getGlendonShuttle() {
                             html += '<li>';
                             html += '	<div id="bus-time">';
                             html += timeRemaining;
-                            html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + shuttle[i].departureminute + '</span>';
+                            if (shuttle[i].departureminute <= 9) {
+                                var departureMinutes = "0" + shuttle[i].departureminute;
+                            } else {
+                               var departureMinutes = departureminute; 
+                            }
+                            html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + departureMinutes + '</span>';
                             html += '	</div>';
                             html += '	<div id="direction">';
                             html += '		<span id="destination-indicator">Glendon York Hall<br/>' + l.getString('towards') + ' Keele Vari Hall</span>';
@@ -830,7 +839,7 @@ function getMyFavorites() {
             for (i = 0; i < favorites.length; i++) {
                 html += '<li class="menu-section">';
                 html += '<i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
-//                html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
+                //                html += '<i class="fa fa-trash pull-left sub-menu-trash" onClick="deleteFavorite(' + favorites[i]['id'] + ')" aria-hidden="true"></i>';
                 html += '<a href="' + favorites[i].url + '">' + favorites[i].name + '</a>';
                 html += '</li>';
             }
@@ -852,6 +861,9 @@ function addToFavorites() {
     var id = $('#id').val();
     var name = $('#name').val();
     var url = $('#url').val();
+    //Check to see if there is a data=id
+    var dataId = $('#favoriteIcon').attr('data-id');
+
     //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
 
@@ -873,44 +885,53 @@ function addToFavorites() {
     //Store favorites
     window.localStorage.setItem('favorites', str);
 
-    $('#favoriteIcon').attr('style', "color:#E31836");
+    if (dataId == -1) {
+        $('#favoriteIcon').attr('style', "color:#E31836");
 
-    if (lang == 'en') {
-        $.notify({
-            message: "Favorite added"
-        }, {
-            element: 'body',
-            position: null,
-            type: 'success',
-            delay: 1000,
-        });
+        if (lang == 'en') {
+            $.notify({
+                message: "Favorite added"
+            }, {
+                element: 'body',
+                position: null,
+                type: 'success',
+                delay: 1000,
+            });
+        } else {
+            $.notify({
+                message: "Favoris ajouté"
+            }, {
+                element: 'body',
+                position: null,
+                type: 'success',
+                delay: 1000,
+            });
+        }
+        $('#favoriteIcon').attr('data-id', id);
     } else {
-        $.notify({
-            message: "Favoris ajouté"
-        }, {
-            element: 'body',
-            position: null,
-            type: 'success',
-            delay: 1000,
-        });
+        deleteFavorite(dataId);
+        $('#favoriteIcon').attr('data-id', -1);
     }
 }
 
 function deleteFavorite(id) {
+    //Convert into integer
+    id = parseInt(id);
     //first get the object from storage
     var favorites = window.localStorage.getItem('favorites');
     var obj = JSON.parse(favorites);
     var i = 0;
-
+    console.log(obj);
     items = $.grep(obj, function (obj) {
         return obj.id !== id;
     });
+    console.log(items);
     var str = JSON.stringify(items);
     //    //Store favorites
     localStorage.setItem('favorites', str);
     $('#favoriteIcon').attr('style', "color:rgba(15, 44, 91, 0.3)");
     return getMyFavorites();
-    
+
 }
 
 //SITE AND PAGES-------------------------------------------------------
@@ -926,7 +947,7 @@ function getSite(ignoreVersion) {
     if (offLine == 0) {
         //Only update if version is ignored OR on a new day
         if (ignoreVersion == 1 || siteVersion == null || siteVersion != version) {
-            console.log('I am getting a new versioin');
+            console.log('I am getting a new version');
             var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
             $.ajax({
                 url: url,
@@ -962,6 +983,7 @@ function subCategories() {
     var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(data);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
+    console.log(sc);
     var html = '<ul>';
     for (i = 0; i < sc.count; i++) {
         if ($('#lang').val() == 'en') {
@@ -1032,7 +1054,7 @@ function pageList() {
         }
         if ($('#lang').val() == 'en') {
             html += '<li class="menu-section-listing">';
-//            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
+            //            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
             if (redirect == true) {
                 html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
             } else {
@@ -1041,7 +1063,7 @@ function pageList() {
             html += '</li>';
         } else {
             html += '<li class="menu-section-listing">';
-//            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
+            //            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
             if (redirect == true) {
                 html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
             } else {
@@ -1105,11 +1127,18 @@ function detailsPage() {
         });
         if (result.length == 1) {
             $('#favoriteIcon').attr('style', "color:#E31836");
-            $('#favoriteIcon').attr('onclick', "deleteFavorite(" + pId + ")");
+            $('#favoriteIcon').attr('data-id', pId);
+            $('#favoriteIcon').attr('onclick', "addToFavorites(" + pId + ")");
         } else {
             style = '';
             $('#favoriteIcon').attr('onclick', "addToFavorites(" + pId + ")");
+            $('#favoriteIcon').attr('style', "color:#E4E4E4");
+            $('#favoriteIcon').attr('data-id', -1);
         }
+    } else {
+        $('#favoriteIcon').attr('onclick', "addToFavorites(" + pId + ")");
+        $('#favoriteIcon').attr('style', "color:#E4E4E4");
+        $('#favoriteIcon').attr('data-id', -1);
     }
 
     var siteCode = window.localStorage.getItem('siteCode');
@@ -1124,7 +1153,7 @@ function detailsPage() {
     $('#id').val(pId);
 
     $('#search').attr('placeholder', l.getString('refineList'));
-    
+
     if ($('#lang').val() == 'en') {
         $('.location-name').html(details.nameEn);
         $('#description').html(details.descriptionEn);
@@ -1136,8 +1165,8 @@ function detailsPage() {
             $('#location-image').attr('src', details.imageEn);
         }
         $('#location-email').html(details.email);
-        
-        if (details.externalUrlEn != '')  {
+
+        if (details.externalUrlEn != '') {
             $('#externalUrl').html('<a href="' + details.externalUrlEn + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
         }
 
@@ -1145,7 +1174,7 @@ function detailsPage() {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-            
+
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             switch (events.type) {
@@ -1221,7 +1250,7 @@ function detailsPage() {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-            
+
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             switch (events.type) {
