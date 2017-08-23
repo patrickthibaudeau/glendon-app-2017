@@ -785,7 +785,6 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    margin-left: 35px;
     z-index: 99;
 }
 
@@ -853,9 +852,8 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    margin-left: 35px;
     z-index: 99;
-    padding: 10px 50px 10px 10px;
+    padding: 10px 15px 10px 10px;
 }
 
 .location-description:after {
@@ -869,7 +867,7 @@ body {
     vertical-align: middle;
     padding-left: 15px;
     position: absolute;
-    right: 50px;
+    right: 20px;
     color: rgba(15, 44, 91, 0.3);
     top: 10px;
     line-height: 100%;
@@ -896,6 +894,7 @@ body {
     font-weight: 500;
     margin: 0 !important;
     margin-bottom: 18px;
+    max-width: 300px;
 }
 
 .location-text {
@@ -925,7 +924,6 @@ body {
     width: 100%;
     height: auto;
     display: block;
-    margin: 0 0 0 35px;
     font-family: 'Lato', sans-serif;
     padding: 10px 45px 10px 10px;
 }
@@ -983,7 +981,6 @@ body {
     background: transparent;
     top: 0;
     color: rgba(15, 44, 91, 0.75);
-    margin: 0 0 0 35px;
     padding: 10px 15px;
     font-size: 20px;
     font-family: 'Lato', sans-serif;
@@ -1057,7 +1054,6 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
     background: transparent;
     top: 0;
     color: rgba(15, 44, 91, 0.50);
-    margin: 0 0 0 35px;
     padding: 15px 45px 15px 15px;
     font-size: 45px;
     font-family: 'Lato', sans-serif;
@@ -1074,8 +1070,6 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
     background: rgba(15, 44, 91, 0.3);
     top: 0;
     color: #0f2c5b;
-    margin: 0 0 0 35px;
-    ;
     padding: 10px 15px;
     font-size: 20px;
     font-family: 'Lato', sans-serif;
@@ -1090,8 +1084,6 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
     height: auto;
     top: 0;
     color: #0f2c5b;
-    margin: 0 0 0 35px;
-    ;
     padding: 10px 15px;
     font-size: 22px;
     font-family: 'Lato', sans-serif;
@@ -1105,9 +1097,7 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
     height: auto;
     top: 0;
     color: #0f2c5b;
-    margin: 0 0 0 35px;
-    ;
-    padding: 15px 50px 10px 15px;
+    padding: 5px 25px 10px 10px;
     font-size: 15px;
     font-family: 'Lato', sans-serif;
     font-weight: 300;
@@ -1118,7 +1108,7 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
 .add-to-calendar-wrap {
     width: 100%;
     height: auto;
-    padding-right: 70px;
+    padding-right: 100px;
     margin: 15px 0px 20px 50px;
 }
 
@@ -1232,34 +1222,13 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
   height: auto;
   top: 0;
   color: #0f2c5b;
-  margin: 0 0 0 35px;;
+  margin: 0 0 0 35px;
   padding: 10px 15px;
   font-size: 18px;
   font-family: 'Lato', sans-serif;
   font-weight: 300;
   line-height: 100%;
   display: block;
-}
-
-.schedule-selector {
-  width: 100%;
-  height: auto;
-  background: rgba(15, 44, 91, 0.15);
-  top: 0;
-  color: rgb(15, 44, 91);
-  margin: 10px 0 0 35px;;
-  padding: 10px 50px 5px 15px;
-  font-size: 15px;
-  font-family: 'Lato', sans-serif;
-  font-weight: 700;
-  line-height: 100%;
-  display: block;
-}
-
-.schedule-slider {
-  height: 50px;
-  background: white;
-  margin: 10px 0;
 }
 
 .open-icon {
@@ -1441,8 +1410,8 @@ WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW*/
   background: rgba(15, 44, 91, 0.15);
   top: 0;
   color: rgb(15, 44, 91);
-  margin: 10px 0 0 35px;;
-  padding: 10px 50px 5px 15px;
+  margin: 10px 0 0 0px;
+  padding: 10px 15px 5px 15px;
   font-size: 15px;
   font-family: 'Lato', sans-serif;
   font-weight: 700;

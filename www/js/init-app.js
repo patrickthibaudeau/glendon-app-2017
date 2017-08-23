@@ -137,3 +137,20 @@ app.hideSplashScreen = function() {
 
     app.consoleLog(fName, "exit") ;
 } ;
+
+function goOffLine() {
+    window.localStorage.setItem('offLine', 1);
+    navPills();
+    getStrings();
+//    atlasCheckOnlineStatus();
+}
+
+function goOnline() {
+    window.localStorage.setItem('offLine', 0);
+    startApp(0);
+//    atlasCheckOnlineStatus();
+}
+
+function onDeviceReady() {
+    
+}

@@ -17,17 +17,7 @@ and open the template in the editor.
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <!--Javascripts-->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/config.js"></script>
-    <script src="js/lang.fr.js"></script>
-    <script src="js/lang.en.js"></script>
-    <script src="js/notify.js"></script>
-    <script src="js/libs/rfc3339date.js"></script>
-    <script src="js/jquery.touchSwipe.min.js"></script>
-    <script src="js/jquery.hideseek.min.js"></script>
-    <script src="js/glendon.js"></script>
+
     <script>
         $(document).ready(function () {
             $('#search').hideseek();
@@ -68,17 +58,18 @@ and open the template in the editor.
         <input type="hidden" id="listId" value="">
         <input type="hidden" id="pId" value="">
         <div class="sub-menu-listing">
-            <a id="return-back-link" href="#"> </a>
+<!--            <a id="return-back-link" href="#"> </a>-->
             <!-- <p id="go-back-text">BACK</p> -->
-            <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>
+<!--            <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>-->
             <div class="location-description">
                 <input type="hidden" id="name" value="">
                 <input type="hidden" id="url" value="">
                 <input type="hidden" id="id" value="">
-                <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
+                
                 <p class="location-text">
                     <div class="location-img-div"><img src="" alt="logo" id="location-image" class="img-responsive pull-left" /></div>
-                    <span class="location-name"></span>
+                    <div class="location-name"></div>
+                <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
                     <br/>
                     <br/>
                     <span id="description"></span>
@@ -91,8 +82,8 @@ and open the template in the editor.
                 <span id="instagram"></span>
                 <span id="facebook"></span>
             </div>
-        
-        <div id="storeHours"></div>
+
+            <div id="storeHours"></div>
             <h1 class="location-event-title"><span id="eventsTitle"></span></h1>
             <div class="schedule-selector">
                 <div class="schedule-slider">
@@ -103,8 +94,19 @@ and open the template in the editor.
             <div id="eventsList"></div>
 
         </div>
-    </div>
-    <!--Site wrap-->
+
+        <!--Site wrap-->
+        <!--Javascripts-->
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/lang.fr.js"></script>
+        <script src="js/lang.en.js"></script>
+        <script src="js/notify.js"></script>
+        <script src="js/libs/rfc3339date.js"></script>
+        <script src="js/jquery.touchSwipe.min.js"></script>
+        <script src="js/jquery.hideseek.min.js"></script>
+        <script src="js/glendon.js"></script>
 </body>
 
 </html>

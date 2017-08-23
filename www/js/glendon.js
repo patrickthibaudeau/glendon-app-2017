@@ -20,18 +20,18 @@ $(document).ready(function () {
     });
 });
 
-function goOffLine() {
-    window.localStorage.setItem('offLine', 1);
-    navPills();
-    getStrings();
-    atlasCheckOnlineStatus();
-}
-
-function goOnline() {
-    window.localStorage.setItem('offLine', 0);
-    startApp(0);
-    atlasCheckOnlineStatus();
-}
+//function goOffLine() {
+//    window.localStorage.setItem('offLine', 1);
+//    navPills();
+//    getStrings();
+//    atlasCheckOnlineStatus();
+//}
+//
+//function goOnline() {
+//    window.localStorage.setItem('offLine', 0);
+//    startApp(0);
+//    atlasCheckOnlineStatus();
+//}
 
 function startApp(ignore) {
     $('#spinnerHome').addClass('fa-spin');
@@ -95,11 +95,11 @@ function startApp(ignore) {
             setInterval(function () {
                 getCurrentDate();
             }, 3600000);
-            
-            setInterval(function() {
+
+            setInterval(function () {
                 $('#spinnerHome').removeClass('fa-spin');
             }, 1500);
-            
+
         }
         if (pageName == 'subcategories') {
             subCategories();
@@ -150,12 +150,10 @@ function initSlider() {
     ul.css("margin-left", "-100%");
     // Listen for click of prev button
     $(".slider .prev").click(function () {
-        console.log("prev button clicked");
         slide(slide_index - 1);
     });
     // Listen for click of next button
     $(".slider .next").click(function () {
-        console.log("next button clicked");
         slide(slide_index + 1);
     });
 
@@ -353,7 +351,9 @@ function route124East() {
                 }
                 $('#route124East .minutes0').html(minuteText);
                 $('#route124East .minutes1').html(route.predictions.direction.prediction[1].minutes);
-                $('#route124East .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                if (route.predictions.direction.prediction[2].minutes != undefined) {
+                    $('#route124East .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                }
             }
         });
     }
@@ -392,7 +392,9 @@ function route124West() {
                 }
                 $('#route124West .minutes0').html(minuteText);
                 $('#route124West .minutes1').html(route.predictions.direction.prediction[1].minutes);
-                $('#route124West .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                if (route.predictions.direction.prediction[2].minutes != undefined) {
+                    $('#route124West .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                }
             }
         });
     }
@@ -427,7 +429,9 @@ function route11South() {
                 }
                 $('#route11South .minutes0').html(minuteText);
                 $('#route11South .minutes1').html(route.predictions.direction.prediction[1].minutes);
-                $('#route11South .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                if (route.predictions.direction.prediction[2].minutes != undefined) {
+                    $('#route11South .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                }
             }
         });
     }
@@ -462,7 +466,9 @@ function route11North() {
                 }
                 $('#route11North .minutes0').html(minuteText);
                 $('#route11North .minutes1').html(route.predictions.direction.prediction[1].minutes);
-                $('#route11North .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                if (route.predictions.direction.prediction[2].minutes != undefined) {
+                    $('#route11North .minutes2').html(route.predictions.direction.prediction[2].minutes);
+                }
             }
         });
     }
@@ -479,7 +485,7 @@ function getGlendonShuttle() {
             crossDomain: true,
             dataType: 'json',
             success: function (shuttle) {
-                console.log(shuttle);
+
                 var html = '';
                 if ($('#lang').val() == 'en') {
                     if (shuttle.length == 1 && shuttle[0]['campus'] == 0) {
@@ -501,7 +507,7 @@ function getGlendonShuttle() {
                             if (shuttle[i].departureminute <= 9) {
                                 var departureMinutes = "0" + shuttle[i].departureminute;
                             } else {
-                               var departureMinutes = departureminute; 
+                                var departureMinutes = departureminute;
                             }
                             html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + departureMinutes + '</span>';
                             html += '	</div>';
@@ -564,7 +570,7 @@ function getKeeleShuttle() {
             crossDomain: true,
             dataType: 'json',
             success: function (shuttle) {
-                console.log(shuttle);
+
                 var html = '';
                 if ($('#lang').val() == 'en') {
                     if (shuttle.length == 1 && shuttle[0]['campus'] == 0) {
@@ -754,8 +760,6 @@ function getAnnouncements() {
                     var liWidth = (100 / a.length);
                     $('.slider li').css('width', liWidth + '%');
                     initSlider();
-                } else {
-                    console.log('I have no printing');
                 }
             }
         });
@@ -815,7 +819,6 @@ function getAnnouncementsRefresh() {
                         initSlider();
                     }
                 } else {
-                    console.log('I have no printing');
                     $('.announcements').remove();
                 }
             }
@@ -921,11 +924,11 @@ function deleteFavorite(id) {
     var favorites = window.localStorage.getItem('favorites');
     var obj = JSON.parse(favorites);
     var i = 0;
-    console.log(obj);
+
     items = $.grep(obj, function (obj) {
         return obj.id !== id;
     });
-    console.log(items);
+
     var str = JSON.stringify(items);
     //    //Store favorites
     localStorage.setItem('favorites', str);
@@ -947,7 +950,7 @@ function getSite(ignoreVersion) {
     if (offLine == 0) {
         //Only update if version is ignored OR on a new day
         if (ignoreVersion == 1 || siteVersion == null || siteVersion != version) {
-            console.log('I am getting a new version');
+
             var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
             $.ajax({
                 url: url,
@@ -983,7 +986,7 @@ function subCategories() {
     var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(data);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
-    console.log(sc);
+
     var html = '<ul>';
     for (i = 0; i < sc.count; i++) {
         if ($('#lang').val() == 'en') {
@@ -1021,7 +1024,7 @@ function pageList() {
     var list = json['categories'][cId]['subcategories'][scId]['listing'];
     var redirect = false;
     var html = '<ul>';
-    console.log(list);
+
     var favorites = JSON.parse(window.localStorage.getItem('favorites'));
 
     for (i = 0; i < list.count; i++) {
@@ -1146,7 +1149,7 @@ function detailsPage() {
     var json = JSON.parse(data);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
-    var event = '<ul class="default_list">';
+    var event = '<ul>';
 
     //Add favorites data info
     $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
@@ -1200,11 +1203,11 @@ function detailsPage() {
                 break;
             case 3:
                 $('#eventsTitle').html(l.getString('dailySpecials'));
-                console.log(events[e]);
+
                 var operationHours = JSON.parse(events[e].operationHours);
                 var openingHour = '';
                 var closingHour = '';
-                console.log(operationHours);
+
 
                 var days = JSON.parse(events[e].days);
                 var day = now.getDay();
@@ -1276,7 +1279,7 @@ function detailsPage() {
                 break;
             case 3:
                 $('#eventsTitle').html(l.getString('dailySpecials'));
-                console.log(events[e]);
+
                 var operationHours = JSON.parse(events[e].operationHours);
                 var openingHour = '';
                 var closingHour = '';
@@ -1378,7 +1381,7 @@ function eventsPage() {
     $('#where').html(l.getString('where'));
     $('#when').html(l.getString('when'));
     $('#description').html(l.getString('description'));
-    console.log(details);
+
     var eventDate = getDateInfo(details.startTimeEn);
     if (lang == 'en') {
         $('#eventTitle').html(details.nameEn);
