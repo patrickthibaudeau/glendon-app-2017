@@ -493,10 +493,10 @@ function getGlendonShuttle() {
                     } else {
                         for (i = 0; i < shuttle.length; i++) {
                             if (shuttle[i].remaininghour != "") {
-                                var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
+                                var timeRemaining = shuttle[i].remaininghour + ' hour(s) ' + shuttle[i].remainingminutes + ' minute(s)';
                             } else {
                                 if (shuttle[i].remainingminutes != 0) {
-                                    var timeRemaining = shuttle[i].remainingminutes + ' min';
+                                    var timeRemaining = shuttle[i].remainingminutes + ' minute(s)';
                                 } else {
                                     var timeRemaining = 'Leaving';
                                 }
@@ -504,11 +504,9 @@ function getGlendonShuttle() {
                             html += '<li>';
                             html += '	<div id="bus-time">';
                             html += timeRemaining;
-                            if (shuttle[i].departureminute <= 9) {
-                                var departureMinutes = "0" + shuttle[i].departureminute;
-                            } else {
-                                var departureMinutes = departureminute;
-                            }
+                            
+                            var departureMinutes = shuttle[i].departureminute;
+                            
                             html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + departureMinutes + '</span>';
                             html += '	</div>';
                             html += '	<div id="direction">';
@@ -578,7 +576,7 @@ function getKeeleShuttle() {
                     } else {
                         for (i = 0; i < shuttle.length; i++) {
                             if (shuttle[i].remaininghour != "") {
-                                var timeRemaining = shuttle[i].remaininghour + ':' + shuttle[i].remainingminutes + ' min';
+                                var timeRemaining = shuttle[i].remaininghour + ' hour(s) ' + shuttle[i].remainingminutes + ' minute(s)';
                             } else {
                                 if (shuttle[i].remainingminutes != 0) {
                                     var timeRemaining = shuttle[i].remainingminutes + ' min';
@@ -986,7 +984,6 @@ function subCategories() {
         $('#cId').val(id);
     }
     var siteCode = window.localStorage.getItem('siteCode');
-//    var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(siteCode);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
 
@@ -1022,7 +1019,6 @@ function pageList() {
         $('#scId').val(scId);
     }
     var siteCode = window.localStorage.getItem('siteCode');
-//    var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(siteCode);
     var list = json['categories'][cId]['subcategories'][scId]['listing'];
     var redirect = false;
@@ -1148,7 +1144,6 @@ function detailsPage() {
     }
 
     var siteCode = window.localStorage.getItem('siteCode');
-//    var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(siteCode);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
@@ -1376,7 +1371,6 @@ function eventsPage() {
         $('#eId').val(eId);
     }
     var siteCode = localStorage.getItem('siteCode');
-//    var data = b64DecodeUnicode(siteCode);
     var json = JSON.parse(siteCode);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'][eId];
     var event = '';
