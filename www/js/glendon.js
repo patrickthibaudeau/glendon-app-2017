@@ -97,10 +97,10 @@ function startApp(ignore) {
                 getCurrentDate();
             }, 3600000);
 
-            $('#spinnerHome').removeClass('fa-spin');
-//            setInterval(function () {
-//                
-//            }, 1500);
+            
+            setInterval(function () {
+                $('#spinnerHome').removeClass('fa-spin');
+            }, 2000);
 
         }
         if (pageName == 'subcategories') {
