@@ -962,12 +962,15 @@ function getSite(ignoreVersion) {
                         window.localStorage.setItem('siteCode', site[0]['site']);
                     } else {
                         if (siteCode != site[0]['site']) {
-                            window.localStorage.setItem('siteCode', site[0]['site']);
                             siteCode = site[0]['site'];
+                            var data = b64DecodeUnicode(siteCode);
+                            window.localStorage.setItem('siteCode', data);
+                            
                         }
                     }
-                    var data = b64DecodeUnicode(siteCode);
+                    
                     var json = JSON.parse(data);
+                    
                     siteVersion = window.localStorage.setItem('siteVersion', version);
                     siteVersion = version;
                 }
@@ -983,8 +986,8 @@ function subCategories() {
         $('#cId').val(id);
     }
     var siteCode = window.localStorage.getItem('siteCode');
-    var data = b64DecodeUnicode(siteCode);
-    var json = JSON.parse(data);
+//    var data = b64DecodeUnicode(siteCode);
+    var json = JSON.parse(siteCode);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
 
     var html = '<ul>';
@@ -1019,8 +1022,8 @@ function pageList() {
         $('#scId').val(scId);
     }
     var siteCode = window.localStorage.getItem('siteCode');
-    var data = b64DecodeUnicode(siteCode);
-    var json = JSON.parse(data);
+//    var data = b64DecodeUnicode(siteCode);
+    var json = JSON.parse(siteCode);
     var list = json['categories'][cId]['subcategories'][scId]['listing'];
     var redirect = false;
     var html = '<ul>';
@@ -1145,8 +1148,8 @@ function detailsPage() {
     }
 
     var siteCode = window.localStorage.getItem('siteCode');
-    var data = b64DecodeUnicode(siteCode);
-    var json = JSON.parse(data);
+//    var data = b64DecodeUnicode(siteCode);
+    var json = JSON.parse(siteCode);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
     var event = '<ul>';
@@ -1373,8 +1376,8 @@ function eventsPage() {
         $('#eId').val(eId);
     }
     var siteCode = localStorage.getItem('siteCode');
-    var data = b64DecodeUnicode(siteCode);
-    var json = JSON.parse(data);
+//    var data = b64DecodeUnicode(siteCode);
+    var json = JSON.parse(siteCode);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'][eId];
     var event = '';
 
