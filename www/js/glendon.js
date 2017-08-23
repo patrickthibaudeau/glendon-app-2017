@@ -74,6 +74,7 @@ function startApp(ignore) {
             route11North();
             getGlendonShuttle();
             getKeeleShuttle();
+            
             //Refresh every minute
             setInterval(function () {
                 route124East();
@@ -96,13 +97,14 @@ function startApp(ignore) {
                 getCurrentDate();
             }, 3600000);
 
-            setInterval(function () {
-                $('#spinnerHome').removeClass('fa-spin');
-            }, 1500);
+            $('#spinnerHome').removeClass('fa-spin');
+//            setInterval(function () {
+//                
+//            }, 1500);
 
         }
         if (pageName == 'subcategories') {
-            subCategories();
+            subCategories();  
         }
         if (pageName == 'pagelist') {
             pageList();
@@ -957,7 +959,8 @@ function getSite(ignoreVersion) {
                 success: function (site) {
                     var siteCode = window.localStorage.getItem('siteCode');
                     if (siteCode == null) {
-                        window.localStorage.setItem('siteCode', site[0]['site']);
+                        var data = b64DecodeUnicode(site[0]['site']);
+                        window.localStorage.setItem('siteCode', data);
                     } else {
                         if (siteCode != site[0]['site']) {
                             siteCode = site[0]['site'];
@@ -984,8 +987,10 @@ function subCategories() {
         $('#cId').val(id);
     }
     var siteCode = window.localStorage.getItem('siteCode');
+    console.log('siteCode=' + siteCode);
     var json = JSON.parse(siteCode);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
+    
 
     var html = '<ul>';
     for (i = 0; i < sc.count; i++) {
