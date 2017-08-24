@@ -38,6 +38,7 @@ function searchAtlas() {
 
     var queryString = '&ln=' + ln + '&fn=' + fn + '&email=' + email + '&ext=' + ext + '&title=' + title + '&dep=' + dep;
     var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_atlas_search' + queryString + '&moodlewsrestformat=json';
+    console.log(url);
     $.ajax({
         url: url,
         crossDomain: true,
