@@ -36,6 +36,10 @@
 </plugin>
 <plugin name="cordova-plugin-compat" spec="1.0.0"/>
 <plugin name="cordova-plugin-whitelist" spec="1.2.2"/>
+<!-- for iOS -->
+<feature name="Calendar">
+	<param name="ios-package" value="Calendar" />
+</feature>
 <platform  name="ios">
     <!-- below requires the splash screen plugin -->
     <!-- docs: https://github.com/apache/cordova-plugin-splashscreen -->
