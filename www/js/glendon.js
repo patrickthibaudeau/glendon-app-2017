@@ -987,7 +987,6 @@ function subCategories() {
         $('#cId').val(id);
     }
     var siteCode = window.localStorage.getItem('siteCode');
-    console.log('siteCode=' + siteCode);
     var json = JSON.parse(siteCode);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
     
@@ -1185,7 +1184,7 @@ function detailsPage() {
 
             switch (events.type) {
             case 1:
-                $('#eventsTitle').html(l.getString('classes'));
+                $('#eventsTitle').html(l.getString('eventTitle'));
                 if (thisEvent >= today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
@@ -1252,6 +1251,10 @@ function detailsPage() {
             $('#location-image').attr('src', details.imageFr);
         }
         $('#location-email').html(details.email);
+        
+        if (details.externalUrlFr != '') {
+            $('#externalUrl').html('<a href="' + details.externalUrlFr + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
+        }
         for (e = 0; e < events['count']; e++) {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
@@ -1261,12 +1264,12 @@ function detailsPage() {
 
             switch (events.type) {
             case 1:
-                $('#eventsTitle').html(l.getString('classes'));
+                $('#eventsTitle').html(l.getString('eventTitle'));
                 if (thisEvent >= today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
-                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
+                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
                     event += '    </li>';
                 }
                 break;
@@ -1275,8 +1278,8 @@ function detailsPage() {
                 if (thisEvent == today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
-                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
+                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
                     event += '    </li>';
                 }
                 break;
