@@ -30,6 +30,7 @@ var en = {
     password: 'Password',
     refineList:'Type here to refine the list',
     SASSL:'SASSL, 24hr Crisis Line',
+    sat: 'SAT',
     shuttle:'Shuttle',
     summer: 'Summer',
     title: 'Title',

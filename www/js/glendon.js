@@ -1123,7 +1123,8 @@ function detailsPage() {
     //Use todays date to view events
     var now = new Date();
     var today = now.getFullYear() + '' + now.getMonth() + '' + now.getDate();
-
+    var todayDay = now.getDay();
+    var eventExists = Array();
     //This is to change the color of the heart for favorites
     var favorites = JSON.parse(window.localStorage.getItem('favorites'));
     var style = '';
@@ -1151,7 +1152,9 @@ function detailsPage() {
     var json = JSON.parse(siteCode);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
-    var event = '<ul>';
+    
+    
+    var event = '<ul class="default_list">';
 
     //Add favorites data info
     $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
@@ -1179,9 +1182,9 @@ function detailsPage() {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
+            var thisEventDay = eventDate.getDay();
 
             var eventDate = getDateInfo(events[e].startTimeEn);
-
             switch (events.type) {
             case 1:
                 $('#eventsTitle').html(l.getString('eventTitle'));
@@ -1201,7 +1204,9 @@ function detailsPage() {
                     event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
                     event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
                     event += '    </li>';
+                    eventExists[e] = thisEventDay + '-' + events[e].nameEn;
                 }
+                
                 break;
             case 3:
                 $('#eventsTitle').html(l.getString('dailySpecials'));
@@ -1241,6 +1246,7 @@ function detailsPage() {
         }
         event += '</ul>';
         $('#name').val(details.nameEn);
+        console.log(eventExists);
     } else {
         $('.location-name').html(details.nameFr);
         $('#description').html(details.descriptionFr);
@@ -1259,7 +1265,7 @@ function detailsPage() {
             //Get event date for comparison
             var eventDate = new Date(events[e].startDateTime);
             var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-
+            var thisEventDay = eventDate.getDay();
             var eventDate = getDateInfo(events[e].startTimeEn);
 
             switch (events.type) {
@@ -1347,6 +1353,7 @@ function detailsPage() {
         }
     });
     $('#return-back-link').attr('href', 'pagelist.html?cid=' + cId + '&scid=' + scId);
+    $('#search').hideseek();
 }
 
 function eventsPage() {

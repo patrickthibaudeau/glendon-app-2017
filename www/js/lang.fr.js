@@ -30,6 +30,7 @@ var fr = {
     password: 'Mot de passe',
     refineList:'Tapez ici pour affiner la liste',
     SASSL:'SASSL, Ligne de crise 24 heures sur 24',
+    sat: 'SAM',
     shuttle: 'Navette',
     summer: 'Été',
     thu: 'JEU',

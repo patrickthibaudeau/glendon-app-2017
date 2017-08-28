@@ -17,12 +17,6 @@ and open the template in the editor.
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
-
-    <script>
-        $(document).ready(function () {
-            $('#search').hideseek();
-        });
-    </script>
 </head>
 
 <body>
@@ -58,18 +52,18 @@ and open the template in the editor.
         <input type="hidden" id="listId" value="">
         <input type="hidden" id="pId" value="">
         <div class="sub-menu-listing">
-<!--            <a id="return-back-link" href="#"> </a>-->
+            <!--            <a id="return-back-link" href="#"> </a>-->
             <!-- <p id="go-back-text">BACK</p> -->
-<!--            <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>-->
+            <!--            <i class="fa fa-angle-double-left goback-arrow" aria-hidden="true"></i>-->
             <div class="location-description">
                 <input type="hidden" id="name" value="">
                 <input type="hidden" id="url" value="">
                 <input type="hidden" id="id" value="">
-                
+
                 <p class="location-text">
                     <div class="location-img-div"><img src="" alt="logo" id="location-image" class="img-responsive pull-left" /></div>
                     <div class="location-name"></div>
-                <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
+                    <i onclick="addToFavorites()" class="fa fa-heart location-heart" id="favoriteIcon" aria-hidden="true"></i>
                     <br/>
                     <br/>
                     <span id="description"></span>
@@ -87,7 +81,7 @@ and open the template in the editor.
             <h1 class="location-event-title"><span id="eventsTitle"></span></h1>
             <div class="schedule-selector">
                 <div class="schedule-slider">
-                    <input id="search" name="search" placeholder="" type="text" data-list=".default_list" autocomplete="off">
+                    <input id="search" name="search" placeholder="" type="text" data-list=".default_list"  autocomplete="on">
                 </div>
             </div>
 
@@ -99,6 +93,8 @@ and open the template in the editor.
         <!--Javascripts-->
         <script src="js/jquery-3.2.1.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/fullcalendar/lib/moment.min.js"></script>
+        <script src="js/fullcalendar/fullcalendar.js"></script>
         <script src="js/config.js"></script>
         <script src="js/lang.fr.js"></script>
         <script src="js/lang.en.js"></script>
@@ -106,7 +102,7 @@ and open the template in the editor.
         <script src="js/libs/rfc3339date.js"></script>
         <script src="js/jquery.touchSwipe.min.js"></script>
         <script src="js/jquery.hideseek.min.js"></script>
-        <script src="js/glendon.min.js"></script>
+        <script src="js/glendon.js"></script>
 </body>
 
 </html>

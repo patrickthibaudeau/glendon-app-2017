@@ -19,11 +19,6 @@ and open the template in the editor.
     <link rel="stylesheet" href="css/style.css">
     <link rel='stylesheet' href='js/fullcalendar/fullcalendar.css' />
 
-    <script>
-        $(document).ready(function () {
-            refreshFallCalendar('2017-05-01');
-        });
-    </script>
 </head>
 
 <body>
@@ -57,9 +52,9 @@ and open the template in the editor.
         <input type="hidden" id="cId" value="">
         <input type="hidden" id="scId" value="">
         <ul class="nav nav-pills blue-title">
-            <li class="active"><a href="fall.html"><span id="fall">Fall</span></a></li>
-            <li><a href="winter.html"><span id="winter">Winter</span></a></li>
-            <li><a data-toggle="tab" href="summer.html"><span id="summer">Summer</span></a></li>
+            <li class="active"><a href="fall.html"><span id="fall"></span></a></li>
+            <li><a href="winter.html"><span id="winter"></span></a></li>
+            <li><a href="summer.html"><span id="summer"></span></a></li>
             <a href="#" onClick="getTimeTable('1')"><i id="spinner" class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
         </ul>
         <div class="sub-menu">
@@ -68,11 +63,12 @@ and open the template in the editor.
             <div class="tab-content">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" id="m" class="active"><a href="#" onclick="refreshFallCalendar('2017-05-01','m')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
-                    <li role="presentation" id="t"><a href="#" aria-controls="t" onclick="refreshFallCalendar('2017-05-02','t')" role="tab"><span id="tue">TUE</span></a></li>
-                    <li role="presentation" id="w"><a href="#" aria-controls="w" onclick="refreshFallCalendar('2017-05-03','w')" role="tab"><span id="wed">WED</span></a></li>
-                    <li role="presentation" id="r"><a href="#" aria-controls="r" onclick="refreshFallCalendar('2017-05-04','r')" role="tab"><span id="thu">THU</span></a></li>
-                    <li role="presentation" id="f"><a href="#" aria-controls="f" onclick="refreshFallCalendar('2017-05-05','f')" role="tab"><span id="fri">FRI</span></a></li>
+                    <li role="presentation" id="m" class="active"><a href="#" onclick="refreshCalendar('2017-05-01', 'fall','m')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
+                    <li role="presentation" id="t"><a href="#" aria-controls="t" onclick="refreshCalendar('2017-05-02', 'fall','t')" role="tab"><span id="tue">TUE</span></a></li>
+                    <li role="presentation" id="w"><a href="#" aria-controls="w" onclick="refreshCalendar('2017-05-03', 'fall','w')" role="tab"><span id="wed">WED</span></a></li>
+                    <li role="presentation" id="r"><a href="#" aria-controls="r" onclick="refreshCalendar('2017-05-04', 'fall','r')" role="tab"><span id="thu">THU</span></a></li>
+                    <li role="presentation" id="f"><a href="#" aria-controls="f" onclick="refreshCalendar('2017-05-05', 'fall','f')" role="tab"><span id="fri">FRI</span></a></li>
+                    <li role="presentation" id="s"><a href="#" aria-controls="s" onclick="refreshCalendar('2017-05-06', 'fall', 's')" role="tab"><span id="sat">SAT</span></a></li>
                 </ul>
                 <div role="tabpanel" class="tab-pane active" id="fall">
                     <div id="calendar"></div>
@@ -92,6 +88,11 @@ and open the template in the editor.
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/timetable.js"></script>
     <script src="js/glendon.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            refreshCalendar('2017-05-01', 'fall', 'm');
+        });
+    </script>
 </body>
 
 </html>

@@ -74,7 +74,6 @@
       if ($this.opts.hidden_mode) $list.children().hide();
 
       $this.keyup(function(e) {
-
         if ( [38, 40, 13].indexOf(e.keyCode) == -1 && ( e.keyCode != 8 ? $this.val().length >= $this.opts.min_chars : true ) ) {
 
           var q = $this.val().toLowerCase();

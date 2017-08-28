@@ -18,17 +18,23 @@ and open the template in the editor.
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel='stylesheet' href='js/fullcalendar/fullcalendar.css' />
-    
+
+    <script>
+        $(document).ready(function () {
+            getTimeTable();
+            refreshCalendar('2017-05-01', 'fall', 'm');
+        });
+    </script>
 </head>
 
 <body>
     <input type="hidden" id="lang" value="fr">
     <div class="menu-wrapping">
         <ul class="navigation">
-            <li class="nav-item"><a href="index.html"><span id="home"></span></a></li>
-            <li class="nav-item"><a href="atlas.html"><span id="directory"></span></a></li>
-            <li class="nav-item"><a href="contact.html"><span id="contact"></span></a></li>
-            <li class="nav-item"><a id="timeTable" href="#"><span id="myTimeTable"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="home"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="about"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="contact"></span></a></li>
+            <li class="nav-item"><a href="#"><span id="myTimeTable"></span></a></li>
         </ul>
     </div>
 
@@ -43,35 +49,32 @@ and open the template in the editor.
         <nav class='main-menu'>
             <ul>
                 <li><a href="index.html" id="focusmeplease"><i class="fa fa-home" aria-hidden="true"></i></a></li>
-                <li><a href="favorites.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
+                <li><a href="listingspage.html"><i class="fa fa-heart" aria-hidden="true"></i></a></li>
                 <li><a href="subcategories.html?id=0"><i class="fa fa-users " aria-hidden="true"></i></a></li>
                 <li><a href="subcategories.html?id=1"><i class="fa fa-institution" aria-hidden="true"></i></a></li>
                 <li><a href="mappage.html"><i class="fa fa-map-marker" aria-hidden="true"></i></a></li>
             </ul>
         </nav>
-        <ul class="nav nav-pills blue-title">
-            <li ><a href="fall.html"><span id="fall"></span></a></li>
-            <li><a href="winter.html"><span id="winter"></span></a></li>
-            <li class="active"><a  href="summer.html"><span id="summer"></span></a></li>
-            <a href="#" onClick="getTimeTable('1')"><i id="spinner" class="fa fa-refresh refresh-icon" aria-hidden="true"></i></a>
-        </ul>
         <input type="hidden" id="cId" value="">
         <input type="hidden" id="scId" value="">
         <div class="sub-menu">
             <!-- Nav tabs -->
-
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="timetable.html" aria-controls="fall" role="tab"><span id="fall">Fall</span></a></li>
+                <li role="presentation"><a href="winter.html" aria-controls="winter" role="tab"><span id="winter">Winter</span></a></li>
+                <li role="presentation"><a href="summer.html" aria-controls="summer" role="tab"><span id="summer">Summer</span></a></li>
+            </ul>
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Nav tabs -->
                 <ul class="nav nav-tabs" role="tablist">
-                    <li role="presentation" id="m" class="active"><a href="#" onclick="refreshCalendar('2017-05-01', 'summer','m')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
-                    <li role="presentation" id="t"><a href="#" aria-controls="t" onclick="refreshCalendar('2017-05-02', 'summer','t')" role="tab"><span id="tue">TUE</span></a></li>
-                    <li role="presentation" id="w"><a href="#" aria-controls="w" onclick="refreshCalendar('2017-05-03', 'summer','w')" role="tab"><span id="wed">WED</span></a></li>
-                    <li role="presentation" id="r"><a href="#" aria-controls="r" onclick="refreshCalendar('2017-05-04', 'summer','r')" role="tab"><span id="thu">THU</span></a></li>
-                    <li role="presentation" id="f"><a href="#" aria-controls="f" onclick="refreshCalendar('2017-05-05', 'summer','f')" role="tab"><span id="fri">FRI</span></a></li>
-                    <li role="presentation" id="s"><a href="#" aria-controls="s" onclick="refreshCalendar('2017-05-06', 'summer', 's')" role="tab"><span id="sat">SAT</span></a></li>
-                </ul>
-                <div role="tabpanel" class="tab-pane active" id="summer">
+                    <li role="presentation" class="active"><a href="#" onclick="refreshCalendar('2017-05-01', 'fall', 'm')" aria-controls="m" role="tab"><span id="mon">MON</span></a></li>
+                    <li role="presentation"><a href="#" aria-controls="t" onclick="refreshCalendar('2017-05-02', 'fall', 't')" role="tab"><span id="tue">TUE</span></a></li>
+                    <li role="presentation"><a href="#" aria-controls="w" onclick="refreshCalendar('2017-05-03', 'fall', 'w')" role="tab"><span id="wed">WED</span></a></li>
+                    <li role="presentation"><a href="#" aria-controls="r" onclick="refreshCalendar('2017-05-04', 'fall', 'r')" role="tab"><span id="thu">THU</span></a></li>
+                    <li role="presentation"><a href="#" aria-controls="f" onclick="refreshCalendar('2017-05-05', 'fall', 'f')" role="tab"><span id="fri">FRI</span></a></li>
+                    <li role="presentation" id="s"><a href="#" aria-controls="s" onclick="refreshCalendar('2017-05-06', 'fall', 's')" role="tab"><span id="sat">SAT</span></a></li>
+                <div role="tabpanel" class="tab-pane active" id="fall">
                     <div id="calendar"></div>
                 </div>
             </div>
@@ -85,16 +88,12 @@ and open the template in the editor.
     <script src="js/fullcalendar/lib/moment.min.js"></script>
     <script src="js/fullcalendar/fullcalendar.js"></script>
     <script src="js/config.js"></script>
+    <script src="js/language.js"></script>
     <script src="js/lang.fr.js"></script>
     <script src="js/lang.en.js"></script>
     <script src="js/jquery.touchSwipe.min.js"></script>
     <script src="js/timetable.js"></script>
     <script src="js/glendon.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            refreshCalendar('2017-05-01', 'summer', 'm');
-        });
-    </script>
 </body>
 
 </html>
