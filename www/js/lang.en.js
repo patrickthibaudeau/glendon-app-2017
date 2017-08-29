@@ -27,6 +27,7 @@ var en = {
     myTimeTable: 'Timetable',
     mon: 'MON',
     noCredentials: 'You have entered the wrong credentials. Please try again.',
+    onlineCourses: 'Online courses',
     password: 'Password',
     refineList:'Type here to refine the list',
     SASSL:'SASSL, 24hr Crisis Line',

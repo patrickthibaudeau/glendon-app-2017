@@ -5,7 +5,7 @@ $(document).ready(function () {
     } else {
         getTimeTable();
     }
-    
+
 });
 
 function getTimeTable(ignore) {
@@ -13,10 +13,11 @@ function getTimeTable(ignore) {
     var lang = getLanguage();
     var l = new Language(lang);
     var uid = window.localStorage.getItem('uid');
+    
     //    User must login in order to get credentials
     if (uid === null) {
         window.location = 'login.html';
-       var ignore = 1;
+        var ignore = 1;
     }
     console.log(ignore);
     if (ignore == 1) {
@@ -31,8 +32,11 @@ function getTimeTable(ignore) {
                     console.log(timeTable);
 
                     window.localStorage.setItem('fall', b64DecodeUnicode(timeTable[0].fall));
+                    window.localStorage.setItem('fallOnline', b64DecodeUnicode(timeTable[0].fallOnline));
                     window.localStorage.setItem('winter', b64DecodeUnicode(timeTable[0].winter));
+                    window.localStorage.setItem('winterOnline', b64DecodeUnicode(timeTable[0].winterOnline));
                     window.localStorage.setItem('summer', b64DecodeUnicode(timeTable[0].summer));
+                    window.localStorage.setItem('summerOnline', b64DecodeUnicode(timeTable[0].summerOnline));
 
                 }
             });
@@ -64,6 +68,23 @@ function refreshCalendar(defaultDate, thisTerm, day) {
         },
         events: term
     });
+}
+
+function getOnlineCourses(thisTerm) {
+    var lang = getLanguage();
+    var l = new Language(lang);
+    var html = '<h3>' + l.getString('onlineCourses') + '</h3>';
+    var courses = JSON.parse(window.localStorage.getItem(thisTerm));
+    if (courses.length > 0) {
+        html += '<ul class="list-group">';
+        for (i = 0; i < courses.length; i++) {
+            html += '<li class="list-group-item">' + courses[i].title + '<br>';
+            html += courses[i].courseTitle + '</li>';
+        }
+        html += '</ul>';
+
+        $('#onlineCourses').html(html);
+    }
 }
 
 
@@ -133,10 +154,10 @@ function getLink() {
     case 4:
     case 5:
     case 6:
-      link  = 'summer.html';
+        link = 'summer.html';
         break;
     case 7:
-    case 8: 
+    case 8:
     case 9:
     case 10:
     case 11:

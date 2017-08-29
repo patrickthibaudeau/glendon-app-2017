@@ -27,6 +27,7 @@ var fr = {
     myTimeTable: 'Horaire',
     mon: 'LUN',
     noCredentials: 'Vous avez entré les fausses informations d\'identification. Veuillez réessayer.',
+    onlineCourses: 'Cours en ligne',
     password: 'Mot de passe',
     refineList:'Tapez ici pour affiner la liste',
     SASSL:'SASSL, Ligne de crise 24 heures sur 24',

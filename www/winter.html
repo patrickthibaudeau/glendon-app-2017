@@ -73,6 +73,7 @@ and open the template in the editor.
                 <div role="tabpanel" class="tab-pane active" id="winter">
                     <div id="calendar"></div>
                 </div>
+                <div id="onlineCourses"></div>
             </div>
         </div>
     </div>
@@ -91,6 +92,7 @@ and open the template in the editor.
     <script>
         $(document).ready(function () {
             refreshCalendar('2017-05-01', 'winter', 'm');
+            getOnlineCourses('winterOnline');
         });
     </script>
 </body>
