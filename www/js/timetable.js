@@ -31,12 +31,12 @@ function getTimeTable(ignore) {
                 success: function (timeTable) {
                     console.log(timeTable);
 
-                    window.localStorage.setItem('fall', b64DecodeUnicode(timeTable[0].fall));
-                    window.localStorage.setItem('fallOnline', b64DecodeUnicode(timeTable[0].fallOnline));
-                    window.localStorage.setItem('winter', b64DecodeUnicode(timeTable[0].winter));
-                    window.localStorage.setItem('winterOnline', b64DecodeUnicode(timeTable[0].winterOnline));
-                    window.localStorage.setItem('summer', b64DecodeUnicode(timeTable[0].summer));
-                    window.localStorage.setItem('summerOnline', b64DecodeUnicode(timeTable[0].summerOnline));
+                    window.localStorage.setItem('fall', timeTable[0].fall);
+                    window.localStorage.setItem('fallOnline', timeTable[0].fallOnline);
+                    window.localStorage.setItem('winter', timeTable[0].winter);
+                    window.localStorage.setItem('winterOnline', timeTable[0].winterOnline);
+                    window.localStorage.setItem('summer', timeTable[0].summer);
+                    window.localStorage.setItem('summerOnline', timeTable[0].summerOnline);
 
                 }
             });

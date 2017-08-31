@@ -752,7 +752,7 @@ function getAnnouncements() {
                      * If not the same refresh annoucments.
                      * Otherwise, skip 
                      */
-                    var code = b64EncodeUnicode(html);
+                    var code = html;
                     window.localStorage.setItem('announcementCode', code);
                     $('#announcementsContent').html(html);
                     var ulWidth = (a.length * 100);
@@ -808,7 +808,7 @@ function getAnnouncementsRefresh() {
                      * If not the same refresh annoucments.
                      * Otherwise, skip 
                      */
-                    var code = b64EncodeUnicode(html);
+                    var code = html;
                     if (window.localStorage.getItem('announcementCode') != code) {
                         window.localStorage.setItem('announcementCode', code);
                         $('#announcementsContent').html(html);
@@ -959,12 +959,12 @@ function getSite(ignoreVersion) {
                 success: function (site) {
                     var siteCode = window.localStorage.getItem('siteCode');
                     if (siteCode == null) {
-                        var data = b64DecodeUnicode(site[0]['site']);
+                        var data = site[0]['site'];
                         window.localStorage.setItem('siteCode', data);
                     } else {
                         if (siteCode != site[0]['site']) {
                             siteCode = site[0]['site'];
-                            var data = b64DecodeUnicode(siteCode);
+                            var data = siteCode;
                             window.localStorage.setItem('siteCode', data);
                             
                         }
@@ -1274,8 +1274,8 @@ function detailsPage() {
                 if (thisEvent >= today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
-                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                    event += '    <span>' + events[e].nameFr + '</span><br/>Ou: ' + events[e].locationFr + '<br/>';
+                    event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
                     event += '    </li>';
                 }
                 break;
@@ -1284,8 +1284,8 @@ function detailsPage() {
                 if (thisEvent == today) {
                     event += '    <li class="location-event-listing">';
                     event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameFr + '</span><br/>Where: ' + events[e].locationFr + '<br/>';
-                    event += '    When: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                    event += '    <span>' + events[e].nameFr + '</span><br/>Ou: ' + events[e].locationFr + '<br/>';
+                    event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
                     event += '    </li>';
                 }
                 break;
