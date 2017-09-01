@@ -4,107 +4,119 @@
 
 $(document).ready(function () {
     $('#lang').val(getLanguage());
+    var thisLang = $('#lang').val();
     startApp(0);
+    //Create database object
+    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+
+    DB.transaction(function (t) {
+        t.executeSql("CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY ASC, name VARCHAR(255), value TEXT)");
+    });
+
+    //Add language
+    DB.transaction(function (t) {
+
+        t.executeSql('SELECT * FROM config WHERE name="lang"', [], function (t, results) {
+
+            var len = results.rows.length;
+            if (len == 0) {
+                t.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['lang', thisLang]);
+                t.executeSql('SELECT * FROM config WHERE name="lang"', [], function (t, results) {}, null);
+            }
+
+        }, null);
+
+    });
+
     $('#langue-toggle').click(function () {
         var lang = $('#lang').val();
         if (lang == 'fr') {
             $('#lang').val('en');
-            //Update local storage variable
-            window.localStorage.setItem('lang', 'en');
+            //Update config
+            DB.transaction(function (t) {
+                t.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['lang', 'en']);
+            }, null);
         } else {
             $('#lang').val('fr');
-            //Update local storage variable
-            window.localStorage.setItem('lang', 'fr');
+            //Update config
+            DB.transaction(function (t) {
+                t.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['lang', 'fr']);
+            }, null);
         }
         startApp(0);
     });
 });
 
-//function goOffLine() {
-//    window.localStorage.setItem('offLine', 1);
-//    navPills();
-//    getStrings();
-//    atlasCheckOnlineStatus();
-//}
-//
-//function goOnline() {
-//    window.localStorage.setItem('offLine', 0);
-//    startApp(0);
-//    atlasCheckOnlineStatus();
-//}
-
-function startApp(ignore) {
+function startApp(ignore,offLine) {
     $('#spinnerHome').addClass('fa-spin');
     var pageName = getPageName();
-    var offLine = window.localStorage.getItem('offLine');
     getStrings(); //Provides strings for the app
+
     if (offLine == 1) {
         getCurrentDate();
         navPills();
         getTimeTableLink();
         if (pageName == 'subcategories') {
-            subCategories();
+            subCategories(offLine);
         }
         if (pageName == 'pagelist') {
-            pageList();
+            pageList(offLine);
         }
         if (pageName == 'details') {
-            detailsPage();
+            detailsPage(offLine);
         }
         if (pageName == 'events') {
-            eventsPage();
+            eventsPage(offLine);
         }
         if (pageName == 'favorites') {
-            getMyFavorites();
+            getMyFavorites(offLine);
         }
     } else {
-
-        getSite(ignore);
+        getSite(ignore,offLine);
         getTimeTableLink();
         if (pageName == 'GlendonApp') {
-
-            getCurrentDate();
+            getCurrentDate(offLine);
             initSlider();
-            getWeather();
-            getAnnouncements();
-            navPills();
-            route124East();
-            route124West();
-            route11South();
-            route11North();
-            getGlendonShuttle();
-            getKeeleShuttle();
-            
+            getWeather(offLine);
+            getAnnouncements(offLine);
+            navPills(offLine);
+            route124East(offLine);
+            route124West(offLine);
+            route11South(offLine);
+            route11North(offLine);
+            getGlendonShuttle(offLine);
+            getKeeleShuttle(offLine);
+
             //Refresh every minute
             setInterval(function () {
-                route124East();
-                route124West();
-                route11South();
-                route11North();
-                getGlendonShuttle();
-                getKeeleShuttle();
+                route124East(offLine);
+                route124West(offLine);
+                route11South(offLine);
+                route11North(offLine);
+                getGlendonShuttle(offLine);
+                getKeeleShuttle(offLine);
             }, 60000);
             //Refresh every 5 seconds
             setInterval(function () {
-                getAnnouncementsRefresh();
+                getAnnouncementsRefresh(offLine);
             }, 5000);
             //Refresh weather every hour
             setInterval(function () {
-                getWeather();
+                getWeather(offLine);
             }, 3600000);
             //Refresh date every hour
             setInterval(function () {
-                getCurrentDate();
+                getCurrentDate(offLine);
             }, 3600000);
 
-            
+
             setInterval(function () {
                 $('#spinnerHome').removeClass('fa-spin');
             }, 2000);
 
         }
         if (pageName == 'subcategories') {
-            subCategories();  
+            subCategories();
         }
         if (pageName == 'pagelist') {
             pageList();
@@ -184,17 +196,16 @@ function initSlider() {
 }
 
 //NAV PILLS BLUE---------------------------------------------
-function navPills() {
-    var lang = window.localStorage.getItem('lang');
+function navPills(offLine) {
+    var lang = getLanguage();
     var l = new Language(lang);
-    var offLine = window.localStorage.getItem('offLine');
     var html = '';
     if (offLine == 0) {
         html += '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle') + '</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
         html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i id="spinnerHome" class="fa fa-refresh fa-spin refresh-icon" aria-hidden="true"></i></a>';
     } else {
-        if (window.localStorage.getItem('lang') == 'fr') {
+        if (lang == 'fr') {
             html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Hors ligne</span></a></li>';
         } else {
             html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Currently offline</span></a></li>';
@@ -220,7 +231,7 @@ function Language(lang) {
             lang = "en";
         }
         return;
-    }()
+    }
 
     this.getString = function (str, defaultStr) {
         var retStr = eval('eval(lang).' + str);
@@ -237,12 +248,21 @@ function Language(lang) {
 }
 
 function getLanguage() {
-    var lang = window.localStorage.getItem('lang');
+    var lang = null;
+    //Create database object
+    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    DB.transaction(function (t) {
+        t.executeSql('SELECT * FROM config WHERE name="lang"', [], function (t, results) {
+            lang = results.rows[0].value;
+        }, null);
+    });
+
     if (lang == null) {
-        window.localStorage.setItem('lang', 'fr');
+        DB.transaction(function (t) {
+            t.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['lang', 'fr']);
+        });
         lang = 'fr';
     }
-
     return lang;
 }
 
@@ -323,8 +343,7 @@ function getTimeTableLink() {
 }
 
 //TTC ---------------------------------------------
-function route124East() {
-    var offLine = window.localStorage.getItem('offLine');
+function route124East(offLine) {
     if (offLine == 0) {
         $.ajax({
             type: 'GET',
@@ -361,8 +380,7 @@ function route124East() {
     }
 }
 
-function route124West() {
-    var offLine = window.localStorage.getItem('offLine');
+function route124West(offLine) {
     if (offLine == 0) {
         $.ajax({
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=124',
@@ -402,8 +420,7 @@ function route124West() {
     }
 }
 
-function route11South() {
-    var offLine = window.localStorage.getItem('offLine');
+function route11South(offLine) {
     if (offLine == 0) {
         $.ajax({
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=11330&r=11',
@@ -439,8 +456,7 @@ function route11South() {
     }
 }
 
-function route11North() {
-    var offLine = window.localStorage.getItem('offLine');
+function route11North(offLine) {
     if (offLine == 0) {
         $.ajax({
             url: 'http://webservices.nextbus.com/service/publicJSONFeed?command=predictions&a=ttc&stopId=1726&r=11',
@@ -476,8 +492,7 @@ function route11North() {
     }
 }
 //GLENDON SHUTTLE SERVICE-----------------------------------
-function getGlendonShuttle() {
-    var offLine = window.localStorage.getItem('offLine');
+function getGlendonShuttle(offLine) {
     var lang = getLanguage();
     var l = new Language(lang);
     if (offLine == 0) {
@@ -506,9 +521,9 @@ function getGlendonShuttle() {
                             html += '<li>';
                             html += '	<div id="bus-time">';
                             html += timeRemaining;
-                            
+
                             var departureMinutes = shuttle[i].departureminute;
-                            
+
                             html += '		<br/><span class="bus-time-span">' + shuttle[i].departurehour + ':' + departureMinutes + '</span>';
                             html += '	</div>';
                             html += '	<div id="direction">';
@@ -559,8 +574,7 @@ function getGlendonShuttle() {
 }
 
 //KEELE SHUTTLE SERVICE-----------------------------------
-function getKeeleShuttle() {
-    var offLine = window.localStorage.getItem('offLine');
+function getKeeleShuttle(offLine) {
     var lang = getLanguage();
     var l = new Language(lang);
     if (offLine == 0) {
@@ -639,8 +653,8 @@ function getKeeleShuttle() {
 }
 //WEATHER --------------------------------------------------
 
-function getWeather() {
-    var offLine = window.localStorage.getItem('offLine');
+function getWeather(offLine) {
+
     if (offLine == 0) {
         var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_weather&retrieve=1&moodlewsrestformat=json';
         $.ajax({
@@ -660,6 +674,7 @@ function getWeather() {
             }
         });
     }
+
 }
 
 //CURRENT DATE-------------------------------------------------
@@ -717,8 +732,7 @@ function getDateInfo(date) {
 }
 
 //ANNOUNCEMENTS--------------------------------------------
-function getAnnouncements() {
-    var offLine = window.localStorage.getItem('offLine');
+function getAnnouncements(offLine) {
     if (offLine == 0) {
         var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_announcements&retrieve=1&moodlewsrestformat=json';
         $.ajax({
@@ -772,8 +786,7 @@ function getAnnouncements() {
  * If it has, it refreshes the announcements. Else, it skips.
  * @returns {undefined}
  */
-function getAnnouncementsRefresh() {
-    var offLine = window.localStorage.getItem('offLine');
+function getAnnouncementsRefresh(offLine) {
     if (offLine == 0) {
         var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_announcements&retrieve=1&moodlewsrestformat=json';
         $.ajax({
@@ -938,8 +951,8 @@ function deleteFavorite(id) {
 }
 
 //SITE AND PAGES-------------------------------------------------------
-function getSite(ignoreVersion) {
-    var offLine = window.localStorage.getItem('offLine');
+function getSite(ignoreVersion,offLine) {
+
     //Create site version. This will prevent the site from being pulled constantly reducing data transfers.
     //The site data will only be updated once per day unless ignoreVersion is set
     var now = new Date();
@@ -966,12 +979,12 @@ function getSite(ignoreVersion) {
                             siteCode = site[0]['site'];
                             var data = siteCode;
                             window.localStorage.setItem('siteCode', data);
-                            
+
                         }
                     }
-                    
+
                     var json = JSON.parse(data);
-                    
+
                     siteVersion = window.localStorage.setItem('siteVersion', version);
                     siteVersion = version;
                 }
@@ -989,7 +1002,7 @@ function subCategories() {
     var siteCode = window.localStorage.getItem('siteCode');
     var json = JSON.parse(siteCode);
     var sc = json['categories'][id]['subcategories']; //Sub-Categories
-    
+
 
     var html = '<ul>';
     for (i = 0; i < sc.count; i++) {
@@ -1095,8 +1108,7 @@ function pageList() {
 
 }
 
-function detailsPage() {
-    var offline = window.localStorage.getItem('offLine');
+function detailsPage(offLine) {
     var lang = $('#lang').val();
     var l = new Language(lang);
     var cId = $('#cId').val();
@@ -1152,8 +1164,8 @@ function detailsPage() {
     var json = JSON.parse(siteCode);
     var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
     var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
-    
-    
+
+
     var event = '<ul class="default_list">';
 
     //Add favorites data info
@@ -1206,7 +1218,7 @@ function detailsPage() {
                     event += '    </li>';
                     eventExists[e] = thisEventDay + '-' + events[e].nameEn;
                 }
-                
+
                 break;
             case 3:
                 $('#eventsTitle').html(l.getString('dailySpecials'));
@@ -1257,7 +1269,7 @@ function detailsPage() {
             $('#location-image').attr('src', details.imageFr);
         }
         $('#location-email').html(details.email);
-        
+
         if (details.externalUrlFr != '') {
             $('#externalUrl').html('<a href="' + details.externalUrlFr + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
         }
@@ -1356,8 +1368,7 @@ function detailsPage() {
     $('#search').hideseek();
 }
 
-function eventsPage() {
-    var offline = window.localStorage.getItem('offLine');
+function eventsPage(offLine) {
     var lang = getLanguage();
     var l = new Language(lang);
     var cId = $('#cId').val();
