@@ -7,7 +7,7 @@ $(document).ready(function () {
     var thisLang = $('#lang').val();
     
     //Create database object
-    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    var DB = window.openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
     DB.transaction(function (t) {
         t.executeSql("CREATE TABLE IF NOT EXISTS config (id INTEGER PRIMARY KEY ASC, name VARCHAR(255), value TEXT)");
@@ -252,7 +252,7 @@ function Language(lang) {
 function getLanguage() {
     var lang = null;
     //Create database object
-    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    var DB = window.openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
     DB.transaction(function (t) {
         t.executeSql('SELECT * FROM config WHERE name="lang"', [], function (t, results) {
             lang = results.rows[0].value;
@@ -954,7 +954,7 @@ function deleteFavorite(id) {
 
 //SITE AND PAGES-------------------------------------------------------
 function getSite(ignoreVersion, offLine) {
-    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    var DB = window.openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
     if (offLine == 0) {
         //Create site version. This will prevent the site from being pulled constantly reducing data transfers.
         //The site data will only be updated once per day unless ignoreVersion is set
@@ -1049,7 +1049,7 @@ function subCategories(offLine) {
         $('#cId').val(id);
     }
 
-    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    var DB = window.openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
     DB.transaction(function (t) {
         t.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (t, results) {
@@ -1092,7 +1092,7 @@ function pageList() {
         scId = getUrlVars()["scid"];
         $('#scId').val(scId);
     }
-    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    var DB = window.openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
     DB.transaction(function (t) {
         t.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (t, results) {
@@ -1225,7 +1225,7 @@ function detailsPage(offLine) {
         $('#favoriteIcon').attr('data-id', -1);
     }
 
-    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+    var DB = window.openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
     DB.transaction(function (t) {
         t.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (t, results) {
