@@ -47,7 +47,7 @@ $(document).ready(function () {
     });
 });
 
-function startApp(ignore,offLine) {
+function startApp(ignore, offLine) {
     $('#spinnerHome').addClass('fa-spin');
     var pageName = getPageName();
     getStrings(); //Provides strings for the app
@@ -72,7 +72,7 @@ function startApp(ignore,offLine) {
             getMyFavorites(offLine);
         }
     } else {
-        getSite(ignore,offLine);
+        getSite(ignore, offLine);
         getTimeTableLink();
         if (pageName == 'GlendonApp') {
             getCurrentDate(offLine);
@@ -203,7 +203,7 @@ function navPills(offLine) {
     if (offLine == 0) {
         html += '<li class="active"><a data-toggle="tab" href="#shuttleTab"><i class="fa fa-bus" aria-hidden="true"></i>' + l.getString('shuttle') + '</a></li>';
         html += '<li><a data-toggle="tab" href="#ttcTab"><i class="fa fa-subway" aria-hidden="true"></i>TTC</a></li>';
-        html += '<a href="javascript:void(0);" onClick="startApp(\'1\')"><i id="spinnerHome" class="fa fa-refresh fa-spin refresh-icon" aria-hidden="true"></i></a>';
+        html += '<a href="javascript:void(0);" onClick="startApp(\'1\',\'0\')"><i id="spinnerHome" class="fa fa-refresh fa-spin refresh-icon" aria-hidden="true"></i></a>';
     } else {
         if (lang == 'fr') {
             html = '<li class="active"><a href="javascript:void(0);"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span id="currentlyOffLine">Hors ligne</span></a></li>';
@@ -951,75 +951,130 @@ function deleteFavorite(id) {
 }
 
 //SITE AND PAGES-------------------------------------------------------
-function getSite(ignoreVersion,offLine) {
-
-    //Create site version. This will prevent the site from being pulled constantly reducing data transfers.
-    //The site data will only be updated once per day unless ignoreVersion is set
-    var now = new Date();
-    var version = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
-    var siteVersion = window.localStorage.getItem('siteVersion');
-
-    //Only update if online
+function getSite(ignoreVersion, offLine) {
+    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
     if (offLine == 0) {
-        //Only update if version is ignored OR on a new day
-        if (ignoreVersion == 1 || siteVersion == null || siteVersion != version) {
+        //Create site version. This will prevent the site from being pulled constantly reducing data transfers.
+        //The site data will only be updated once per day unless ignoreVersion is set
+        var now = new Date();
+        var version = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate();
 
-            var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
-            $.ajax({
-                url: url,
-                crossDomain: true,
-                dataType: 'json',
-                success: function (site) {
-                    var siteCode = window.localStorage.getItem('siteCode');
-                    if (siteCode == null) {
-                        var data = site[0]['site'];
-                        window.localStorage.setItem('siteCode', data);
-                    } else {
-                        if (siteCode != site[0]['site']) {
-                            siteCode = site[0]['site'];
-                            var data = siteCode;
-                            window.localStorage.setItem('siteCode', data);
+
+        DB.transaction(function (t) {
+
+            t.executeSql('SELECT * FROM config WHERE name="siteVersion"', [], function (t, results) {
+                var len = results.rows.length;
+                if (len == 0) {
+                    t.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['siteVersion', version]);
+                    ignoreVersion = 1;
+                }
+                console.log(ignoreVersion);
+                //Only update if version is ignored OR on a new day
+                if (ignoreVersion == 1) {
+
+                    var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
+                    $.ajax({
+                        url: url,
+                        crossDomain: true,
+                        dataType: 'json',
+                        success: function (site) {
+                            var data = site[0]['site'];
+                            //Find out if siteCode exists.
+                            DB.transaction(function (tx) {
+                                tx.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (tx, results) {
+                                    var len = results.rows.length;
+                                    if (len == 0) {
+                                        //create siteCode
+                                        tx.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['siteCode', data]);
+                                    } else {
+                                        //update
+                                        tx.executeSql('UPDATE config SET value = ? WHERE id = ?)', [data, results.rows[0].id]);
+                                    }
+                                }, null);
+                            });
+
 
                         }
-                    }
-
-                    var json = JSON.parse(data);
-
-                    siteVersion = window.localStorage.setItem('siteVersion', version);
-                    siteVersion = version;
+                    });
                 }
-            });
-        }
+
+            }, null);
+
+        });
     }
+
+
+
+
+    //Only update if online
+    //    if (offLine == 0) {
+    //        //Only update if version is ignored OR on a new day
+    //        if (ignoreVersion == 1 || siteVersion == null || siteVersion != version) {
+    //
+    //            var url = config.webServiceUrl + 'wstoken=' + config.webServiceToken + '&wsfunction=local_webapp_site&retrieve=1&moodlewsrestformat=json';
+    //            $.ajax({
+    //                url: url,
+    //                crossDomain: true,
+    //                dataType: 'json',
+    //                success: function (site) {
+    //                    var siteCode = window.localStorage.getItem('siteCode');
+    //                    if (siteCode == null) {
+    //                        var data = site[0]['site'];
+    //                        window.localStorage.setItem('siteCode', data);
+    //                    } else {
+    //                        if (siteCode != site[0]['site']) {
+    //                            siteCode = site[0]['site'];
+    //                            var data = siteCode;
+    //                            window.localStorage.setItem('siteCode', data);
+    //
+    //                        }
+    //                    }
+    //
+    //                    var json = JSON.parse(data);
+    //
+    //                    siteVersion = window.localStorage.setItem('siteVersion', version);
+    //                    siteVersion = version;
+    //                }
+    //            });
+    //        }
+    //    }
 }
 
-function subCategories() {
+function subCategories(offLine) {
     var id = $('#cId').val();
     if (id == '') {
         id = getUrlVars()["id"];
         $('#cId').val(id);
     }
-    var siteCode = window.localStorage.getItem('siteCode');
-    var json = JSON.parse(siteCode);
-    var sc = json['categories'][id]['subcategories']; //Sub-Categories
+
+    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
+
+    DB.transaction(function (t) {
+        t.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (t, results) {
+            var siteCode = results.rows[0].value;
+            var json = JSON.parse(siteCode);
+            var sc = json['categories'][id]['subcategories']; //Sub-Categories
+
+            var html = '<ul>';
+            for (i = 0; i < sc.count; i++) {
+                if ($('#lang').val() == 'en') {
+                    html += '<li class="menu-section">';
+                    html += '    <i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
+                    html += '    <a href="pagelist.html?cid=' + id + '&scid=' + i + '&offline=' + offLine +'">' + sc[i].nameEn + '</a>';
+                    html += '</li>';
+                } else {
+                    html += '<li class="menu-section">';
+                    html += '    <i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
+                    html += '    <a href="pagelist.html?cid=' + id + '&scid=' + i + '&offline=' + offLine +'">' + sc[i].nameFr + '</a>';
+                    html += '</li>';
+                }
+            }
+            html += '</ul>';
+            $('#subCategories').html(html);
+        }, null);
+    });
 
 
-    var html = '<ul>';
-    for (i = 0; i < sc.count; i++) {
-        if ($('#lang').val() == 'en') {
-            html += '<li class="menu-section">';
-            html += '    <i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
-            html += '    <a href="pagelist.html?cid=' + id + '&scid=' + i + '">' + sc[i].nameEn + '</a>';
-            html += '</li>';
-        } else {
-            html += '<li class="menu-section">';
-            html += '    <i class="fa fa-angle-right sub-menu-arrow" aria-hidden="true"></i>';
-            html += '    <a href="pagelist.html?cid=' + id + '&scid=' + i + '">' + sc[i].nameFr + '</a>';
-            html += '</li>';
-        }
-    }
-    html += '</ul>';
-    $('#subCategories').html(html);
 }
 
 //After clicking from a student or community list item, you then get
@@ -1035,80 +1090,88 @@ function pageList() {
         scId = getUrlVars()["scid"];
         $('#scId').val(scId);
     }
-    var siteCode = window.localStorage.getItem('siteCode');
-    var json = JSON.parse(siteCode);
-    var list = json['categories'][cId]['subcategories'][scId]['listing'];
-    var redirect = false;
-    var html = '<ul>';
+    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
-    var favorites = JSON.parse(window.localStorage.getItem('favorites'));
+    DB.transaction(function (t) {
+        t.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (t, results) {
+            var siteCode = results.rows[0].value;
+            var json = JSON.parse(siteCode);
 
-    for (i = 0; i < list.count; i++) {
-        //Get external urls;
-        if (list[i].externalUrlEn != '' || list[i].externalUrlFr != '') {
-            var redirectEn = list[i].externalUrlEn;
-            var redirectFr = list[i].externalUrlFr;
+            var list = json['categories'][cId]['subcategories'][scId]['listing'];
+            var redirect = false;
+            var html = '<ul>';
 
-            if (redirectFr == '') {
-                redirectFr = redirectEn;
+            var favorites = JSON.parse(window.localStorage.getItem('favorites'));
+
+            for (i = 0; i < list.count; i++) {
+                //Get external urls;
+                if (list[i].externalUrlEn != '' || list[i].externalUrlFr != '') {
+                    var redirectEn = list[i].externalUrlEn;
+                    var redirectFr = list[i].externalUrlFr;
+
+                    if (redirectFr == '') {
+                        redirectFr = redirectEn;
+                    }
+
+                    if (redirectEn == '') {
+                        redirectEn = redirectFr;
+                    }
+                    redirect = false;
+                }
+                //This is to change the color of the heart for favorites
+                var style = '';
+                if (favorites !== null) {
+                    var result = $.grep(favorites, function (e) {
+                        return e.id == list[i].id;
+                    });
+
+                    if (result.length == 1) {
+                        style = 'style="color:#E31836"';
+                    } else {
+                        style = '';
+                    }
+                }
+                if ($('#lang').val() == 'en') {
+                    html += '<li class="menu-section-listing">';
+                    //            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
+                    if (redirect == true) {
+                        html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
+                    } else {
+                        html += '    <a href="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + i + '&pid=' + list[i].id + '">' + list[i].nameEn + '</a>';
+                    }
+                    html += '</li>';
+                } else {
+                    html += '<li class="menu-section-listing">';
+                    //            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
+                    if (redirect == true) {
+                        html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
+                    } else {
+                        html += '    <a href="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + i + '&pid=' + list[i].id + '">' + list[i].nameFr + '</a>';
+                    }
+                    html += '</li>';
+                }
             }
+            html += '</ul>';
+            $('#pageList').html(html);
 
-            if (redirectEn == '') {
-                redirectEn = redirectFr;
-            }
-            redirect = false;
-        }
-        //This is to change the color of the heart for favorites
-        var style = '';
-        if (favorites !== null) {
-            var result = $.grep(favorites, function (e) {
-                return e.id == list[i].id;
+            $('.site-wrap').swipe({
+                allowPageScroll: "vertical",
+                //Generic swipe handler for all directions
+                swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+                    if (direction == 'right') {
+                        window.location = 'subcategories.html?id=' + cId;
+                    }
+                }
             });
-
-            if (result.length == 1) {
-                style = 'style="color:#E31836"';
-            } else {
-                style = '';
-            }
-        }
-        if ($('#lang').val() == 'en') {
-            html += '<li class="menu-section-listing">';
-            //            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
-            if (redirect == true) {
-                html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
-            } else {
-                html += '    <a href="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + i + '&pid=' + list[i].id + '">' + list[i].nameEn + '</a>';
-            }
-            html += '</li>';
-        } else {
-            html += '<li class="menu-section-listing">';
-            //            html += '    <i class="fa fa-heart sub-menu-heart" ' + style + ' aria-hidden="true" onclick="addToFavorites(' + list[i].id + ')"></i>';
-            if (redirect == true) {
-                html += '    <a href="' + redirectEn + '" target="_blank">' + list[i].nameEn + '</a>';
-            } else {
-                html += '    <a href="details.html?cid=' + cId + '&scid=' + scId + '&listid=' + i + '&pid=' + list[i].id + '">' + list[i].nameFr + '</a>';
-            }
-            html += '</li>';
-        }
-    }
-    html += '</ul>';
-    $('#pageList').html(html);
-
-    $('.site-wrap').swipe({
-        allowPageScroll: "vertical",
-        //Generic swipe handler for all directions
-        swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
-            if (direction == 'right') {
-                window.location = 'subcategories.html?id=' + cId;
-            }
-        }
+            //Update back link
+            $('#return-back-link').attr('href', 'subcategories.html?id=' + cId);
+        }, null);
     });
-    //Update back link
-    $('#return-back-link').attr('href', 'subcategories.html?id=' + cId);
 
 }
 
 function detailsPage(offLine) {
+    offLine = 0;
     var lang = $('#lang').val();
     var l = new Language(lang);
     var cId = $('#cId').val();
@@ -1160,212 +1223,218 @@ function detailsPage(offLine) {
         $('#favoriteIcon').attr('data-id', -1);
     }
 
-    var siteCode = window.localStorage.getItem('siteCode');
-    var json = JSON.parse(siteCode);
-    var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
-    var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
+    var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
+    DB.transaction(function (t) {
+        t.executeSql('SELECT * FROM config WHERE name="siteCode"', [], function (t, results) {
+            var siteCode = results.rows[0].value;
+            var json = JSON.parse(siteCode);
+            var details = json['categories'][cId]['subcategories'][scId]['listing'][listId];
+            var events = json['categories'][cId]['subcategories'][scId]['listing'][listId]['events'];
 
-    var event = '<ul class="default_list">';
+            console.log(events);
+            var event = '<ul class="default_list">';
 
-    //Add favorites data info
-    $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
-    $('#id').val(pId);
+            //Add favorites data info
+            $('#url').val('details.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId);
+            $('#id').val(pId);
 
-    $('#search').attr('placeholder', l.getString('refineList'));
+            $('#search').attr('placeholder', l.getString('refineList'));
 
-    if ($('#lang').val() == 'en') {
-        $('.location-name').html(details.nameEn);
-        $('#description').html(details.descriptionEn);
-        if (offline == 1 || details.imageEn == "") {
-            $('#location-image').attr('src', 'img/transparent.png');
-            $('#location-image').attr('style', 'width: 0px; height:0px;');
+            if ($('#lang').val() == 'en') {
+                $('.location-name').html(details.nameEn);
+                $('#description').html(details.descriptionEn);
+                if (offline == 1 || details.imageEn == "") {
+                    $('#location-image').attr('src', 'img/transparent.png');
+                    $('#location-image').attr('style', 'width: 0px; height:0px;');
 
-        } else {
-            $('#location-image').attr('src', details.imageEn);
-        }
-        $('#location-email').html(details.email);
-
-        if (details.externalUrlEn != '') {
-            $('#externalUrl').html('<a href="' + details.externalUrlEn + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
-        }
-
-        for (e = 0; e < events['count']; e++) {
-            //Get event date for comparison
-            var eventDate = new Date(events[e].startDateTime);
-            var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-            var thisEventDay = eventDate.getDay();
-
-            var eventDate = getDateInfo(events[e].startTimeEn);
-            switch (events.type) {
-            case 1:
-                $('#eventsTitle').html(l.getString('eventTitle'));
-                if (thisEvent >= today) {
-                    event += '    <li class="location-event-listing">';
-                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
-                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
-                    event += '    </li>';
+                } else {
+                    $('#location-image').attr('src', details.imageEn);
                 }
-                break;
-            case 2:
-                $('#eventsTitle').html(l.getString('eventTitle'));
-                if (thisEvent == today) {
-                    event += '    <li class="location-event-listing">';
-                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
-                    event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
-                    event += '    </li>';
-                    eventExists[e] = thisEventDay + '-' + events[e].nameEn;
+                $('#location-email').html(details.email);
+
+                if (details.externalUrlEn != '') {
+                    $('#externalUrl').html('<a href="' + details.externalUrlEn + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
                 }
 
-                break;
-            case 3:
-                $('#eventsTitle').html(l.getString('dailySpecials'));
+                for (e = 0; e < events['count']; e++) {
+                    //Get event date for comparison
+                    var eventDate = new Date(events[e].startDateTime);
+                    var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
+                    var thisEventDay = eventDate.getDay();
 
-                var operationHours = JSON.parse(events[e].operationHours);
-                var openingHour = '';
-                var closingHour = '';
+                    var eventDate = getDateInfo(events[e].startTimeEn);
+                    switch (events.type) {
+                    case 1:
+                        $('#eventsTitle').html(l.getString('eventTitle'));
+                        if (thisEvent >= today) {
+                            event += '    <li class="location-event-listing">';
+                            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                            event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                            event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                            event += '    </li>';
+                        }
+                        break;
+                    case 2:
+                        $('#eventsTitle').html(l.getString('eventTitle'));
+                        if (thisEvent == today) {
+                            event += '    <li class="location-event-listing">';
+                            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                            event += '    <span>' + events[e].nameEn + '</span><br/>Where: ' + events[e].locationEn + '<br/>';
+                            event += '    When: ' + eventDate.currentDateEn + ' | @ ' + eventDate.timeEn + '</a>';
+                            event += '    </li>';
+                            eventExists[e] = thisEventDay + '-' + events[e].nameEn;
+                        }
+
+                        break;
+                    case 3:
+                        $('#eventsTitle').html(l.getString('dailySpecials'));
+
+                        var operationHours = JSON.parse(events[e].operationHours);
+                        var openingHour = '';
+                        var closingHour = '';
 
 
-                var days = JSON.parse(events[e].days);
-                var day = now.getDay();
-                //get operation hours for today
-                for (i = 0; i < operationHours.length; i++) {
-                    if (operationHours[i].day == day) {
-                        openingHour = operationHours[i].openingHour;
-                        closingHour = operationHours[i].closingHour;
+                        var days = JSON.parse(events[e].days);
+                        var day = now.getDay();
+                        //get operation hours for today
+                        for (i = 0; i < operationHours.length; i++) {
+                            if (operationHours[i].day == day) {
+                                openingHour = operationHours[i].openingHour;
+                                closingHour = operationHours[i].closingHour;
+                            }
+                        }
+                        var hour = now.getHours();
+                        var minutes = now.getMinutes();
+                        //Check if store is open
+                        var storeHours = '<h1 class="hours-operation-title">Store hours</h1>';
+                        //                storeHours += '<h1 class="operation-schedule">' + openHour + ' à ' + closingHour + '<span class="open-icon">OPEN</span></h1>'
+                        storeHours += '<h1 class="operation-schedule">' + openingHour + ' to ' + closingHour + '</h1>';
+                        $('#storeHours').html(storeHours);
+                        if ($.inArray(day, days)) {
+                            event += '    <li class = "food-menu-item"> ';
+                            if (offline == 1 || events[e].imageEn != "") {
+                                event += '    <img style="float: left; margin: 0px 15px 15px 0px;" src="' + events[e].imageEn + '" class="img-responsive" height="42" width="42">';
+                            }
+                            event += '    <span>$' + events[e].price + ' // ' + events[e].nameEn + '</span><br style="clear:both" />' + events[e].descriptionEn;
+                            event += '    </li>';
+
+                        }
+                        break;
                     }
                 }
-                var hour = now.getHours();
-                var minutes = now.getMinutes();
-                //Check if store is open
-                var storeHours = '<h1 class="hours-operation-title">Store hours</h1>';
-                //                storeHours += '<h1 class="operation-schedule">' + openHour + ' à ' + closingHour + '<span class="open-icon">OPEN</span></h1>'
-                storeHours += '<h1 class="operation-schedule">' + openingHour + ' to ' + closingHour + '</h1>';
-                $('#storeHours').html(storeHours);
-                if ($.inArray(day, days)) {
-                    event += '    <li class = "food-menu-item"> ';
-                    if (offline == 1 || events[e].imageEn != "") {
-                        event += '    <img style="float: left; margin: 0px 15px 15px 0px;" src="' + events[e].imageEn + '" class="img-responsive" height="42" width="42">';
+                event += '</ul>';
+                $('#name').val(details.nameEn);
+                console.log(eventExists);
+            } else {
+                $('.location-name').html(details.nameFr);
+                $('#description').html(details.descriptionFr);
+                if (offLine == 1 || details.imageFr == "") {
+                    $('#location-image').attr('src', 'img/transparent.png');
+                    $('#location-image').attr('style', 'width: 0px; height:0px;');
+                } else {
+                    $('#location-image').attr('src', details.imageFr);
+                }
+                $('#location-email').html(details.email);
+
+                if (details.externalUrlFr != '') {
+                    $('#externalUrl').html('<a href="' + details.externalUrlFr + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
+                }
+                for (e = 0; e < events['count']; e++) {
+                    //Get event date for comparison
+                    var eventDate = new Date(events[e].startDateTime);
+                    var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
+                    var thisEventDay = eventDate.getDay();
+                    var eventDate = getDateInfo(events[e].startTimeEn);
+
+                    switch (events.type) {
+                    case 1:
+                        $('#eventsTitle').html(l.getString('eventTitle'));
+                        if (thisEvent >= today) {
+                            event += '    <li class="location-event-listing">';
+                            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                            event += '    <span>' + events[e].nameFr + '</span><br/>Ou: ' + events[e].locationFr + '<br/>';
+                            event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                            event += '    </li>';
+                        }
+                        break;
+                    case 2:
+                        $('#eventsTitle').html(l.getString('eventTitle'));
+                        if (thisEvent == today) {
+                            event += '    <li class="location-event-listing">';
+                            event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
+                            event += '    <span>' + events[e].nameFr + '</span><br/>Ou: ' + events[e].locationFr + '<br/>';
+                            event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
+                            event += '    </li>';
+                        }
+                        break;
+                    case 3:
+                        $('#eventsTitle').html(l.getString('dailySpecials'));
+
+                        var operationHours = JSON.parse(events[e].operationHours);
+                        var openingHour = '';
+                        var closingHour = '';
+
+                        var days = JSON.parse(events[e].days);
+                        var day = now.getDay();
+                        //get operation hours for today
+                        for (i = 0; i < operationHours.length; i++) {
+                            if (operationHours[i].day == day) {
+                                openingHour = operationHours[i].openingHour;
+                                closingHour = operationHours[i].closingHour;
+                            }
+                        }
+                        var hour = now.getHours();
+                        var minutes = now.getMinutes();
+                        //Check if store is open
+                        var storeHours = '<h1 class="hours-operation-title">Heures d\'ouvertures</h1>';
+                        //                storeHours += '<h1 class="operation-schedule">' + openHour + ' à ' + closingHour + '<span class="open-icon">OPEN</span></h1>'
+                        storeHours += '<h1 class="operation-schedule">' + openingHour + ' à ' + closingHour + '</h1>';
+                        $('#storeHours').html(storeHours);
+                        if ($.inArray(day, days)) {
+                            event += '    <li class = "food-menu-item"> ';
+                            if (offline == 1 || events[e].imageFr != "") {
+                                event += '    <img style="float: left; margin: 0px 15px 15px 0px;" src="' + events[e].imageFr + '" class="img-responsive" height="42" width="42">';
+                            }
+                            event += '    <span>' + events[e].price + '$ // ' + events[e].nameFr + '</span><br style="clear:both" />' + events[e].descriptionFr;
+                            event += '    </li>';
+
+                        }
+                        break;
                     }
-                    event += '    <span>$' + events[e].price + ' // ' + events[e].nameEn + '</span><br style="clear:both" />' + events[e].descriptionEn;
-                    event += '    </li>';
-
                 }
-                break;
-            }
-        }
-        event += '</ul>';
-        $('#name').val(details.nameEn);
-        console.log(eventExists);
-    } else {
-        $('.location-name').html(details.nameFr);
-        $('#description').html(details.descriptionFr);
-        if (offline == 1 || details.imageFr == "") {
-            $('#location-image').attr('src', 'img/transparent.png');
-            $('#location-image').attr('style', 'width: 0px; height:0px;');
-        } else {
-            $('#location-image').attr('src', details.imageFr);
-        }
-        $('#location-email').html(details.email);
+                event += '</ul>';
+                $('#name').val(details.nameFr);
 
-        if (details.externalUrlFr != '') {
-            $('#externalUrl').html('<a href="' + details.externalUrlFr + '"><i class="fa fa-globe  contact-info-icon" aria-hidden="true"></i></a>');
-        }
-        for (e = 0; e < events['count']; e++) {
-            //Get event date for comparison
-            var eventDate = new Date(events[e].startDateTime);
-            var thisEvent = eventDate.getFullYear() + '' + eventDate.getMonth() + '' + eventDate.getDate();
-            var thisEventDay = eventDate.getDay();
-            var eventDate = getDateInfo(events[e].startTimeEn);
-
-            switch (events.type) {
-            case 1:
-                $('#eventsTitle').html(l.getString('eventTitle'));
-                if (thisEvent >= today) {
-                    event += '    <li class="location-event-listing">';
-                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameFr + '</span><br/>Ou: ' + events[e].locationFr + '<br/>';
-                    event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
-                    event += '    </li>';
-                }
-                break;
-            case 2:
-                $('#eventsTitle').html(l.getString('eventTitle'));
-                if (thisEvent == today) {
-                    event += '    <li class="location-event-listing">';
-                    event += '    <a href="events.html?cid=' + cId + '&scid=' + scId + '&listid=' + listId + '&pid=' + pId + '&eid=' + e + '"><i class="fa fa-angle-right event-arrow" aria-hidden="true"></i>';
-                    event += '    <span>' + events[e].nameFr + '</span><br/>Ou: ' + events[e].locationFr + '<br/>';
-                    event += '    Quand: ' + eventDate.currentDateFr + ' | @ ' + eventDate.timeFr + '</a>';
-                    event += '    </li>';
-                }
-                break;
-            case 3:
-                $('#eventsTitle').html(l.getString('dailySpecials'));
-
-                var operationHours = JSON.parse(events[e].operationHours);
-                var openingHour = '';
-                var closingHour = '';
-
-                var days = JSON.parse(events[e].days);
-                var day = now.getDay();
-                //get operation hours for today
-                for (i = 0; i < operationHours.length; i++) {
-                    if (operationHours[i].day == day) {
-                        openingHour = operationHours[i].openingHour;
-                        closingHour = operationHours[i].closingHour;
-                    }
-                }
-                var hour = now.getHours();
-                var minutes = now.getMinutes();
-                //Check if store is open
-                var storeHours = '<h1 class="hours-operation-title">Heures d\'ouvertures</h1>';
-                //                storeHours += '<h1 class="operation-schedule">' + openHour + ' à ' + closingHour + '<span class="open-icon">OPEN</span></h1>'
-                storeHours += '<h1 class="operation-schedule">' + openingHour + ' à ' + closingHour + '</h1>';
-                $('#storeHours').html(storeHours);
-                if ($.inArray(day, days)) {
-                    event += '    <li class = "food-menu-item"> ';
-                    if (offline == 1 || events[e].imageFr != "") {
-                        event += '    <img style="float: left; margin: 0px 15px 15px 0px;" src="' + events[e].imageFr + '" class="img-responsive" height="42" width="42">';
-                    }
-                    event += '    <span>' + events[e].price + '$ // ' + events[e].nameFr + '</span><br style="clear:both" />' + events[e].descriptionFr;
-                    event += '    </li>';
-
-                }
-                break;
-            }
-        }
-        event += '</ul>';
-        $('#name').val(details.nameFr);
-
-    }
-
-    $('#eventsList').html(event);
-
-    if (details.instagram != '') {
-        $('#instagram').html('<a href="' + details.instagram + '"><i class="fa fa-instagram  contact-info-icon" aria-hidden="true"></i></a>')
-    }
-    if (details.facebook != '') {
-        $('#facebook').html('<a href="' + details.facebook + '"><i class="fa fa-facebook-square  contact-info-icon" aria-hidden="true"></i></a>')
-    }
-    if (details.twitter != '') {
-        $('#twitter').html('<a href="' + details.twitter + '"><i class="fa fa-twitter-square  contact-info-icon" aria-hidden="true"></i></a>')
-    }
-
-    //Swipe action
-    $('.site-wrap').swipe({
-        allowPageScroll: "vertical",
-        //Generic swipe handler for all directions
-        swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
-            if (direction == 'right') {
-                window.location = 'pagelist.html?cid=' + cId + '&scid=' + scId;
             }
 
-        }
+            $('#eventsList').html(event);
+
+            if (details.instagram != '') {
+                $('#instagram').html('<a href="' + details.instagram + '"><i class="fa fa-instagram  contact-info-icon" aria-hidden="true"></i></a>')
+            }
+            if (details.facebook != '') {
+                $('#facebook').html('<a href="' + details.facebook + '"><i class="fa fa-facebook-square  contact-info-icon" aria-hidden="true"></i></a>')
+            }
+            if (details.twitter != '') {
+                $('#twitter').html('<a href="' + details.twitter + '"><i class="fa fa-twitter-square  contact-info-icon" aria-hidden="true"></i></a>')
+            }
+
+            //Swipe action
+            $('.site-wrap').swipe({
+                allowPageScroll: "vertical",
+                //Generic swipe handler for all directions
+                swipe: function (event, direction, distance, duration, fingerCount, fingerData) {
+                    if (direction == 'right') {
+                        window.location = 'pagelist.html?cid=' + cId + '&scid=' + scId;
+                    }
+
+                }
+            });
+            $('#return-back-link').attr('href', 'pagelist.html?cid=' + cId + '&scid=' + scId);
+            $('#search').hideseek();
+        }, null);
     });
-    $('#return-back-link').attr('href', 'pagelist.html?cid=' + cId + '&scid=' + scId);
-    $('#search').hideseek();
 }
 
 function eventsPage(offLine) {
