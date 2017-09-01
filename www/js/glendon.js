@@ -5,7 +5,7 @@
 $(document).ready(function () {
     $('#lang').val(getLanguage());
     var thisLang = $('#lang').val();
-    startApp(0);
+    
     //Create database object
     var DB = openDatabase("config", "0.1", "this apps configuration", ((1024 * 1024) * 5));
 
@@ -22,6 +22,8 @@ $(document).ready(function () {
             if (len == 0) {
                 t.executeSql('INSERT INTO config (name,value) VALUES (?,?)', ['lang', thisLang]);
                 t.executeSql('SELECT * FROM config WHERE name="lang"', [], function (t, results) {}, null);
+            } else {
+                alert(results.rows[0].value);
             }
 
         }, null);
